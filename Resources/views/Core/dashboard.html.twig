@@ -1,0 +1,71 @@
+{% extends "BackendBundle:Base:content_and_meta.html.twig" %}
+
+{% block content %}
+
+            <!--
+            <div class="hero-unit">
+                <h1>E-Bike Selector</h1>
+                <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+                <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+            </div>
+            -->
+
+            {% loadView 'Dashboard/getWidgets' as widgets %}
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs">
+                    {% for loopvar in widgets.htmliterator %}
+                        {% set widget = loopvar.value %}
+                        {% if loopvar.first %}
+                            <li class="active">
+                        {% else %}
+                            <li>
+                        {% endif %}
+                                <a href="#widget-primary-{{ loopvar.number }}" data-toggle="tab">{{ widget.title }}</a>
+                            </li>
+                    {% endfor %}
+                        </ul>
+
+                        <div class="tab-content">
+                    {% for loopvar in widgets.htmliterator %}
+                        {% set widget = loopvar.value %}
+                        {% if loopvar.first %}
+                            <div class="tab-pane active" id="widget-primary-{{ loopvar.number }}">
+                        {% else %}
+                            <div class="tab-pane" id="widget-primary-{{ loopvar.number }}">
+                        {% endif %}
+                                {% include widget.template %}
+                            </div>
+                    {% endfor %}
+                        </div><!-- /tab-content -->
+                    </div><!-- /tabbable -->
+                </div><!-- /span12 -->
+            </div><!-- /row-fluid -->
+
+{% endblock %}
+
+
+{% block meta_content %}
+            <div class="well sidebar-nav">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#editorial-activity" data-toggle="tab">Editorial activity</a></li>
+                        <li><a href="#administrative-activity" data-toggle="tab">Administrative activity</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        {% loadView 'ActivityLog/findLatest' as items with {'level':200}  %}
+                        <div class="tab-pane active" id="editorial-activity">
+                            {% include 'BackendBundle:Include:activity.html.twig' %}
+                        </div>
+
+                        {% loadView 'ActivityLog/findLatest' as items with {'level':500}  %}
+                        <div class="tab-pane" id="administrative-activity">
+                            {% include 'BackendBundle:Include:activity.html.twig' %}
+                        </div>
+                    </div>
+                </div>
+            </div><!--/.well -->
+{% endblock %}

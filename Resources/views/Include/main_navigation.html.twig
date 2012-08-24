@@ -1,0 +1,62 @@
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="{{ ref('_page/dashboard') }}">PivotX</a>
+            <div class="btn-group pull-right">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="icon-user"></i> {{ backend.security.username }} <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Profile</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{{ ref('_page/logout') }}">Sign Out</a></li>
+                </ul>
+            </div>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li x-class="active"><a href="{{ ref('_page/dashboard') }} ">Dashboard</a></li>
+                    <li>
+                        <div class="btn-group">
+                            <a class="btn" href="#">
+                                Content
+                            </a>
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                <span class="caret"></span>
+                            </a>
+
+                            {% loadView 'Backend/loadContentMenu' as items %}
+                            <ul class="dropdown-menu">
+                            {% for item in items.result %}
+                                <li><a href="{{ ref(item.refText, item.refArguments) }}">{{ item.label }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                    {% if is_granted('ROLE_DEVELOPER') %}
+                    <li>
+                        <div class="btn-group">
+                            <a class="btn" href="#">
+                                Developers
+                            </a>
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ ref('_developer/routing') }}">Routing</a></li>
+                                <li><a href="{{ ref('_developer/views') }}">Views</a></li>
+                                <li><a href="{{ ref('_developer/formats') }}">Formats</a></li>
+                            </ul>
+                       </div>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+</div>

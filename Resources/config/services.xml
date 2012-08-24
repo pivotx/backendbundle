@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <!-- views -->
+        <parameter key="pivotx.backend.views.class">PivotX\Backend\Views\Service</parameter>
+
+        <!-- formats -->
+        <parameter key="pivotx.backend.formats.class">PivotX\Backend\Formats\Service</parameter>
+
+        <!-- pivotx.crud -->
+        <parameter key="pivotx.crud.class">PivotX\Backend\Crud\Service</parameter>
+    </parameters>
+
+    <services>
+        <service id="pivotx.backend.views" class="%pivotx.backend.views.class%" public="true">
+            <argument type="service" id="pivotx.views" />
+            <argument type="service" id="doctrine" />
+        </service>
+
+        <service id="pivotx.backend.formats" class="%pivotx.backend.formats.class%" public="true">
+            <argument type="service" id="pivotx.formats" />
+        </service>
+
+        <service id="pivotx.crud.event_listener" class="%pivotx.crud.class%" public="true">
+        </service>
+
+        <service id="form.type.backend_file" class="PivotX\Backend\Component\Form\Type\BackendFile">
+            <tag name="form.type" alias="backend_file" />
+        </service>
+
+        <service id="form.type.backend_resource" class="PivotX\Backend\Component\Form\Type\BackendResource">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <tag name="form.type" alias="backend_resource" />
+        </service>
+
+        <service id="form.type.backend_unique" class="PivotX\Backend\Component\Form\Type\BackendUnique">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <tag name="form.type" alias="backend_unique" />
+        </service>
+    </services>
+
+
+</container>

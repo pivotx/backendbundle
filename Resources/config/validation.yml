@@ -1,0 +1,17 @@
+PivotX\CoreBundle\Entity\TranslationText:
+  properties:
+    sitename:
+      - NotBlank: ~
+    groupname:
+      - NotBlank: ~
+    name:
+      - NotBlank: ~
+    encoding:
+      - NotBlank: ~
+
+PivotX\CoreBundle\Entity\LocalEmbedResource:
+  properties:
+    title:
+      - NotBlank: ~
+    filename:
+      - NotBlank: ~
