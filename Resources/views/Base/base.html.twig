@@ -6,8 +6,13 @@
 <!DOCTYPE html>
 <html lang="{{ app.request.get('_language') }}">
     <head>
+        {{ webresourcer('headStart') }}
+
         <meta charset="{{ backend.meta.charset }}">
+
         <title>{{ backend.title }}</title>
+
+        {{ webresourcer('titleAfter') }}
 
 {# '@BackendBundle/Resources/lib/bootstrap/css/*' #}
 {# '../src/PivotX/BackendBundle/Resources/lib/bootstrap/css/bootstrap.min.css' #}
@@ -80,9 +85,12 @@
         }
 
         </style>
+
+        {{ webresourcer('headEnd') }}
     </head>
 
     <body>
+        {{ webresourcer('bodyStart') }}
 
         <div class="header">
         {% block header %}
@@ -102,6 +110,7 @@
         {% endblock %}
         </div>
 
+        {{ webresourcer('bodyEnd') }}
     </body>
 
 </html>
