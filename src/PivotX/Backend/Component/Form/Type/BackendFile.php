@@ -6,12 +6,17 @@ use Symfony\Component\Form\FormBuilderInterface;
 use PivotX\Backend\Component\Form\DataTransformer\FileToFieldTransformer;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class BackendFile extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->setAttribute('files', $options['files']);
+        $files = array();
+        if (isset($options['files'])) {
+            $files = $options['files'];
+        }
+        $builder->setAttribute('files', $files);
 
         $transformer = new FileToFieldTransformer();
         $builder->prependClientTransformer($transformer);
@@ -29,17 +34,25 @@ class BackendFile extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        // @todo guessing this is new
+        $this->options = $options;
+
         $view
             ->set('files', $form->getAttribute('files'))
         ;
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
+        $files = array();
+        if (isset($this->options['files'])) {
+            $files = $this->options['files'];
+        }
+        $resolver->setDefaults(array(
+            'compound' => true,
             'multiple' => false,
-            'files' => $options['files'],
-        );
+            'files' => $files
+        ));
     }
 
     public function getParent()

@@ -276,6 +276,7 @@ class CrudController extends Controller
         }
 
         $builder = $this->createFormBuilder($item, $form_options);
+        $builder->setCompound(true);
 
         foreach($form_items as $form_item) {
             $builder->add($form_item['name'], $form_item['type'], $form_item['options']);

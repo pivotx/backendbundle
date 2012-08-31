@@ -20,6 +20,10 @@ class BackendResource extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $files = array();
+        if (isset($options['files'])) {
+            $files = $options['files'];
+        }
         $builder->setAttribute('files', $options['files']);
 
         $transformer = new ResourceToFieldTransformer($this->entity_manager);
@@ -47,9 +51,14 @@ class BackendResource extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+        $files = array();
+        if (isset($this->options['files'])) {
+            $files = $this->options['files'];
+        }
         $resolver->setDefaults(array(
+            'compound' => true,
             'multiple' => false,
-            'files' => $this->options['files']
+            'files' => $files
         ));
     }
 

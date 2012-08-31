@@ -36,6 +36,7 @@ class BackendUnique extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'compound' => true,
             'sources' => $this->options['sources']
         ));
     }
