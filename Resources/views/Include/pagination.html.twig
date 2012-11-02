@@ -8,7 +8,7 @@
         {% set link_arguments = {} %}
     {% endif %}
     {% if pagination_variable is not defined %}
-        {% set pagination_variable = ['table-',translate('pagination.page_variable')]|join %}
+        {% set pagination_variable = ['table-',translate('pagination.page-variable')]|join %}
     {% endif %}
 
     {% set pagination = pagination(view, link, link_arguments, pagination_variable) %}

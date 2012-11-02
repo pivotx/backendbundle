@@ -10,17 +10,17 @@ sites:
       description:  "PivotX back-end"
 
 languages:
-    - name:         "nl"
+    - name:         "nld"
       description:  "Dutch"
       locale:       "nl_NL.utf-8"
 
-    - name:         "en"
+    - name:         "eng"
       description:  "English"
       locale:       "en_GB.utf-8"
 
 
 routeprefixes:
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "eng" }
       prefix:       "|^(http://.+/pivotx/en/)|"
 # @todo should not do regexes but something simpler?
 
@@ -45,14 +45,14 @@ routes:
       public:       "logout"
       defaults:     { _controller: "BackendBundle:Backend:any", _view: "BackendBundle:Core:logout.html.twig" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "eng" }
       pattern:      "_table/{entity}"
       public:       "table/{entity}"
       defaults:     { _controller: "BackendBundle:Crud:showTable" }
       requirements:
           entity: "[A-Za-z_]+[A-Za-z0-9]+"
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "eng" }
       pattern:      "_table/{entityref}/{id}/{entity}"
       public:       "table/{entityref}/{id}/{entity}"
       defaults:     { _controller: "BackendBundle:Crud:showSubTable" }
@@ -61,7 +61,7 @@ routes:
           entityref: "[A-Za-z_]+[A-Za-z0-9_]+"
           id:        "[0-9]+"
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "eng" }
       pattern:      "_table/{entity}/{id}"
       public:       "table/{entity}/{id}"
       defaults:     { _controller: "BackendBundle:Crud:showRecord" }
@@ -69,7 +69,7 @@ routes:
           entity:   "[A-Za-z_]+[A-Za-z0-9_]+"
           id:       "[0-9]+"
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "eng" }
       pattern:      "_table/{entity}/suggest/{field}"
       public:       "table/{entity}/suggest/{field}"
       defaults:     { _controller: "BackendBundle:Crud:suggestFieldValue" }
@@ -77,27 +77,27 @@ routes:
           entity:   "[A-Za-z_]+[A-Za-z0-9_]+"
           field:    "[A-Za-z_]+[A-Za-z0-9_]+"
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "eng" }
       pattern:      "_api/fileupload"
       public:       "api/fileupload"
       defaults:     { _controller: "BackendBundle:Upload:processUpload" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "eng" }
       pattern:      "_developer/routing"
       public:       "developer/routing"
       defaults:     { _controller: "BackendBundle:Developer:showRouting" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "eng" }
       pattern:      "_developer/views"
       public:       "developer/views"
       defaults:     { _controller: "BackendBundle:Developer:showViews" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "eng" }
       pattern:      "_developer/formats"
       public:       "developer/formats"
       defaults:     { _controller: "BackendBundle:Developer:showFormats" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "eng" }
       pattern:      "_page/not-found"
       public:       "page-not-found"
       defaults:     { _nothing: "not-found" }

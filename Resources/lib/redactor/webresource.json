@@ -1,0 +1,9 @@
+{
+    "identifier": "redactor",
+    "version": "7.7.2",
+
+    "files": [
+        "redactor.min.js",
+        "css/redactor.css"
+    ]
+}

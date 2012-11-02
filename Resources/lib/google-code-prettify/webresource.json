@@ -1,0 +1,15 @@
+{
+    "identifier": "google-code-prettify",
+    "version": "1.0.0",
+
+    "files": [
+        "js/prettify.js",
+        "js/lang-css.js",
+        "js/lang-sql.js",
+        "js/lang-wiki.js",
+        "js/lang-xq.js",
+        "js/lang-yaml.js",
+
+        "css/prettify.css"
+    ]
+}

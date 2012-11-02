@@ -48,22 +48,12 @@ class CrudController extends Controller
 
             $class = $entity_manager->getClassMetadata($class_name);
             if ($class) {
-                $ignore_mapnames = array();
-                if (method_exists($item,'getCrudFormIgnores')) {
-                    $ignore_mapnames = $item->getCrudFormIgnores();
-                }
-
                 $all_mappings = array();
                 foreach($class->fieldMappings as $mapname => $mapping) {
                     $all_mappings[$mapname] = $mapping;
                 }
 
                 foreach($all_mappings as $mapname => $mapping) {
-                    if (in_array($mapname, $ignore_mapnames)) {
-                        // ignore these
-                        continue;
-                    }
-
                     $add_field = false;
                     if (!isset($mapping['targetEntity'])) {
                         switch ($mapping['type']) {
@@ -115,11 +105,6 @@ class CrudController extends Controller
         if ($em) {
             $class = $em->getClassMetadata(get_class($item));
             if ($class) {
-                $ignore_mapnames = array();
-                if (method_exists($item,'getCrudFormIgnores')) {
-                    $ignore_mapnames = $item->getCrudFormIgnores();
-                }
-
                 $all_mappings = array();
                 foreach($class->fieldMappings as $mapname => $mapping) {
                     $all_mappings[$mapname] = $mapping;
@@ -136,16 +121,6 @@ class CrudController extends Controller
                 foreach($all_mappings as $mapname => $mapping) {
                     if (isset($mapping['id']) && ($mapping['id'] === true)) {
                         // always ignore id field
-                        continue;
-                    }
-
-                    // @todo temporary thing
-                    if (in_array($mapname, array('date_created', 'date_modified'))) {
-                        // always ignore these fields
-                        continue;
-                    }
-                    if (in_array($mapname, $ignore_mapnames)) {
-                        // ignore these
                         continue;
                     }
 
@@ -183,6 +158,7 @@ class CrudController extends Controller
                                 break;
 
                             default:
+                                /*
                                 switch ($mapname) {
                                     case 'passwd':
                                         $type = 'repeated';
@@ -192,40 +168,35 @@ class CrudController extends Controller
                                         break;
                                 }
                                 break;
+                                 */
                         }
                     }
 
-                    // if we encounter this method and it returns true, ignore this field in the crud
-                    if (method_exists($item,'getCrudFormIgnore_'.$mapname)) {
-                        $method = 'getCrudFormIgnore_'.$mapname;
-                        if ($item->$method()) {
+                    if (method_exists($item,'getCrudConfiguration_'.$mapname)) {
+                        $method = 'getCrudConfiguration_'.$mapname;
+                        $configuration = $item->$method();
+
+                        if (isset($configuration['type']) && ($configuration['type'] === false)) {
+                            // ignore
                             continue;
                         }
-                    }
-                    // if we encounter this method, overwrite arguments
-                    if (method_exists($item,'getCrudFormArguments_'.$mapname)) {
-                        $method         = 'getCrudFormArguments_'.$mapname;
-                        $crud_arguments = $item->$method();
-                        $args           = array_merge($args,$crud_arguments);
-                    }
-                    // if we encounter this method, change type to 'choice' and fill in the options
-                    if (method_exists($item,'getCrudFormChoices_'.$mapname)) {
-                        $method          = 'getCrudFormChoices_'.$mapname;
-                        $choices         = $item->$method();
-                        $type            = 'choice';
-                        $args['choices'] = $choices;
-                        unset($args['precision']);
-                        /*
-                        foreach($choices as $choice) {
-                            $label = $choice;
-                            $args['choices'][$choice] = $label;
+                        if (isset($configuration['arguments'])) {
+                            $args = array_merge($args, $configuration['arguments']);
                         }
-                        */
-                    }
-                    // only type gets overwritten
-                    if (method_exists($item,'getCrudFormType_'.$mapname)) {
-                        $method = 'getCrudFormType_'.$mapname;
-                        $type   = $item->$method();
+                        if (isset($configuration['type'])) {
+                            $type = $configuration['type'];
+
+                            switch ($configuration['type']) {
+                                case 'choice':
+                                    $args['choices'] = $configuration['choices'];
+                                    unset($args['precision']);
+                                    break;
+                            }
+                        }
+                        if (isset($configuration['setencoderfactory'])) {
+                            $method = $configuration['setencoderfactory'];
+                            $item->$method($this->container->get('security.encoder_factory'));
+                        }
                     }
 
                     if (is_null($type) && isset($mapping['targetEntity'])) {
@@ -388,7 +359,7 @@ class CrudController extends Controller
 
         $arguments  = array();
         $query_args = array();
-        $page_variable = 'table-'.$this->get('pivotx.translations')->translate('pagination.page_variable');
+        $page_variable = 'table-'.$this->get('pivotx.translations')->translate('pagination.page-variable');
         foreach($request->query->all() as $name => $value) {
             if (substr($name,0,7) == 'filter-') {
                 $arguments[substr($name,7)] = $value;

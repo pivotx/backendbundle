@@ -6,18 +6,19 @@
 <!DOCTYPE html>
 <html lang="{{ app.request.get('_language') }}">
     <head>
-        {{ webresourcer('headStart') }}
+        {{ outputter('headStart') }}
 
         <meta charset="{{ backend.meta.charset }}">
 
         <title>{{ backend.title }}</title>
 
-        {{ webresourcer('titleAfter') }}
+        {{ outputter('titleAfter') }}
 
 {# '@BackendBundle/Resources/lib/bootstrap/css/*' #}
 {# '../src/PivotX/BackendBundle/Resources/lib/bootstrap/css/bootstrap.min.css' #}
 {#    '@BackendBundle/Resources/lib/bootstrap/css/bootstrap.min.css' #}
 {#    '@BackendBundle/Resources/lib/bootstrap/css/bootstrap-responsive.min.css' #}
+{#
 {% stylesheets
     '@BackendBundle/Resources/lib/jquery-ui/css/ui-lightness/*'
     '@BackendBundle/Resources/public/css/*'
@@ -26,6 +27,7 @@
 %}
         <link rel="stylesheet" href="{{ asset_url }}" />
 {% endstylesheets %}
+#}
 
 {#
 <style type="text/css">
@@ -44,6 +46,7 @@
 
 {#    '@BackendBundle/Resources/lib/bootstrap/less/bootstrap.less' #}
 {#    '@BackendBundle/Resources/public/less/font-awesome.less' #}
+{#
 {% stylesheets
     '@BackendBundle/Resources/public/less/bootstrap.less'
     '@BackendBundle/Resources/public/less/crud.less'
@@ -53,8 +56,10 @@
 %}
         <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
 {% endstylesheets %}
+#}
 
 {#    '@BackendBundle/Resources/lib/less/js/*' #}
+{#
 {% javascripts
     '@BackendBundle/Resources/lib/jquery/js/*'
     '@BackendBundle/Resources/lib/jquery-ui/js/*'
@@ -69,11 +74,13 @@
 %}
         <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
+#}
 
         <style type="text/css">
 
         {# temporary fix for the bootstrap images #}
 
+{#
         [class^="icon-"], [class*=" icon-"] {
             background-image: url({% image '@BackendBundle/Resources/lib/bootstrap/img/glyphicons-halflings.png' %}{{ asset_url }}{% endimage %});
         }
@@ -83,14 +90,15 @@
         }
         [class^="icon-"], [class*=" icon-"] {
         }
+#}
 
         </style>
 
-        {{ webresourcer('headEnd') }}
+        {{ outputter('headEnd') }}
     </head>
 
     <body>
-        {{ webresourcer('bodyStart') }}
+        {{ outputter('bodyStart') }}
 
         <div class="header">
         {% block header %}
@@ -110,7 +118,7 @@
         {% endblock %}
         </div>
 
-        {{ webresourcer('bodyEnd') }}
+        {{ outputter('bodyEnd') }}
     </body>
 
 </html>

@@ -4,7 +4,7 @@ namespace PivotX\BackendBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+use PivotX\Component\Webresourcer\DirectoryWebresource;
 
 class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
 {
@@ -123,6 +123,28 @@ class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
         }
 
         $parameters['backend']['security'] = $this->checkLogin($this->getRequest());
+
+        static $once = false;
+
+        if ($once === false) {
+            $once = true;
+
+            $webresourcer = $this->get('pivotx.webresourcer');
+
+            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/jquery'));
+            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/jquery-ui'));
+            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/jquery-fileupload'));
+            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/google-code-prettify'));
+            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/redactor'));
+            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/bootstrap/webresource_js.json'));
+
+            $webresource = new DirectoryWebresource('@BackendBundle/Resources/public');
+            $webresource->allowDebugging();
+            $webresourcer->addWebresource($webresource);
+
+            $outputter = $this->get('pivotx.outputter');
+            $webresourcer->finalizeWebresources($outputter);
+        }
 
         if (is_array($view)) {
             foreach($view as $_view) {

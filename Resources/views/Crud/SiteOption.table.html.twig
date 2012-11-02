@@ -31,8 +31,9 @@ table.crud-translationtext th.column-text4 {
 </style>
 
 <div class="crud crud-filter">
+{#
     <form method="get" action="" class="well form-inline">
-        {% loadView 'Crud/TranslationText/findAll' as ttexts %}
+        {% loadView 'Crud/SiteOption/findAll' as ttexts %}
         <select name="filter-siteandgroup">
             <option value="">(filter on site &amp; group)</option>
         {% for loopvar in ttexts.htmliterator({'groupingby':'sitename,groupname'}) %}
@@ -52,9 +53,10 @@ table.crud-translationtext th.column-text4 {
 
         <button type="submit" class="btn">filter</button>
     </form>
+#}
 </div>
 
-<table class="crud crud-translationtext table table-striped" data-crud-table="{{ crud.htmlid }}">
+<table class="crud crud-siteoption table table-striped" data-crud-table="{{ crud.htmlid }}">
     <thead>
         <tr>
             <th class="column-checkbox select-checkbox">
@@ -63,26 +65,18 @@ table.crud-translationtext th.column-text4 {
             <th class="column-id">Id</th>
             <th class="column-site">Site</th>
             <th class="column-key">Key</th>
-            <th class="column-text2">Text (nld)</th>
-            <th class="column-text2">Text (eng)</th>
+            <th class="column-text2">Value</th>
         </tr>
     </thead>
 
     <tbody>
     {% for item in view.result %}
-        <tr class="state-group state-group-{{ item.state|slice(0,1) }}">
+        <tr class="{# item.crudGetRowClass() #}">
             <td class="select-checkbox">
                 <input type="checkbox" name="id{{ item.id }}" data-id="{{ item.id }}">
             </td>
             <td>
                 № {{ item.id }}
-
-                <br/>
-                {% if item.state|slice(0,1) == 2 %}
-                <span class="label label-warning">auto-filled</span>
-                {% elseif item.state|slice(0,1) == 9 %}
-                <span class="label">old value</span>
-                {% endif %}
             </td>
             <td>
                 <span class="sitename">{{ item.sitename }}</span>
@@ -101,12 +95,7 @@ table.crud-translationtext th.column-text4 {
             </td>
             <td>
                 <span>
-                    {{ item.textnld }}
-                </span>
-            </td>
-            <td>
-                <span>
-                    {{ item.texteng }}
+                    {{ item.value }}
                 </span>
             </td>
         </tr>

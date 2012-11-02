@@ -1,0 +1,10 @@
+{
+    "identifier": "public",
+    "version": "1.0",
+
+    "files": [
+        "css/*.css",
+        "js/*.js",
+        "less/bootstrap.less"
+    ]
+}

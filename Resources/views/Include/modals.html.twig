@@ -1,17 +1,17 @@
 <div class="modal hide" id="default-modal">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">×</button>
-        <h3>Modal header</h3>
+        <h3>{{ translate('modal.default-title') }}</h3>
     </div>
     <div class="modal-body">
         <p>One fine body…</p>
     </div>
     <div class="modal-footer">
 {#        <a href="#" class="btn" data-dismiss="modal" data-modal-kind="close">Close</a> #}
-        <a href="#" class="btn" data-dismiss="modal" data-modal-kind="cancel">Cancel</a>
-        <a href="#" class="btn btn-info" data-dismiss="modal" data-modal-kind="ok">Ok</a>
-        <a href="#" class="btn btn-danger" data-modal-kind="confirm">Confirm</a>
-        <a href="#" class="btn btn-success" data-modal-kind="save">Save changes</a>
-        <a href="#" class="btn btn-danger" data-modal-kind="delete">Delete</a>
+        <a href="#" class="btn" data-dismiss="modal" data-modal-kind="cancel">{{ translate('modal.button.cancel') }}</a>
+        <a href="#" class="btn btn-info" data-dismiss="modal" data-modal-kind="ok">{{ translate('modal.button.ok') }}</a>
+        <a href="#" class="btn btn-danger" data-modal-kind="confirm">{{ translate('modal.button.confirm') }}</a>
+        <a href="#" class="btn btn-success" data-modal-kind="save">{{ translate('modal.button.save') }}</a>
+        <a href="#" class="btn btn-danger" data-modal-kind="delete">{{ translate('modal.button.delete') }}</a>
     </div>
 </div>

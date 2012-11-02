@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <a class="brand" href="{{ ref('_page/dashboard') }}">PivotX</a>
+            <a class="brand" href="{{ ref('_page/dashboard') }}">{{ translate('header.button.pivotx') }}</a>
             <div class="btn-group pull-right">
                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="icon-user"></i> {{ backend.security.username }} <span class="caret"></span>
@@ -15,16 +15,16 @@
                 <ul class="dropdown-menu">
                     <li><a href="#">Profile</a></li>
                     <li class="divider"></li>
-                    <li><a href="{{ ref('_page/logout') }}">Sign Out</a></li>
+                    <li><a href="{{ ref('_page/logout') }}">{{ translate('header.button.logout') }}</a></li>
                 </ul>
             </div>
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li x-class="active"><a href="{{ ref('_page/dashboard') }} ">Dashboard</a></li>
+                    <li x-class="active"><a href="{{ ref('_page/dashboard') }} ">{{ translate('header.button.dashboard') }}</a></li>
                     <li>
                         <div class="btn-group">
                             <a class="btn" href="#">
-                                Content
+                                {{ translate('header.button.content-group') }}
                             </a>
                             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
                                 <span class="caret"></span>
