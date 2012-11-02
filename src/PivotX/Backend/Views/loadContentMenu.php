@@ -7,14 +7,16 @@ use \PivotX\Component\Views\AbstractView;
 class loadContentMenu extends AbstractView
 {
     private $doctrine_registry;
+    private $translations_service;
     private $data = false;
 
-    public function __construct($doctrine_registry, $name)
+    public function __construct($doctrine_registry, $translations_service, $name)
     {
         parent::__construct($name, 'PivotX/Backend');
 
-        $this->doctrine_registry = $doctrine_registry;
-        $this->description       = 'Load the items for the content menu';
+        $this->doctrine_registry    = $doctrine_registry;
+        $this->translations_service = $translations_service;
+        $this->description          = 'Load the items for the content menu';
 
         $this->tags = array(
             'Backend',
@@ -57,7 +59,7 @@ THEEND;
                 $data[] = array(
                     'refText' => '_table/'.$base_class,
                     'refArguments' => array(),
-                    'label' => $base_class,
+                    'label' => $this->translations_service->translate(mb_strtolower($base_class).'.entity.title')
                 );
             }
         }

@@ -24,8 +24,18 @@ class AutoFormat extends AbstractFormat
 
             switch (get_class($in)) {
                 case 'DateTime':
-                    //return $in->format(\DateTime::RFC3339);
-                    return $in->format('Y-m-d H:i:s');
+                    $fmt = '%a %e %b %Y, %H:%M';
+                    if (count($arguments) >= 1) {
+                        switch ($arguments[0]) {
+                            case 'readable':
+                                $fmt = '%a %e %b %Y, %H:%M';
+                                break;
+                            case 'technical':
+                                $fmt = '%F %T';
+                                break;
+                        }
+                    }
+                    return strftime($fmt, $in->getTimestamp());
                     break;
 
                 default:

@@ -9,6 +9,7 @@
 namespace PivotX\Backend\Views;
 
 use PivotX\Component\Views\Service as ViewsService;
+use PivotX\Component\Translations\Service as TranslationsService;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
 /**
@@ -18,17 +19,19 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
  */
 class Service
 {
-    protected $pivotx_views = false;
-    protected $doctrine_registry = false;
+    private $pivotx_views = false;
+    private $doctrine_registry = false;
+    private $translations_service = false;
 
     /**
      */
-    public function __construct(ViewsService $pivotx_views, Registry $doctrine_registry)
+    public function __construct(ViewsService $pivotx_views, TranslationsService $translations_service, Registry $doctrine_registry)
     {
-        $this->pivotx_views      = $pivotx_views;
-        $this->doctrine_registry = $doctrine_registry;
+        $this->pivotx_views         = $pivotx_views;
+        $this->doctrine_registry    = $doctrine_registry;
+        $this->translations_service = $translations_service;
 
-        $view = new loadContentMenu($this->doctrine_registry, 'Backend/loadContentMenu');
+        $view = new loadContentMenu($this->doctrine_registry, $this->translations_service, 'Backend/loadContentMenu');
         $this->pivotx_views->registerView($view);
         unset($view);
     }

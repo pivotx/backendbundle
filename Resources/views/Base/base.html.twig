@@ -14,68 +14,6 @@
 
         {{ outputter('titleAfter') }}
 
-{# '@BackendBundle/Resources/lib/bootstrap/css/*' #}
-{# '../src/PivotX/BackendBundle/Resources/lib/bootstrap/css/bootstrap.min.css' #}
-{#    '@BackendBundle/Resources/lib/bootstrap/css/bootstrap.min.css' #}
-{#    '@BackendBundle/Resources/lib/bootstrap/css/bootstrap-responsive.min.css' #}
-{#
-{% stylesheets
-    '@BackendBundle/Resources/lib/jquery-ui/css/ui-lightness/*'
-    '@BackendBundle/Resources/public/css/*'
-    '@BackendBundle/Resources/lib/google-code-prettify/css/*.css'
-    '@BackendBundle/Resources/lib/redactor/css/redactor.css'
-%}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-{% endstylesheets %}
-#}
-
-{#
-<style type="text/css">
-@font-face {
-    font-family: 'FontAwesome';
-    src: url('{% image '@BackendBundle/Resources/lib/font-awesome/font/fontawesome-webfont.eot' %}{{ asset_url }}{% endimage %}');
-    src: url('{% image '@BackendBundle/Resources/lib/font-awesome/font/fontawesome-webfont.eot' %}{{ asset_url }}{% endimage %}?#iefix') format('embedded-opentype');
-         url('{% image '@BackendBundle/Resources/lib/font-awesome/font/fontawesome-webfont.woff' %}{{ asset_url }}{% endimage %}') format('woff'),
-         url('{% image '@BackendBundle/Resources/lib/font-awesome/font/fontawesome-webfont.ttf' %}{{ asset_url }}{% endimage %}') format('truetype'),
-         url('{% image '@BackendBundle/Resources/lib/font-awesome/font/fontawesome-webfont.svg' %}{{ asset_url }}{% endimage %}#FontAwesome') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-</style>
-#}
-
-{#    '@BackendBundle/Resources/lib/bootstrap/less/bootstrap.less' #}
-{#    '@BackendBundle/Resources/public/less/font-awesome.less' #}
-{#
-{% stylesheets
-    '@BackendBundle/Resources/public/less/bootstrap.less'
-    '@BackendBundle/Resources/public/less/crud.less'
-    filter='less'
-    output='css/bootstrap-main.css'
-
-%}
-        <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
-{% endstylesheets %}
-#}
-
-{#    '@BackendBundle/Resources/lib/less/js/*' #}
-{#
-{% javascripts
-    '@BackendBundle/Resources/lib/jquery/js/*'
-    '@BackendBundle/Resources/lib/jquery-ui/js/*'
-    '@BackendBundle/Resources/lib/bootstrap/js/bootstrap-tooltip.js'
-    '@BackendBundle/Resources/lib/bootstrap/js/*js'
-    '@BackendBundle/Resources/lib/google-code-prettify/js/prettify.js'
-    '@BackendBundle/Resources/lib/google-code-prettify/js/*'
-    '@BackendBundle/Resources/lib/jquery-fileupload/js/*'
-    '@BackendBundle/Resources/lib/redactor/redactor.js'
-    '@BackendBundle/Resources/public/js/*'
-    output='js/*.js'
-%}
-        <script src="{{ asset_url }}"></script>
-{% endjavascripts %}
-#}
-
         <style type="text/css">
 
         {# temporary fix for the bootstrap images #}

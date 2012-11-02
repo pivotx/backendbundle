@@ -129,7 +129,7 @@ class CrudController extends Controller
                     $args = array();
 
                     //$args['label'] = $mapname . ' ('.$mapping['type'].')';
-                    $args['label'] = $this->get('pivotx.translations')->translate(mb_strtolower($entity_name).'.form.edit.'.mb_strtolower($mapname));
+                    $args['label'] = $this->get('pivotx.translations')->translate(mb_strtolower($entity_name).'.crud-form.'.mb_strtolower($mapname));
 
                     if (!isset($mapping['targetEntity'])) {
                         switch ($mapping['type']) {

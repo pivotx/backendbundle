@@ -36,6 +36,20 @@ tr:hover .on-row-hover {
 
 
 /**
+ * Tri selects
+ */
+
+.triselect .tri-0 {
+    display: inline;
+}
+
+.triselect .tri-1,
+.triselect .tri-x {
+    display: none;
+}
+
+
+/**
  * Crud tables
  */
 

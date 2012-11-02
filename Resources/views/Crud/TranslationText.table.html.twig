@@ -48,6 +48,22 @@ table.crud-translationtext th.column-text4 {
         {% endfor %}
         </select>
 
+        {% loadView 'Crud/TranslationText/findAll' as ttexts with { 'order':'state' } %}
+        <select name="filter-state">
+            <option value="">(filter on state)</option>
+        {% for loopvar in ttexts.htmliterator({'groupingby':'state'}) %}
+            {% if loopvar.item_first %}
+                {% set ttext = loopvar.value %}
+                {% set value = ttext.state %}
+                {% set selected = '' %}
+                {% if value == view.queryarguments['filter-state']|default('') %}
+                    {% set selected = ' selected="selected"' %}
+                {% endif %}
+                <option value="{{ value }}"{{ selected }}>{{ translate(['translationtext.state-',ttext.state]|join) }}</option>
+            {% endif %}
+        {% endfor %}
+        </select>
+
         <input type="text" class="input-medium" name="filter-name" placeholder="Search by key name" value="{{ view.queryarguments['filter-name']|default('') }}" />
 
         <button type="submit" class="btn">filter</button>
@@ -60,11 +76,11 @@ table.crud-translationtext th.column-text4 {
             <th class="column-checkbox select-checkbox">
                 <input type="checkbox" name="id-toggle" data-id="id-toggle">
             </th>
-            <th class="column-id">Id</th>
-            <th class="column-site">Site</th>
-            <th class="column-key">Key</th>
-            <th class="column-text2">Text (nld)</th>
-            <th class="column-text2">Text (eng)</th>
+            <th class="column-id sort-by" data-order="id"                 >{{ translate([crud.entity,'.crud-heading.id']) }}</th>
+            <th class="column-site sort-by" data-order="key"              >{{ translate([crud.entity,'.crud-heading.sitename']) }}</th>
+            <th class="column-key sort-by" data-order="key"               >{{ translate([crud.entity,'.crud-heading.key']) }}</th>
+            <th class="column-text_nld"                                   >{{ translate([crud.entity,'.crud-heading.text_nld']) }}</th>
+            <th class="column-text_eng"                                   >{{ translate([crud.entity,'.crud-heading.text_eng']) }}</th>
         </tr>
     </thead>
 

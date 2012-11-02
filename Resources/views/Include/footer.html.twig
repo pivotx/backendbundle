@@ -9,6 +9,7 @@
         </div>
         #}
 
+        {% if backend.security.logged %}
         <div class="container-fluid">
             <div class="btn-group pull-right">
                 <a class="btn" href="#">
@@ -16,6 +17,7 @@
                 </a>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 

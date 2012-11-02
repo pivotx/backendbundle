@@ -68,9 +68,12 @@ table.crud-bike th.column-reviews {
             </td>
 
         {% for field in crud.fields %}
+            {% set field = field|replace({'_':''}) %}
+            {% if attribute(item, field) is defined %}
             <td>
-                {{ item[field] }}
+                {{ attribute(item, field) }}
             </td>
+            {% endif %}
         {% endfor %}
         </tr>
     {% endfor %}
