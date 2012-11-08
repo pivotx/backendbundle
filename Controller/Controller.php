@@ -106,7 +106,7 @@ class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
             $view    = $request->get('_view');
         }
         if (is_null($view)) {
-            $view = 'BackendBundle:Core:unconfigured.html.twig';
+            $view = 'Core/unconfigured.html.twig';
         }
 
         if (!isset($parameters['backend'])) {
@@ -136,14 +136,20 @@ class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
             $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/jquery-fileupload'));
             $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/google-code-prettify'));
             $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/redactor'));
-            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/bootstrap/webresource_js.json'));
+            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/bootstrap'));
 
-            $webresource = new DirectoryWebresource('@BackendBundle/Resources/public');
+            $webresource = new DirectoryWebresource('@BackendBundle/Resources/themes/backend/theme.json');
             $webresource->allowDebugging();
             $webresourcer->addWebresource($webresource);
 
+            $webresourcer->activateWebresource($webresource->getIdentifier());
+
             $outputter = $this->get('pivotx.outputter');
             $webresourcer->finalizeWebresources($outputter);
+
+            // @todo not hardcoded of course
+            $twig_loader = $this->container->get('twig.loader');
+            $twig_loader->addPath('/raiddata/2kdata/dev/____users/marcel/px4/src/PivotX/BackendBundle/Resources/themes/backend/twig');
         }
 
         if (is_array($view)) {

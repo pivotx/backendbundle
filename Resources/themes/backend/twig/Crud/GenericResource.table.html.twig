@@ -3,33 +3,34 @@
 
 <style type="text/css">
 
-table.crud-translationtext th.column-site {
+table.crud-genericresource th.column-site {
     width: 110px;
     min-width: 110px;
 }
 
-table.crud-translationtext th.column-key {
+table.crud-genericresource th.column-key {
     width: 30%;
 }
 
-table.crud-translationtext th.column-text1 {
+table.crud-genericresource th.column-text1 {
     width: 70%;
 }
 
-table.crud-translationtext th.column-text2 {
+table.crud-genericresource th.column-text2 {
     width: 35%;
 }
 
-table.crud-translationtext th.column-text3 {
+table.crud-genericresource th.column-text3 {
     width: 23.33333%;
 }
 
-table.crud-translationtext th.column-text4 {
+table.crud-genericresource th.column-text4 {
     width: 17.5%;
 }
 
 </style>
 
+{#
 <div class="crud crud-filter">
     <form method="get" action="" class="well form-inline">
         {% loadView 'Crud/TranslationText/findAll' as ttexts %}
@@ -48,66 +49,43 @@ table.crud-translationtext th.column-text4 {
         {% endfor %}
         </select>
 
-        {% loadView 'Crud/TranslationText/findAll' as ttexts with { 'order':'state' } %}
-        <select name="filter-state">
-            <option value="">(filter on state)</option>
-        {% for loopvar in ttexts.htmliterator({'groupingby':'state'}) %}
-            {% if loopvar.item_first %}
-                {% set ttext = loopvar.value %}
-                {% set value = ttext.state %}
-                {% set selected = '' %}
-                {% if value == view.queryarguments['filter-state']|default('') %}
-                    {% set selected = ' selected="selected"' %}
-                {% endif %}
-                <option value="{{ value }}"{{ selected }}>{{ translate(['translationtext.state-',ttext.state]|join) }}</option>
-            {% endif %}
-        {% endfor %}
-        </select>
-
         <input type="text" class="input-medium" name="filter-name" placeholder="Search by key name" value="{{ view.queryarguments['filter-name']|default('') }}" />
 
         <button type="submit" class="btn">filter</button>
     </form>
 </div>
+#}
 
-<table class="crud crud-translationtext table table-striped" data-crud-table="{{ crud.htmlid }}">
+<table class="crud crud-genericresource table table-striped" data-crud-table="{{ crud.htmlid }}">
     <thead>
         <tr>
             <th class="column-checkbox select-checkbox">
                 <input type="checkbox" name="id-toggle" data-id="id-toggle">
             </th>
-            <th class="column-id sort-by" data-order="id"                 >{{ translate([crud.entity,'.crud-heading.id']) }}</th>
-            <th class="column-site sort-by" data-order="key"              >{{ translate([crud.entity,'.crud-heading.sitename']) }}</th>
-            <th class="column-key sort-by" data-order="key"               >{{ translate([crud.entity,'.crud-heading.key']) }}</th>
-            <th class="column-text_nl"                                    >{{ translate([crud.entity,'.crud-heading.text_nl']) }}</th>
-            <th class="column-text_en"                                    >{{ translate([crud.entity,'.crud-heading.text_en']) }}</th>
+            <th class="column-id">Id</th>
+            <th class="column-type">Type</th>
+            <th class="column-title">Title</th>
+            <th class="column-info">Info</th>
         </tr>
     </thead>
 
     <tbody>
     {% for item in view.result %}
-        <tr class="state-group state-group-{{ item.state|slice(0,1) }}">
+        <tr class="{# item.crudGetRowClass() #}">
             <td class="select-checkbox">
                 <input type="checkbox" name="id{{ item.id }}" data-id="{{ item.id }}">
             </td>
             <td>
                 № {{ item.id }}
-
-                <br/>
-                {% if item.state|slice(0,1) == 2 %}
-                <span class="label label-warning">auto-filled</span>
-                {% elseif item.state|slice(0,1) == 9 %}
-                <span class="label">old value</span>
-                {% endif %}
             </td>
             <td>
-                <span class="sitename">{{ item.sitename }}</span>
+                <span class="type">{{ translate([item.resourcetype,'.name']|join) }}</span>
             </td>
             <td>
-                <span class="groupname">{{ item.groupname }}</span>.<span class="name">{{ item.name }}</span>
+                <span class="title">{{ item.title }}</span>
 
                 <span class="crud-hide text-delete-{{ item.id }}">
-                    Are you sure you want to delete the key <strong><span class="groupname">{{ item.groupname }}</span>.<span class="name">{{ item.name }}</span></strong>?
+                    Are you sure you want to delete the resource <strong><span class="title">{{ item.title }}</span></strong>?
                 </span>
 
                 <div class="btn-group on-row-hover">
@@ -116,14 +94,13 @@ table.crud-translationtext th.column-text4 {
                 </div>
             </td>
             <td>
+                {% if (item.html is defined) and (item.height is not null) and (item.height > 0) %}
+                    {{ item.html(200,150) }}
+                {% else %}
                 <span>
-                    {{ item.textnld }}
+                    Some information here.
                 </span>
-            </td>
-            <td>
-                <span>
-                    {{ item.texteng }}
-                </span>
+                {% endif %}
             </td>
         </tr>
     {% endfor %}

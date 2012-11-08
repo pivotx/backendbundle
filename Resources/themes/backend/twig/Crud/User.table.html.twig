@@ -1,0 +1,83 @@
+
+{# @todo define this somewhere else #}
+
+<style type="text/css">
+
+table.crud-user th.column-enabled {
+    width: 70px;
+    min-width: 70px;
+}
+
+table.crud-user th.column-last-login {
+    width: 150px;
+    min-width: 150px;
+}
+
+table.crud-user th.column-email {
+    width: 100%;
+    min-width: 100%;
+}
+
+table.crud-user th.column-level {
+    width: 110px;
+    min-width: 110px;
+}
+
+</style>
+
+<table class="crud crud-user table table-striped" data-crud-table="{{ crud.htmlid }}">
+    <thead>
+        <tr data-order-href="{{ ref(['_table/',crud.entity], view.queryarguments({'table-order':''})) }}" data-order-current="{{ view.queryarguments['table-order']|default('email') }}">
+            <th class="column-checkbox select-checkbox">
+                <input type="checkbox" name="id-toggle" data-id="id-toggle">
+            </th>
+            <th class="column-id"                                         >{{ translate([crud.entity,'.crud-heading.id']) }}</th>
+            <th class="column-enabled"                                    >{{ translate([crud.entity,'.crud-heading.enabled']) }}</th>
+            <th class="column-email sort-by"   data-order="email"         >{{ translate([crud.entity,'.crud-heading.email']) }}</th>
+            <th class="column-last-login sort-by" data-order="!last_login">{{ translate([crud.entity,'.crud-heading.last_login']) }}</th>
+            <th class="column-level"                                      >{{ translate([crud.entity,'.crud-heading.level']) }}</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for item in view.result %}
+        <tr class="{# item.crudGetRowClass() #}">
+            <td class="select-checkbox">
+                <input type="checkbox" name="id{{ item.id }}" data-id="{{ item.id }}">
+            </td>
+            <td>
+                № {{ item.id }}
+            </td>
+            <td>
+                {% if item.enabled %}
+                    Enabled
+                {% else %}
+                    (disabled)
+                {% endif %}
+            </td>
+            <td>
+                <span>
+                    {{ item.email }}
+                </span>
+
+                <span class="crud-hide text-delete-{{ item.id }}">
+                    Are you sure tou want to delete the user <strong>{{ item.email }}</strong>?
+                </span>
+
+                <div class="btn-toolbar on-row-hover">
+                    <div class="btn-group">
+                        <a class="btn btn-mini crud-button-link" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments) }}"><i class="icon-pencil"></i> {{ translate('entity.button.edit') }}</a>
+                        <a class="btn btn-mini btn-danger crud-button-confirm" data-modal-text-selector=".text-delete-{{ item.id }}" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments({'action':'delete'})) }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
+                    </div>
+                </div>
+            </td>
+            <td>
+                {{ item.datelastlogin|formatas('Backend/Auto') }}
+            </td>
+            <td>
+                {{ item.level }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

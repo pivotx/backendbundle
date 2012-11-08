@@ -1,0 +1,46 @@
+{#
+    This is base template for every page in our back-end.
+
+    This should rarely be used directly. Usually you should include main.html.twig
+#}
+<!DOCTYPE html>
+<html lang="{{ app.request.get('_language') }}">
+    <!-- using themes directory -->
+
+    <head>
+        {{ outputter('headStart') }}
+
+        <meta charset="{{ backend.meta.charset }}">
+
+        <title>{{ backend.title }}</title>
+
+        {{ outputter('titleAfter') }}
+
+        {{ outputter('headEnd') }}
+    </head>
+
+    <body>
+        {{ outputter('bodyStart') }}
+
+        <div class="header">
+        {% block header %}
+            Header
+        {% endblock %}
+        </div>
+
+        <div class="body">
+        {% block body %}
+            Base body
+        {% endblock %}
+        </div>
+
+        <div class="footer">
+        {% block footer %}
+            Footer
+        {% endblock %}
+        </div>
+
+        {{ outputter('bodyEnd') }}
+    </body>
+
+</html>

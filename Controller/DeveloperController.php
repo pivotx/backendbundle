@@ -106,7 +106,7 @@ class DeveloperController extends Controller
             'routes' => new \PivotX\Component\Views\ArrayView($routes, 'Developing/Routing/Routes', 'PivotX/Devend', 'Dynamic view to show the routes')
         );
 
-        return $this->render('BackendBundle:Developer:routing.html.twig', $context);
+        return $this->render('Developer/routing.html.twig', $context);
     }
 
     public static function cmpViews($a, $b)
@@ -208,7 +208,7 @@ class DeveloperController extends Controller
             'tags' => new \PivotX\Component\Views\ArrayView($tags, 'Developing/Views/Tags', 'Dynamic view to show all tags of the views')
         );
 
-        return $this->render('BackendBundle:Developer:views.html.twig', $context);
+        return $this->render('Developer/views.html.twig', $context);
     }
 
     public static function cmpFormats($a, $b)
@@ -240,7 +240,7 @@ class DeveloperController extends Controller
             'items' => new \PivotX\Component\Views\ArrayView($formats, 'Developing/Formats', 'Dynamic view to show all formats')
         );
 
-        return $this->render('BackendBundle:Developer:formats.html.twig', $context);
+        return $this->render('Developer/formats.html.twig', $context);
     }
 }
 

@@ -384,13 +384,13 @@ class CrudController extends Controller
 
         $widgets = array();
         if ($crud['entity'] == 'GenericResource') {
-            $widgets[] = 'BackendBundle:CrudWidgets:GenericResourceGeneral.html.twig';
+            $widgets[] = 'CrudWidgets/GenericResourceGeneral.html.twig';
         }
         else {
-            $widgets[] = 'BackendBundle:CrudWidgets:General.html.twig';
+            $widgets[] = 'CrudWidgets/General.html.twig';
         }
-        $widgets[] = 'BackendBundle:CrudWidgets:Selection.html.twig';
-        $widgets[] = 'BackendBundle:CrudWidgets:ExportImport.html.twig';
+        $widgets[] = 'CrudWidgets/Selection.html.twig';
+        $widgets[] = 'CrudWidgets/ExportImport.html.twig';
 
         $context = array(
             'html' => $html,
@@ -402,16 +402,16 @@ class CrudController extends Controller
         // @todo should not be hard-wired here of course
         $table_html = $this
             ->render(array(
-                    'TwoKingsEBikeBundle:Crud:'.$crud['entity'].'.table.html.twig',
-                    'BackendBundle:Crud:'.$crud['entity'].'.table.html.twig',
-                    'BackendBundle:Crud:any.table.html.twig'
+                    //'TwoKingsEBikeBundle:Crud:'.$crud['entity'].'.table.html.twig',
+                    'Crud/'.$crud['entity'].'.table.html.twig',
+                    'Crud/any.table.html.twig'
                 ), $context)
             ->getContent()
             ;
 
         $context['table'] = $table_html;
 
-        return $this->render('BackendBundle:Crud:table.html.twig', $context);
+        return $this->render('Crud/table.html.twig', $context);
     }
 
     /**
@@ -440,8 +440,8 @@ class CrudController extends Controller
         $item = $em->find($entityref_class,$request->get('id'));
 
         $widgets = array(
-            'BackendBundle:CrudWidgets:CommentGeneral.html.twig',
-            'BackendBundle:CrudWidgets:CommentSelection.html.twig'
+            'CrudWidgets/CommentGeneral.html.twig',
+            'CrudWidgets/CommentSelection.html.twig'
         );
 
         $context = array(
@@ -458,7 +458,7 @@ class CrudController extends Controller
 
         $context['table'] = $table_html;
 
-        return $this->render('BackendBundle:Crud:table.html.twig', $context);
+        return $this->render('Crud/table.html.twig', $context);
     }
 
     /**
@@ -496,7 +496,7 @@ class CrudController extends Controller
         }
 
         return $this->render(
-            'BackendBundle:Crud:record.html.twig',
+            'Crud/record.html.twig',
             array('html' => $html, 'crud' => $crud, 'item' => $item, 'form' => $form->createView())
         );
     }

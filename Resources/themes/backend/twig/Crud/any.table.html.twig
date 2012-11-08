@@ -1,0 +1,81 @@
+
+{# @todo define this somewhere else #}
+
+<style type="text/css">
+
+table.crud-bike th.column-brand {
+    width: 100px;
+    min-width: 100px;
+}
+
+table.crud-bike th.column-title {
+    width: 100%;
+    min-width: 100%;
+}
+
+table.crud-bike th.column-year {
+    width: 90px;
+    min-width: 90px;
+}
+
+table.crud-bike th.column-reviews {
+    width: 110px;
+    min-width: 110px;
+}
+
+</style>
+
+{#
+<div class="crud crud-filter">
+    <form method="get" action="" class="well form-inline">
+        {% loadView 'Crud/Brand/findAll' as brands %}
+        <select name="filter-brand">
+            <option value="">(filter op merk)</option>
+        {% for loopvar in brands.htmliterator.setActive('publicid', view.queryarguments['filter-brand']|default('')) %}
+            {% set brand = loopvar.value %}
+            <option value="{{ brand.publicid }}"{{ loopvar.selected }}>{{ brand.title }}</option>
+        {% endfor %}
+        </select>
+
+        <input type="text" class="input-medium" name="filter-q" placeholder="Zoek op model.." value="{{ view.queryarguments['filter-q']|default('') }}" />
+
+        <button type="submit" class="btn">filter</button>
+    </form>
+</div>
+#}
+
+<table class="crud crud-any table table-striped" data-crud-table="{{ crud.htmlid }}">
+    <thead>
+        <tr data-order-href="{{ ref(['_table/',crud.entity]) }}', view.queryarguments({'table-order':''})) }}" data-order-current="{{ view.queryarguments['table-order']|default('title') }}">
+            <th class="column-checkbox select-checkbox">
+                <input type="checkbox" name="id-toggle" data-id="id-toggle">
+            </th>
+            <th class="column-id"                                   >Id</th>
+        {% for field in crud.fields %}
+            <th>{{ field }}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for item in view.result %}
+        <tr class="{# item.crudGetRowClass() #}">
+            <td class="select-checkbox">
+                <input type="checkbox" name="id{{ item.id }}" data-id="{{ item.id }}">
+            </td>
+            <td>
+                № {{ item.id }}
+            </td>
+
+        {% for field in crud.fields %}
+            {% set field = field|replace({'_':''}) %}
+            {% if attribute(item, field) is defined %}
+            <td>
+                {{ attribute(item, field) }}
+            </td>
+            {% endif %}
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

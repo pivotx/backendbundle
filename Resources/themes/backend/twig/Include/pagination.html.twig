@@ -1,0 +1,27 @@
+
+{% if view.noofpages > 1 %}
+
+    {% if class is not defined %}
+        {% set class = '' %}
+    {% endif %}
+    {% if link_arguments is not defined %}
+        {% set link_arguments = {} %}
+    {% endif %}
+    {% if pagination_variable is not defined %}
+        {% set pagination_variable = ['table-',translate('pagination.page-variable')]|join %}
+    {% endif %}
+
+    {% set pagination = pagination(view, link, link_arguments, pagination_variable) %}
+    <div class="pagination {{ class }}">
+        <ul>
+        {% for page in pagination.result %}
+            {% if page.link %}
+            <li class="{% if page.class %}{{ page.class }}{% endif %}"><a class="crud-button-link" href="{{ page.link }}">{{ page.title }}</a></li>
+            {% else %}
+            <li class="{% if page.class %}{{ page.class }}{% endif %}"><a class="crud-button-link" href="#">{{ page.title }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </div>
+
+{% endif %}

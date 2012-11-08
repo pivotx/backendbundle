@@ -23,7 +23,7 @@ class BackendController extends Controller
             $session->remove(SecurityContext::AUTHENTICATION_ERROR);
         }
 
-        return $this->render('BackendBundle:Core:login.html.twig', array(
+        return $this->render('Core/login.html.twig', array(
             // last username entered by the user
             'last_username' => $session->get(SecurityContext::LAST_USERNAME),
             'error'         => $error
