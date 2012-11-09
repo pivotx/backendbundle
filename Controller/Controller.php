@@ -130,18 +130,17 @@ class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
             $once = true;
 
             $webresourcer = $this->get('pivotx.webresourcer');
+            $siteoptions  = $this->get('pivotx.siteoptions');
 
-            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/jquery'));
-            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/jquery-ui'));
-            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/jquery-fileupload'));
-            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/google-code-prettify'));
-            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/redactor'));
-            $webresourcer->addWebresource(new DirectoryWebresource('@BackendBundle/Resources/lib/bootstrap'));
+            $directories = $siteoptions->getValue('webresources.directory');
+            foreach($directories as $directory) {
+                $webresourcer->addWebresourcesFromDirectory($directory);
+            }
 
-            $webresource = new DirectoryWebresource('@BackendBundle/Resources/themes/backend/theme.json');
-            $webresource->allowDebugging();
-            $webresourcer->addWebresource($webresource);
-
+            $webresource = $webresourcer->addWebresource(new DirectoryWebresource($siteoptions->getValue('theme.active'), true));
+            if ($siteoptions->getValue('theme.debug', false)) {
+                $webresource->allowDebugging();
+            }
             $webresourcer->activateWebresource($webresource->getIdentifier());
 
             $outputter = $this->get('pivotx.outputter');

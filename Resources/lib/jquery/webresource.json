@@ -1,0 +1,8 @@
+{
+    "identifier": "jquery",
+    "version": "1.7.2",
+
+    "files": [
+        "js/jquery-1.7.2.min.js"
+    ]
+}

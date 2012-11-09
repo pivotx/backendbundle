@@ -561,6 +561,27 @@ $(function(){
         }
     });
 
+    // give a modal window
+    $('a.crud-button-text').on('click', function(e){
+        var click_el = this;
+
+        e.preventDefault();
+
+        var title = $(click_el).text().trim().capitalize();
+        var text = $(click_el).text().trim().capitalize() + '?';
+
+        if ((a_title = $(click_el).attr('data-modal-title-text')) !== undefined) {
+            title = a_title;
+        }
+        if ((dmt_selector = $(click_el).attr('data-modal-text-selector')) !== undefined) {
+            // @todo we assume the selector will only match one element
+            text = $(dmt_selector).html();
+        }
+
+        var dm_el = modalAll(title, text);
+        $(dm_el).modal();
+    });
+
     // give a modal confirmation
     $('a.crud-button-confirm').on('click', function(e){
         var click_el = this;

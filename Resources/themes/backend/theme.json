@@ -11,11 +11,11 @@
     ],
 
     "dependencies": [
-        "redactor",
-        "bootstrap/js-only",
         "jquery",
         "jquery-ui",
         "jquery-fileupload",
+        "bootstrap/js-only",
+        "redactor",
         "google-code-prettify"
     ]
 }

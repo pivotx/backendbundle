@@ -73,10 +73,17 @@ table.crud-translationtext th.column-text4 {
     {% for item in view.result %}
         <tr class="{# item.crudGetRowClass() #}">
             <td class="select-checkbox">
+                {% if item.humaneditable %}
                 <input type="checkbox" name="id{{ item.id }}" data-id="{{ item.id }}">
+                {% endif %}
             </td>
             <td>
                 № {{ item.id }}
+
+                <br/>
+                {% if item.humaneditable %}
+                <span class="label">editable</span>
+                {% endif %}
             </td>
             <td>
                 <span class="sitename">{{ item.sitename }}</span>
@@ -88,15 +95,30 @@ table.crud-translationtext th.column-text4 {
                     Are you sure you want to delete the key <strong><span class="groupname">{{ item.groupname }}</span>.<span class="name">{{ item.name }}</span></strong>?
                 </span>
 
+                <span class="crud-hide text-dump-{{ item.id }}">
+                    Site: <strong>{{ item.sitename }}</strong><br/>
+                    Type: <strong>{{ item.mediatype }}</strong><br/>
+                    <pre>{{ item.value }}</pre>
+                </span>
+
+                {% if item.humaneditable %}
                 <div class="btn-group on-row-hover">
                     <a class="btn btn-mini crud-button-link" data-loading-text="Starting edit&hellip;" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments) }}"><i class="icon-pencil"></i> {{ translate('entity.button.edit') }}</a>
                     <a class="btn btn-mini btn-danger crud-button-confirm" data-modal-text-selector=".text-delete-{{ item.id }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments({'action':'delete'})) }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
                 </div>
+                {% endif %}
             </td>
             <td>
-                <span>
-                    {{ item.value }}
-                </span>
+                {% set short_value = item.value|striptags|slice(0, 60) %}
+                {% if short_value != item.value %}
+                    <span>{{ short_value }}</span> <strong class="wbadge">&hellip;</strong>
+                {% else %}
+                    <span>{{ short_value }}</span>
+                {% endif %}
+                    <br/>
+                    <div class="btn-group on-row-hover">
+                        <a class="btn btn-mini btn-info crud-button-text" data-modal-title-text="Dump of <span class='groupname'>{{ item.groupname }}</span>.<span class='name'>{{ item.name }}</span>"  data-modal-text-selector=".text-dump-{{ item.id }}" href="#"><i class="icon-zoom-in"></i> {{ translate('entity.button.dump') }}</a>
+                    </div>
             </td>
         </tr>
     {% endfor %}

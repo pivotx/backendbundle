@@ -1,0 +1,12 @@
+{
+    "identifier": "jquery-fileupload",
+    "version": "5.12",
+
+    "files": [
+        "js/*"
+    ],
+
+    "dependencies": [
+        "jquery"
+    ]
+}
