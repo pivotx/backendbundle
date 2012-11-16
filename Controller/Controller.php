@@ -129,6 +129,22 @@ class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
         if ($once === false) {
             $once = true;
 
+            $views = $this->get('pivotx.views');
+
+            $views->registerView(new \PivotX\Component\Views\ArrayView(
+                array(
+                    array(
+                        'title' => 'Sitemap',
+                        'template' => 'DashboardWidgets/sitemap.html.twig'
+                    ),
+                    array(
+                        'title' => 'Example',
+                        'template' => 'DashboardWidgets/example.html.twig'
+                    )
+                ),
+                'Dashboard/getWidgets', 'Backend'
+            ));
+
             $webresourcer = $this->get('pivotx.webresourcer');
             $siteoptions  = $this->get('pivotx.siteoptions');
 
@@ -137,8 +153,8 @@ class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
                 $webresourcer->addWebresourcesFromDirectory($directory);
             }
 
-            $webresource = $webresourcer->addWebresource(new DirectoryWebresource($siteoptions->getValue('theme.active'), true));
-            if ($siteoptions->getValue('theme.debug', false)) {
+            $webresource = $webresourcer->addWebresource(new DirectoryWebresource($siteoptions->getValue('themes.active'), true));
+            if ($siteoptions->getValue('themes.debug', false)) {
                 $webresource->allowDebugging();
             }
             $webresourcer->activateWebresource($webresource->getIdentifier());
@@ -149,6 +165,29 @@ class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
             // @todo not hardcoded of course
             $twig_loader = $this->container->get('twig.loader');
             $twig_loader->addPath('/raiddata/2kdata/dev/____users/marcel/px4/src/PivotX/BackendBundle/Resources/themes/backend/twig');
+
+
+            $topmenu = new \PivotX\Component\Lists\RouteItem('dashboard', '_page/dashboard');
+
+            $contentmenu = $topmenu->addItem(new \PivotX\Component\Lists\Item('content'));
+            $contentmenu->setAttribute('icon', 'icon-pencil');
+            $contentmenu->resetBreadcrumb();
+            $menu = $contentmenu->addItem(new \PivotX\Component\Lists\RouteItem('resources', '_table/GenericResource'));
+            $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem('genericresource', '_table/GenericResource/{id}'));
+            $submenu->resetInMenu();
+            $menu = $contentmenu->addItem(new \PivotX\Component\Lists\RouteItem('siteoptions', '_table/SiteOption'));
+            $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem('siteoption', '_table/SiteOption/{id}'));
+            $submenu->resetInMenu();
+            $menu = $contentmenu->addItem(new \PivotX\Component\Lists\RouteItem('translations', '_table/TranslationText'));
+            $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem('translation', '_table/TranslationText/{id}'));
+            $submenu->resetInMenu();
+            $menu = $contentmenu->addItem(new \PivotX\Component\Lists\RouteItem('users', '_table/User'));
+            $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem('user', '_table/user/{id}'));
+            $submenu->resetInMenu();
+
+            $developermenu = $topmenu->addItem(new \PivotX\Backend\Lists\Developer());
+
+            $this->get('pivotx.lists')->addItem('Backend/Topmenu', $topmenu, false);
         }
 
         if (is_array($view)) {

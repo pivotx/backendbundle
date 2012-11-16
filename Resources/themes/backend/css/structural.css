@@ -10,13 +10,18 @@ body {
 
 
 /* just copied this */
+
 .sidebar-nav {
     padding: 9px 0;
 }
 
-/* extra big bottom navbar otherwise our symfony debug bar overrides it */
 
+/* extra big bottom navbar otherwise our symfony debug bar overrides it */
 .navbar-fixed-bottom .navbar-inner {
     min-height: 80px;
 }
 
+/* inline breadcrumb */
+.navbar-fixed-bottom .breadcrumb {
+    display: inline;
+}

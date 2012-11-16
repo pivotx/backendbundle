@@ -11,6 +11,23 @@
 
         {% if backend.security.logged %}
         <div class="container-fluid">
+            <span class="navbar-text">
+                PivotX version 4.1.x
+            </span>
+
+            <span class="navbar-text">
+                {% loadList 'Backend/Topmenu' as menu %}
+                <ul class="breadcrumb">
+                {% for breadcrumb in menu.breadcrumbs %}
+                    {% if not breadcrumb.islast %}
+                    <li><a href="{{ breadcrumb.link }}">{{ breadcrumb.label }}</a> <span class="divider">/</span></li>
+                    {% else %}
+                    <li class="active">{{ breadcrumb.label }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </span>
+
             <div class="btn-group pull-right">
                 <a class="btn" href="#">
                     <i class="icon-wrench"></i> {{ translate('footer.button.configuration') }}

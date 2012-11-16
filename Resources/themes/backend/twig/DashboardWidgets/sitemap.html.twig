@@ -1,0 +1,33 @@
+{% block iterateitem %}
+{% if item is defined %}
+    <li>
+        {% if item.haslink %}
+            <a href="{{ item.link }}">{{ item.label }}</a>
+        {% else %}
+            {{ item.label }}
+        {% endif %}
+
+        {% if item.ismenu %}
+            <ul>
+            {% set keep_item = item %}
+            {% for subitem in item.menu.items %}
+                {% set item = subitem %}
+                {{ block('iterateitem') }}
+            {% endfor %}
+            {% set item = keep_item %}
+            </ul>
+        {% endif %}
+    <ul>
+    </ul>
+{% endif %}
+{% endblock %}
+
+                <div class="span6">
+                    <h2>Backend sitemap</h2>
+
+                    {% loadList 'Backend/Topmenu' as menu %}
+                    {% set item = menu.item %}
+                    <ul>
+                    {{ block('iterateitem') }}
+                    </ul>
+                </div><!--/span-->

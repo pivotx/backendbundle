@@ -18,6 +18,8 @@
                     <li><a href="{{ ref('_page/logout') }}">{{ translate('header.button.logout') }}</a></li>
                 </ul>
             </div>
+
+{# this should be removed once Lists really lands 
             <div class="nav-collapse">
                 <ul class="nav">
                     <li x-class="active"><a href="{{ ref('_page/dashboard') }} ">{{ translate('header.button.dashboard') }}</a></li>
@@ -59,6 +61,37 @@
                     {% endif %}
                 </ul>
             </div><!--/.nav-collapse -->
+#}
+
+            {% loadList 'Backend/Topmenu' as menu %}
+            <div class="nav-collapse">
+                <ul class="nav {{ menu.classes }}">
+                {% for menuitem in menu.items %}
+                    {% if not menuitem.ismenu %}
+                    <li class="{{ menuitem.classes }}"><a href="{{ menuitem.link }}">{{ menuitem.label }}</a></li>
+                    {% else %}
+                    <li class="{{ menuitem.classes }}">
+                        &#160;
+                        <div class="btn-group pull-left">
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="{{ menuitem.attribute('icon') }}"></i>
+                                {{ menuitem.label }}
+                                <span class="caret"></span>
+                            </a>
+
+                            {% set submenu = menuitem.menu %}
+                            <ul class="dropdown-menu {{ submenu.classes }}">
+                            {% for subitem in submenu.items %}
+                                <li class="{{ subitem.classes }}"><a href="{{ subitem.link }}">{{ subitem.label }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+
         </div>
     </div>
 </div>
