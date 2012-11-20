@@ -5,8 +5,9 @@ namespace PivotX\BackendBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use PivotX\Component\Webresourcer\DirectoryWebresource;
+use PivotX\CoreBundle\Controller\Controller as CoreController;
 
-class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
+class Controller extends CoreController
 {
     /**
      * Naieve implementation of logged in/out
@@ -73,138 +74,95 @@ class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
         return $parameters;
     }
 
-    /**
-     * @todo set the current user into the activity service
-     */
-    /*
-    protected function setActivityUser()
+    public function getDefaultHtmlContext()
     {
-        echo 'setting activitt user';
-        $session = $this->getRequest()->getSession();
+        $context = array(
+            'html' => array(
+                'title' => 'PivotX',
+                'meta' => array(
+                    'charset' => 'utf-8'
+                )
+            )
+        );
 
-        $user_id = null;
-        if (!is_null($session) && ($session->has('security.logged') && ($session->get('security.logged') === true))) {
-            $user_id = $session->get('security.user_id');
-        }
+        $context['backend'] = array(
+            'security' => $this->checkLogin($this->getRequest())
+        );
 
-        $activityservice = $this->get('pivotx.activity');
-        if (!is_null($activityservice)) {
-            $activityservice->setUserId($user_id);
-            echo 'setting';
-        }
-
-        var_dump($user_id);
+        return $context;
     }
-*/
+
+    private function runOnce()
+    {
+        $views = $this->get('pivotx.views');
+
+        $views->registerView(new \PivotX\Component\Views\ArrayView(
+            array(
+                array(
+                    'title' => 'Sitemap',
+                    'template' => 'DashboardWidgets/sitemap.html.twig'
+                ),
+                array(
+                    'title' => 'Example',
+                    'template' => 'DashboardWidgets/example.html.twig'
+                )
+            ),
+            'Dashboard/getWidgets', 'Backend'
+        ));
+
+        $webresourcer = $this->get('pivotx.webresourcer');
+        $siteoptions  = $this->get('pivotx.siteoptions');
+
+        $directories = $siteoptions->getValue('webresources.directory');
+        foreach($directories as $directory) {
+            $webresourcer->addWebresourcesFromDirectory($directory);
+        }
+
+        $webresource = $webresourcer->addWebresource(new DirectoryWebresource($siteoptions->getValue('themes.active'), true));
+        if ($siteoptions->getValue('themes.debug', false)) {
+            $webresource->allowDebugging();
+        }
+        $webresourcer->activateWebresource($webresource->getIdentifier());
+
+        /*
+        $outputter = $this->get('pivotx.outputter');
+        $webresourcer->finalizeWebresources($outputter);
+         */
+
+        // @todo not hardcoded of course
+        $twig_loader = $this->container->get('twig.loader');
+        $twig_loader->addPath('/raiddata/2kdata/dev/____users/marcel/px4/src/PivotX/BackendBundle/Resources/themes/backend/twig');
+
+
+        $topmenu = new \PivotX\Component\Lists\RouteItem('dashboard', '_page/dashboard');
+
+        $contentmenu = $topmenu->addItem(new \PivotX\Component\Lists\Item('content'));
+        $contentmenu->setAttribute('icon', 'icon-pencil');
+        $contentmenu->resetBreadcrumb();
+
+        $crudmenu = $contentmenu->addItem(new \PivotX\Backend\Lists\CrudTables('editor'));
+        $crudmenu->setAsItemsholder();
+
+        $siteadminmenu = $topmenu->addItem(new \PivotX\Backend\Lists\Siteadmin());
+        $developermenu = $topmenu->addItem(new \PivotX\Backend\Lists\Developer());
+
+        $this->get('pivotx.lists')->addItem('Backend/Topmenu', $topmenu, false);
+    }
 
     public function render($view, array $parameters = array(), Response $response = null)
     {
-        //$this->setActivityUser();
-
-        if (is_null($view)) {
-            $request = $this->getRequest();
-            $view    = $request->get('_view');
-        }
-        if (is_null($view)) {
-            $view = 'Core/unconfigured.html.twig';
-        }
-
-        if (!isset($parameters['backend'])) {
-            $parameters['backend'] = array();
-        }
-        if (!isset($parameters['backend']['title'])) {
-            $parameters['backend']['title'] = 'PivotX';
-        }
-        if (!isset($parameters['backend']['meta'])) {
-            $parameters['backend']['meta'] = array();
-        }
-        if (!isset($parameters['backend']['meta']['charset'])) {
-            $parameters['backend']['meta']['charset'] = 'utf-8';
-        }
-
-        $parameters['backend']['security'] = $this->checkLogin($this->getRequest());
-
         static $once = false;
 
         if ($once === false) {
             $once = true;
 
-            $views = $this->get('pivotx.views');
-
-            $views->registerView(new \PivotX\Component\Views\ArrayView(
-                array(
-                    array(
-                        'title' => 'Sitemap',
-                        'template' => 'DashboardWidgets/sitemap.html.twig'
-                    ),
-                    array(
-                        'title' => 'Example',
-                        'template' => 'DashboardWidgets/example.html.twig'
-                    )
-                ),
-                'Dashboard/getWidgets', 'Backend'
-            ));
-
-            $webresourcer = $this->get('pivotx.webresourcer');
-            $siteoptions  = $this->get('pivotx.siteoptions');
-
-            $directories = $siteoptions->getValue('webresources.directory');
-            foreach($directories as $directory) {
-                $webresourcer->addWebresourcesFromDirectory($directory);
-            }
-
-            $webresource = $webresourcer->addWebresource(new DirectoryWebresource($siteoptions->getValue('themes.active'), true));
-            if ($siteoptions->getValue('themes.debug', false)) {
-                $webresource->allowDebugging();
-            }
-            $webresourcer->activateWebresource($webresource->getIdentifier());
-
-            $outputter = $this->get('pivotx.outputter');
-            $webresourcer->finalizeWebresources($outputter);
-
-            // @todo not hardcoded of course
-            $twig_loader = $this->container->get('twig.loader');
-            $twig_loader->addPath('/raiddata/2kdata/dev/____users/marcel/px4/src/PivotX/BackendBundle/Resources/themes/backend/twig');
-
-
-            $topmenu = new \PivotX\Component\Lists\RouteItem('dashboard', '_page/dashboard');
-
-            $contentmenu = $topmenu->addItem(new \PivotX\Component\Lists\Item('content'));
-            $contentmenu->setAttribute('icon', 'icon-pencil');
-            $contentmenu->resetBreadcrumb();
-            $menu = $contentmenu->addItem(new \PivotX\Component\Lists\RouteItem('resources', '_table/GenericResource'));
-            $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem('genericresource', '_table/GenericResource/{id}'));
-            $submenu->resetInMenu();
-            $menu = $contentmenu->addItem(new \PivotX\Component\Lists\RouteItem('siteoptions', '_table/SiteOption'));
-            $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem('siteoption', '_table/SiteOption/{id}'));
-            $submenu->resetInMenu();
-            $menu = $contentmenu->addItem(new \PivotX\Component\Lists\RouteItem('translations', '_table/TranslationText'));
-            $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem('translation', '_table/TranslationText/{id}'));
-            $submenu->resetInMenu();
-            $menu = $contentmenu->addItem(new \PivotX\Component\Lists\RouteItem('users', '_table/User'));
-            $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem('user', '_table/user/{id}'));
-            $submenu->resetInMenu();
-
-            $developermenu = $topmenu->addItem(new \PivotX\Backend\Lists\Developer());
-
-            $this->get('pivotx.lists')->addItem('Backend/Topmenu', $topmenu, false);
-        }
-
-        if (is_array($view)) {
-            foreach($view as $_view) {
-                try {
-                    return parent::render($_view, $parameters, $response);
-                }
-                catch (\InvalidArgumentException $e) {
-                }
-            }
-            throw new \InvalidArgumentException('Cannot find any of the given templates.');
+            $this->runOnce();
         }
 
         return parent::render($view, $parameters, $response);
     }
 
-    public function anyAction(Request $request)
+    public function xyzanyAction(Request $request)
     {
 /*
             echo 'hier';

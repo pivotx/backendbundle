@@ -19,50 +19,6 @@
                 </ul>
             </div>
 
-{# this should be removed once Lists really lands 
-            <div class="nav-collapse">
-                <ul class="nav">
-                    <li x-class="active"><a href="{{ ref('_page/dashboard') }} ">{{ translate('header.button.dashboard') }}</a></li>
-                    <li>
-                        &#160;
-                        <div class="btn-group pull-left">
-                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="icon-pencil"></i>
-                                {{ translate('header.button.content-group') }}
-                                <span class="caret"></span>
-                            </a>
-
-                            {% loadView 'Backend/loadContentMenu' as items %}
-                            <ul class="dropdown-menu">
-                            {% for item in items.result %}
-                                <li><a href="{{ ref(item.refText, item.refArguments) }}">{{ item.label }}</a></li>
-                            {% endfor %}
-                            </ul>
-                        </div>
-                    </li>
-                    {% if is_granted('ROLE_DEVELOPER') %}
-                    <li>
-                        &#160;
-                        <div class="btn-group pull-left">
-                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="icon-fire"></i>
-                                Developers
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{ ref('_developer/webresourcer') }}">Webresources</a></li>
-                                <li class="divider"></li>
-                                <li><a href="{{ ref('_developer/routing') }}">Routing</a></li>
-                                <li><a href="{{ ref('_developer/views') }}">Views</a></li>
-                                <li><a href="{{ ref('_developer/formats') }}">Formats</a></li>
-                            </ul>
-                       </div>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div><!--/.nav-collapse -->
-#}
-
             {% loadList 'Backend/Topmenu' as menu %}
             <div class="nav-collapse">
                 <ul class="nav {{ menu.classes }}">
@@ -74,7 +30,7 @@
                         &#160;
                         <div class="btn-group pull-left">
                             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="{{ menuitem.attribute('icon') }}"></i>
+                                <i class="{{ menuitem.attribute('icon') }}{{ menuitem.attribute('my-class') }}"></i>
                                 {{ menuitem.label }}
                                 <span class="caret"></span>
                             </a>
@@ -82,7 +38,19 @@
                             {% set submenu = menuitem.menu %}
                             <ul class="dropdown-menu {{ submenu.classes }}">
                             {% for subitem in submenu.items %}
+                                {% if not subitem.ismenu %}
                                 <li class="{{ subitem.classes }}"><a href="{{ subitem.link }}">{{ subitem.label }}</a></li>
+                                {% else %}
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">{{ subitem.label }}</a>
+                                    <ul class="dropdown-menu">
+                                    {% set sub2menu = subitem.menu %}
+                                    {% for sub2item in sub2menu.items %}
+                                        <li class="{{ sub2item.classes }}"><a href="{{ sub2item.link }}">{{ sub2item.label }}</a></li>
+                                    {% endfor %}
+                                    </ul>
+                                </li>
+                                {% endif %}
                             {% endfor %}
                             </ul>
                         </div>

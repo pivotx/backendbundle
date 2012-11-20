@@ -98,6 +98,13 @@ routes:
       defaults:     { _controller: "BackendBundle:Developer:showFormats" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+      pattern:      "_siteadmin/entity/{entity}"
+      public:       "siteadmin/entity/{entity}"
+      defaults:     { _controller: "BackendBundle:Backend:any", _view: "Siteadmin/entity.html.twig" }
+      requirements:
+          entity:   "[A-Za-z_]+[A-Za-z0-9_]+"
+
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_page/not-found"
       public:       "page-not-found"
       defaults:     { _nothing: "not-found" }

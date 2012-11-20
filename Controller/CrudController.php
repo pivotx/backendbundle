@@ -506,6 +506,8 @@ class CrudController extends Controller
      */
     public function showGetRecordAction(Request $request, $entity_manager, $item)
     {
+        $repository = $this->get('doctrine')->getRepository(get_class($item));
+
         $this->get('pivotx.activity')
             ->editorialMessage(
                 null,
