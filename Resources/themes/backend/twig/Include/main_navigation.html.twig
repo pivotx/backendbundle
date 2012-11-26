@@ -39,7 +39,12 @@
                             <ul class="dropdown-menu {{ submenu.classes }}">
                             {% for subitem in submenu.items %}
                                 {% if not subitem.ismenu %}
-                                <li class="{{ subitem.classes }}"><a href="{{ subitem.link }}">{{ subitem.label }}</a></li>
+                                <li class="{{ subitem.classes }}">
+                                    <a href="{{ subitem.link }}">
+                                        <!-- <i class="icon-pencil"></i> -->
+                                        {{ subitem.label }}
+                                    </a>
+                                </li>
                                 {% else %}
                                 <li class="dropdown-submenu">
                                     <a tabindex="-1" href="#">{{ subitem.label }}</a>

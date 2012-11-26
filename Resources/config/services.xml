@@ -17,8 +17,10 @@
 
     <services>
         <service id="pivotx.backend.views" class="%pivotx.backend.views.class%" public="true">
+            <argument type="service" id="kernel" />
             <argument type="service" id="pivotx.views" />
             <argument type="service" id="pivotx.translations" />
+            <argument type="service" id="pivotx.siteoptions" />
             <argument type="service" id="doctrine" />
         </service>
 

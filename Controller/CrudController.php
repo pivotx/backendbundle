@@ -306,14 +306,6 @@ class CrudController extends Controller
      */
     public function showTableAction(Request $request)
     {
-        $html = array(
-            'language' => 'en',
-            'meta' => array(
-                'charset' => 'utf-8',
-            ),
-            'title' => 'PivotX back-end'
-        );
-
         if ($request->query->has('action')) {
             $selection = $this->getCrudSelection($request);
 
@@ -392,12 +384,11 @@ class CrudController extends Controller
         $widgets[] = 'CrudWidgets/Selection.html.twig';
         $widgets[] = 'CrudWidgets/ExportImport.html.twig';
 
-        $context = array(
-            'html' => $html,
-            'crud' => $crud,
-            'widgets' => $widgets,
-            'view' => $view
-        );
+        $context = $this->getDefaultHtmlContext();
+
+        $context['crud']    = $crud;
+        $context['widgets'] = $widgets;
+        $context['view']    = $view;
 
         // @todo should not be hard-wired here of course
         $table_html = $this
@@ -444,12 +435,12 @@ class CrudController extends Controller
             'CrudWidgets/CommentSelection.html.twig'
         );
 
-        $context = array(
-            'crud' => $crud,
-            'widgets' => $widgets,
-            'view' => $view,
-            'item' => $item
-        );
+        $context = $this->getDefaultHtmlContext();
+
+        $context['crud'] = $crud;
+        $context['widgets'] = $widgets;
+        $context['view'] = $view;
+        $context['item'] = $item;
 
         $table_html = $this
             ->render('TwoKingsEBikeBundle:Crud:'.$crud['entity'].'.subtable.html.twig', $context)
@@ -466,14 +457,6 @@ class CrudController extends Controller
      */
     public function showGetForm(Request $request, $form, $item)
     {
-        $html = array(
-            'language' => 'en',
-            'meta' => array(
-                'charset' => 'utf-8',
-            ),
-            'title' => 'PivotX back-end'
-        );
-
         $crud = array(
             'entity' => $request->get('entity'),
             'id' => $request->get('id'),
@@ -495,9 +478,14 @@ class CrudController extends Controller
             }
         }
 
+        $context = $this->getDefaultHtmlContext();
+        $context['crud'] = $crud;
+        $context['item'] = $item;
+        $context['form'] = $form->createView();
+
         return $this->render(
             'Crud/record.html.twig',
-            array('html' => $html, 'crud' => $crud, 'item' => $item, 'form' => $form->createView())
+            $context
         );
     }
 
@@ -539,6 +527,7 @@ class CrudController extends Controller
             /*
             $data = $form->getData();
             var_dump($data);
+            exit();
             //*/
 
             if (method_exists($item, 'fixCrudBeforePersist')) {

@@ -1,0 +1,74 @@
+
+{% block entity_content %}
+
+    <h2>
+        Entity {{ entity.name }}
+    </h2>
+
+    <dl>
+        <dt>Bundle</dt>
+        <dd>{{ entity.bundle }}</dd>
+    </dl>
+
+    <table class="siteadmin table table-striped table-bordered" data-entity="{{ entity.name }}">
+        <thead>
+            <tr>
+                <td>name</td>
+                <td>definition</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for field in entity.fields %}
+            <tr>
+                <td>
+                    <span class="field-name">{{ field.name }}</span><br/>
+            {% if entity.mediatype == 'application/json' %}
+                {% if not field.created %}
+                    <div class="btn-group on-row-hover">
+                        <a class="btn btn-mini siteadmin-edit" href="{{ ref('_siteadmin/entities/mutate') }}"><i class="icon-pencil"></i> edit</a>
+                        <a class="btn btn-mini btn-danger siteadmin-delete" href="{{ ref('_siteadmin/entities/mutate') }}"><i class="icon-trash icon-white"></i> delete</a>
+                    </div>
+                {% else %}
+                    <span class="label label-info">Unchangable</span>
+                {% endif %}
+            {% else %}
+                <div class="btn-group on-row-hover">
+                    <a class="btn btn-mini siteadmin-edit-entity" href="#"><i class="icon-pencil"></i> edit entity</a>
+                </div>
+            {% endif %}
+                </td>
+                <td>
+                    {{ field.type_description }}<br/>
+                    <small>( 
+                        <span class="field-type">{{ field.type }}</span>
+                        {% if field.nullable %} / nullable{% endif %}
+                        {% if field.unique %} / unique{% endif %}
+                        {% if field.arguments is defined %} / <span class="field-arguments">{{ field.arguments }}</span>{% endif %}
+                        {% if field.relation is defined %} / <span class="field-relation">{{ field.relation }}</span>{% endif %}
+                    )</small>
+                </td>
+            </tr>
+        {% endfor %}
+        {% if entity.mediatype == 'application/json' %}
+            <tr>
+                <td>
+                    <em>new field</em><span class="field-name"></span>
+                    <div class="btn-group on-row-hover">
+                        <a class="btn btn-mini siteadmin-edit siteadmin-add" href="#"><i class="icon-pencil"></i> add</a>
+                    </div>
+                </td>
+                <td>
+                    <em>( .. )</em>
+                </td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    {% if entity.mediatype == 'text/x-yaml' %}
+        <span class="hide" "{{ entity.name }}">{{ entity.source }}</textarea>
+    {% endif %}
+
+{% endblock %}
+
+

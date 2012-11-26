@@ -661,7 +661,15 @@ $(function(){
             var name = $(this).attr('name');
             var value = $(this).val();
 
-            post[name] = value;
+            if ($(this).attr('type') == 'checkbox') {
+                if (!$(this).is(':checked')) {
+                    value = null;
+                }
+            }
+
+            if (value !== null) {
+                post[name] = value;
+            }
         });
 
         var url = document.location;
@@ -723,7 +731,7 @@ $(function(){
     });
 
     $('.crud-edit-form input, .crud-edit-form textarea').on('focus', function(e){
-        $(this).select();
+        //$(this).select();
     });
     $('.crud-edit-form input.primary-focus, .crud-edit-form textarea.primary-focus').each(function(){
         $(this).focus();

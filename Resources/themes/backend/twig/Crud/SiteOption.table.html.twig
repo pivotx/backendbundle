@@ -87,6 +87,10 @@ table.crud-translationtext th.column-text4 {
             </td>
             <td>
                 <span class="sitename">{{ item.sitename }}</span>
+                <br/>
+                {% if item.autoload %}
+                <span class="label label-info">autoload</span>
+                {% endif %}
             </td>
             <td>
                 <span class="groupname">{{ item.groupname }}</span>.<span class="name">{{ item.name }}</span>

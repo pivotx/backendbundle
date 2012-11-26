@@ -1,0 +1,145 @@
+{% extends "Base/content_and_meta.html.twig" %}
+
+{% block content %}
+
+    <h1>Entities</h1>
+
+    {% if app.session.hasFlash('error') %}
+    <p class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{ app.session.flash('error') }}
+    </p>
+    {% endif %}
+    {% if app.session.hasFlash('notice') %}
+    <p class="alert">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{ app.session.flash('notice') }}
+    </p>
+    {% endif %}
+
+    {% if app.session.hasFlash('debug') %}
+    <pre>{{ app.session.flash('debug') }}</pre>
+    {% endif %}
+
+    <p>
+        On this page you can add, edit and remove entities for your site.
+    </p>
+
+{% loadView 'Backend/findEntities' as entities %}
+{% for entity in entities.result %}
+    {% include 'Siteadmin/_entity.html.twig' with { 'entity': entity } %}
+{% endfor %}
+
+    <h2>Add a new entity</h2>
+
+    <button type="button" class="btn btn-primary add-entity-button">Add</button>
+
+
+    <div class="hide">
+        <div class="add-entity">
+            <form class="add-entity-form" method="post" action="{{ ref('_siteadmin/entities/mutate') }}">
+                <input type="hidden" name="action" value="add-entity" />
+                <label>
+                    Name:<br/>
+                    <input type="text" name="name" value="" />
+                </label>
+                <label>
+                    Bundle:<br/>
+                    {% loadView 'Backend/findBundles' as bundles %}
+                    <select name="bundle">
+                    {% for bundle in bundles.result %}
+                        <option value="{{ bundle.value }}">{{ bundle.title }}</option>
+                    {% endfor %}
+                    </select>
+                </label>
+                <label>
+                    Specify type:<br/>
+                    <label>
+                        <input type="radio" name="entity_type" value="no-fields">
+                        <span>Add an id field.</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="entity_type" value="minimal-fields">
+                        <span>Add id, date creation/modification.</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="entity_type" value="content">
+                        <span>Add a generic content entity: id, dates, title &amp; body.</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="entity_type" value="news">
+                        <span>Add a generic news entity.</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="entity_type" value="page">
+                        <span>Add a generic page entity.</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="entity_type" value="event">
+                        <span>Add a generic event entity.</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="entity_type" value="user">
+                        <span>Add a generic user entity.</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="entity_type" value="category">
+                        <span>Add a generic category relation entity.</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="entity_type" value="category">
+                        <span>Add a generic tag relation entity.</span>
+                    </label>
+                </label>
+            </form>
+        </div>
+        <div class="edit-entity">
+            <form class="edit-entity-form" method="post" action="{{ ref('_siteadmin/entities/mutate') }}">
+                <input type="hidden" name="action" value="edit_entity" />
+                <input type="hidden" name="entity" value="" />
+                <label>
+                    Configuration:<br/>
+                    <textarea name="configuration"></textarea>
+                </label>
+            </form>
+        </div>
+        <div class="edit-field">
+            <form class="edit-field-form" method="post" action="{{ ref('_siteadmin/entities/mutate') }}">
+                <input type="hidden" name="action" value="edit_field" />
+                <input type="hidden" name="entity" value="" />
+                <input type="hidden" name="original_name" value="" />
+                <label>
+                    Name:<br/>
+                    <input type="text" name="name" value="" />
+                </label>
+                <label>
+                    Type:<br/>
+                    <select name="type">
+                    {% loadView 'Backend/findEntityFieldTypes' as types %}
+                        <option value="">(choose type)</option>
+                    {% for type in types.result %}
+                        <option value="{{ type.title }}">{{ type.title }}</option>
+                    {% endfor %}
+                    </select>
+                </label>
+                <label class="need-arguments">
+                    Arguments:<br/>
+                    <input type="text" name="arguments" value="" />
+                </label>
+                <label class="need-relation">
+                    Related to:<br/>
+                    <select name="relation">
+                        <option value="">(only select when applicable)</option>
+                    {% loadView 'Backend/findEntities' as entities %}
+                    {% for entity in entities.result %}
+                        <option value="{{ entity.name }}">{{ entity.name }}</option>
+                    {% endfor %}
+                    </select>
+                </label>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+
