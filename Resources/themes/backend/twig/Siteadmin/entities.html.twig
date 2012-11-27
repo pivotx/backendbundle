@@ -37,11 +37,11 @@
 
     <div class="hide">
         <div class="add-entity">
-            <form class="add-entity-form" method="post" action="{{ ref('_siteadmin/entities/mutate') }}">
+            <form class="add-entity-form" method="post" action="{{ ref('_entities/all/mutate') }}">
                 <input type="hidden" name="action" value="add-entity" />
                 <label>
                     Name:<br/>
-                    <input type="text" name="name" value="" />
+                    <input type="text" class="identifier-type" data-identifier-allow="uppercase" name="name" value="" />
                 </label>
                 <label>
                     Bundle:<br/>
@@ -94,7 +94,7 @@
             </form>
         </div>
         <div class="edit-entity">
-            <form class="edit-entity-form" method="post" action="{{ ref('_siteadmin/entities/mutate') }}">
+            <form class="edit-entity-form" method="post" action="{{ ref('_entities/all/mutate') }}">
                 <input type="hidden" name="action" value="edit_entity" />
                 <input type="hidden" name="entity" value="" />
                 <label>
@@ -104,13 +104,13 @@
             </form>
         </div>
         <div class="edit-field">
-            <form class="edit-field-form" method="post" action="{{ ref('_siteadmin/entities/mutate') }}">
+            <form class="edit-field-form" method="post" action="{{ ref('_entities/all/mutate') }}">
                 <input type="hidden" name="action" value="edit_field" />
                 <input type="hidden" name="entity" value="" />
                 <input type="hidden" name="original_name" value="" />
                 <label>
                     Name:<br/>
-                    <input type="text" name="name" value="" />
+                    <input type="text" class="identifier-type" name="name" value="" />
                 </label>
                 <label>
                     Type:<br/>

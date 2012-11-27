@@ -98,14 +98,19 @@ routes:
       defaults:     { _controller: "BackendBundle:Developer:showFormats" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
-      pattern:      "_siteadmin/entities"
-      public:       "siteadmin/entities"
-      defaults:     { _controller: "BackendBundle:Siteadmin:showEntities" }
+      pattern:      "_entities/all"
+      public:       "entities/all"
+      defaults:     { _controller: "BackendBundle:Entities:showEntities" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
-      pattern:      "_siteadmin/entities/mutate"
-      public:       "siteadmin/entities/mutate"
-      defaults:     { _controller: "BackendBundle:Siteadmin:showMutate" }
+      pattern:      "_entities/all/mutate"
+      public:       "entities/all/mutate"
+      defaults:     { _controller: "BackendBundle:Entities:showMutate" }
+
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+      pattern:      "_developer/site/new"
+      public:       "site/new"
+      defaults:     { _controller: "BackendBundle:Developer:showSite" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_page/not-found"

@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 
-class SiteadminController extends Controller
+class EntitiesController extends Controller
 {
     /**
      * Find the entity configuration
@@ -84,7 +84,7 @@ class SiteadminController extends Controller
                 'created' => false
             );
             if ($field_arg != '') {
-                $field['argument'] = $field_arg;
+                $field['arguments'] = $field_arg;
             }
             if ($field_rel != '') {
                 $field['relation'] = $field_rel;
@@ -189,7 +189,7 @@ class SiteadminController extends Controller
 
     public function showMutateAction(Request $request)
     {
-        $url = $this->get('pivotx.routing')->buildUrl('_siteadmin/entities');
+        $url = $this->get('pivotx.routing')->buildUrl('_entities/all');
 
         switch ($request->request->get('action', '')) {
             case 'add_entity':
@@ -205,6 +205,9 @@ class SiteadminController extends Controller
                 $this->handleDeleteField($request->request);
                 break;
         }
+
+        $siteoptions = $this->get('pivotx.siteoptions');
+        $siteoptions->set('config.check.entities', 0, 'x-value/boolean', false, false, 'all');
 
         return $this->redirect($url);
     }

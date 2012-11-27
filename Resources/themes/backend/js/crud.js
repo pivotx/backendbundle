@@ -302,7 +302,9 @@ function updateCrudUniqueField(unique_el, field, sources)
         post[source] = $('input[name="form['+source+']"]').val();
     }
 
-    url = '/pivotx/en/table/Bike/suggest/' + field;
+    var my_location = new String(document.location);
+    var re = my_location.match(/(.+)\/[0-9]+$/);
+    var url = re[1] + '/suggest/' + field;
 
     $.ajax({
         type: 'POST',

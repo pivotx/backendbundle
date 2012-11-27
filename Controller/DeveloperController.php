@@ -242,5 +242,16 @@ class DeveloperController extends Controller
 
         return $this->render('Developer/formats.html.twig', $context);
     }
+
+    public function showSiteAction(Request $request)
+    {
+        $context = $this->getDefaultHtmlContext();
+
+        $formats = $this->get('pivotx.formats')->getRegisteredFormats();
+
+        usort($formats, array(get_class($this), 'cmpFormats'));
+
+        return $this->render('Developer/site.html.twig', $context);
+    }
 }
 

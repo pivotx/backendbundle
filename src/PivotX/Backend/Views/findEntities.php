@@ -187,8 +187,7 @@ THEEND;
     {
         $data = array();
 
-        $entities_text = $this->siteoptions_service->getValue('config.entities', null, 'all');
-        $entities      = explode("\n", trim($entities_text));
+        $entities = $this->siteoptions_service->getValue('config.entities', null, 'all');
 
         foreach($entities as $entity) {
             $record = $this->loadEntity($entity);

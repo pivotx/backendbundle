@@ -21,15 +21,21 @@
         {% for field in entity.fields %}
             <tr>
                 <td>
+            {% if not field.created %}
+                    <em>(<strong>new</strong>)</em>
+            {% endif %}
                     <span class="field-name">{{ field.name }}</span><br/>
             {% if entity.mediatype == 'application/json' %}
                 {% if not field.created %}
                     <div class="btn-group on-row-hover">
-                        <a class="btn btn-mini siteadmin-edit" href="{{ ref('_siteadmin/entities/mutate') }}"><i class="icon-pencil"></i> edit</a>
-                        <a class="btn btn-mini btn-danger siteadmin-delete" href="{{ ref('_siteadmin/entities/mutate') }}"><i class="icon-trash icon-white"></i> delete</a>
+                        <a class="btn btn-mini siteadmin-edit" href="{{ ref('_entities/all/mutate') }}"><i class="icon-pencil"></i> edit</a>
+                        <a class="btn btn-mini btn-danger siteadmin-delete" href="{{ ref('_entities/all/mutate') }}"><i class="icon-trash icon-white"></i> delete</a>
                     </div>
                 {% else %}
-                    <span class="label label-info">Unchangable</span>
+                    <!-- <span class="label label-info">Unchangable</span> -->
+                    <div class="btn-group on-row-hover">
+                        <a class="btn btn-mini btn-danger siteadmin-delete" href="{{ ref('_siteadmin/entities/mutate') }}"><i class="icon-trash icon-white"></i> delete</a>
+                    </div>
                 {% endif %}
             {% else %}
                 <div class="btn-group on-row-hover">

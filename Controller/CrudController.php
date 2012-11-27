@@ -530,6 +530,8 @@ class CrudController extends Controller
             exit();
             //*/
 
+            //var_dump($item);
+
             if (method_exists($item, 'fixCrudBeforePersist')) {
                 $item->fixCrudBeforePersist();
             }
@@ -674,7 +676,7 @@ class CrudController extends Controller
      * Get suggested field values
      *
      * Returns a list of possible values when trying to enter a unique value.
-     * For instance for 'publicid' or 'uri' fields.
+     * Usually reserved for SLUGs
      */
     public function suggestFieldValueAction(Request $request)
     {
@@ -682,29 +684,31 @@ class CrudController extends Controller
         $entity_manager = $this->get('doctrine')->getEntityManager();
         $repository     = $this->get('doctrine')->getRepository($entity_class);
 
+        $item = null;
+        if ($request->get('id') > 0) {
+            $item = $entity_manager->find($entity_class, $request->get('id'));
 
-        $unique_value = '';
-        foreach($request->request->all() as $name => $value) {
-            $unique_value .= ' ' . $value;
+            $entity_manager->detach($item);
         }
-        $unique_value = preg_replace('|[^a-z0-9]+|', '-', mb_strtolower(trim($unique_value)));
-        $unique_value = preg_replace('|^-*(.+?)-*$|', '\\1', $unique_value);
+        else {
+            $item = new $entity_class;
+        }
+
+        // unsophisticated way to set the temporary fields
+        foreach($request->request->all() as $name => $value) {
+            $method = 'set'.ucfirst($name);
+            if (method_exists($item, $method)) {
+                $item->$method($value);
+            }
+        }
 
         $field_name = $request->get('field');
 
         $suggestions = array();
 
-        $base_value = $unique_value;
-        $counter    = 0;
-        if (preg_match('|(.+)-([0-9]+)$|', $base_value, $match)) {
-            $base_value = $match[1];
-            $counter    = intval($match[2]) + 1;
-        }
-        do {
-            $try_value = $base_value;
-            if ($counter > 0) {
-                $try_value .= '-' . $counter;
-            }
+        $counter = 0;
+        while (($counter < 1000) && (count($suggestions) < 2)) {
+            $try_value = $item->getSlugSuggestion($counter++);
 
             $q = $entity_manager
                 ->createQuery('select t from '.$entity_class.' t where t.'.$field_name.' = :value')
@@ -715,9 +719,7 @@ class CrudController extends Controller
             if (count($items) == 0) {
                 $suggestions[] = $try_value;
             }
-            $counter++;
         }
-        while ((count($suggestions) < 2) && ($counter < 1000));
 
         $content = json_encode($suggestions);
 

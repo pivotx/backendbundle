@@ -25,3 +25,8 @@ body {
 .navbar-fixed-bottom .breadcrumb {
     display: inline;
 }
+
+/* more spaces in the top menu */
+.navbar-fixed-top .navbar-inner .nav > li {
+    margin-right: 5px;
+}

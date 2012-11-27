@@ -105,7 +105,6 @@
 
 {% block backend_unique_widget %}
 {% spaceless %}
-    {# type="number" doesn't work with floats #}
     {% set type = type|default('text') %}
     <div class="unique" data-field="{{ name }}" data-sources="{{ sources }}" data-automatic="{% if value == "" %}autofill{% else %}keep{% endif %}">
         <div class="value">

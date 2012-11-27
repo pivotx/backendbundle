@@ -68,10 +68,19 @@ table.crud-bike th.column-reviews {
             </td>
 
         {% for field in crud.fields %}
+            {% set shown_buttons = false %}
             {% set field = field|replace({'_':''}) %}
             {% if attribute(item, field) is defined %}
             <td>
                 {{ attribute(item, field) }}
+
+                {% if not shown_buttons %}
+                    {% set shown_buttons = true %}
+                <div class="btn-group on-row-hover">
+                    <a class="btn btn-mini crud-button-link" data-loading-text="Starting edit&hellip;" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments) }}"><i class="icon-pencil"></i> {{ translate('entity.button.edit') }}</a>
+                    <a class="btn btn-mini btn-danger crud-button-confirm" data-modal-text-selector=".text-delete-{{ item.id }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments({'action':'delete'})) }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
+                </div>
+                {% endif %}
             </td>
             {% endif %}
         {% endfor %}

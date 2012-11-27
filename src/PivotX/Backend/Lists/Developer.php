@@ -12,8 +12,10 @@ class Developer extends Item
     {
         parent::__construct('development');
 
-        $this->setAttribute('icon', 'icon-fire');
+        $this->setAttribute('icon', 'icon-globe');
         $this->resetBreadcrumb();
+
+        $this->addItem(new RouteItem('entities', '_entities/all'));
 
         $this->addItem(new RouteItem('webresourcer', '_developer/webresourcer'));
         $this->addItem(new RouteItem('routing', '_developer/routing'));

@@ -135,14 +135,7 @@ class Controller extends CoreController
 
 
         $topmenu = new \PivotX\Component\Lists\RouteItem('dashboard', '_page/dashboard');
-
-        $contentmenu = $topmenu->addItem(new \PivotX\Component\Lists\Item('content'));
-        $contentmenu->setAttribute('icon', 'icon-pencil');
-        $contentmenu->resetBreadcrumb();
-
-        $crudmenu = $contentmenu->addItem(new \PivotX\Backend\Lists\CrudTables('editor'));
-        $crudmenu->setAsItemsholder();
-
+        $contentmenu = $topmenu->addItem(new \PivotX\Backend\Lists\Content($this->get('pivotx.siteoptions')));
         $siteadminmenu = $topmenu->addItem(new \PivotX\Backend\Lists\Siteadmin());
         $developermenu = $topmenu->addItem(new \PivotX\Backend\Lists\Developer());
 
