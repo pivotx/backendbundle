@@ -1,0 +1,99 @@
+{% extends "Base/content_and_meta.html.twig" %}
+
+{% block content %}
+
+<div class="site span9">
+    <form class="form table-form" method="post" action="">
+
+    <h1>Site configuration "new"</h1>
+
+    <h2>Basic information</h2>
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th class="span12" colspan="3">
+                    Site
+                </th>
+            </tr>
+            <tr>
+                <td class="span5" colspan="2"><label for="siteid">Site identifier</label></td>
+                <td class="span7"><input type="text" id="siteid" class="span8 identifier-type" value="main" /></td>
+            </tr>
+            <tr>
+                <td class="span5" colspan="2"><label for="primary_domain">Primary domain</label></td>
+                <td class="span7"><input type="text" id="primary_domain" class="span8 host-type" value="" placeholder="example.com" /></td>
+            </tr>
+
+            <tr>
+                <th class="span12" colspan="3">
+                    Theme / URL schemes
+                </th>
+            </tr>
+            <tr>
+                <td class="span3 checkbox"><span>#1</span><input type="checkbox" name="" value="" checked="checked" /></td>
+                <td class="span2"><input class="span12 identifier-type" type="text" name="" value="desktop" /></td>
+                <td class="span7"><input class="span8" type="text" name="" value="Desktop version" /></td>
+            </tr>
+            <tr>
+                <td class="span3 checkbox"><span>#2</span><input type="checkbox" name="" value="" /></td>
+                <td class="span2"><input class="span12 identifier-type" type="text" name="" value="mobile" /></td>
+                <td class="span7"><input class="span8" type="text" name="" value="Mobile version" /></td>
+            </tr>
+
+            <tr>
+                <th class="span12" colspan="3">
+                    Languages
+                </th>
+            </tr>
+            <tr>
+                <td class="span3 checkbox"><span>#1</span><input type="checkbox" name="" value="" /></td>
+                <td class="span2"><input class="span12 identifier-type" type="text" name="" value="en" /></td>
+                <td class="span7">
+                    <input class="span3" type="text" name="" value="en_GB.utf-8" />
+                    &#160;
+                    <input class="span5" type="text" name="" value="English language" />
+                </td>
+            </tr>
+            <tr>
+                <td class="span3 checkbox"><span>#2</span><input type="checkbox" name="" value="" /></td>
+                <td class="span2"><input class="span12 identifier-type" type="text" name="" value="nl" /></td>
+                <td class="span6">
+                    <input class="span3" type="text" name="" value="nl_NL.utf-8" />
+                    &#160;
+                    <input class="span5" type="text" name="" value="Dutch language" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <hr />
+
+
+    <h2>Hostname setup</h2>
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <td class="span2"></td>
+                <td class="span2">desktop</td>
+                <td class="span2">mobile</td>
+            </tr>
+            <tr>
+                <td class="span2 target-language">en</td>
+                <td class="span2"><input class="span12" type="text" value="http://example.com/" /></td>
+                <td class="span2"><input class="span12" type="text" value="http://example.com/mobile/" /></td>
+            </tr>
+            <tr>
+                <td class="span2 target-language">nl</td>
+                <td class="span2"><input class="span12" type="text" value="http://example.com/nl/" /></td>
+                <td class="span2"><input class="span12" type="text" value="http://example.com/mobile/nl/" /></td>
+            </tr>
+        </tbody>
+    </table>
+
+    </form>
+</div>
+
+{% endblock %}
