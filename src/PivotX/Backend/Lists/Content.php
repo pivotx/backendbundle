@@ -12,6 +12,7 @@ class Content extends Item
     {
         parent::__construct('content');
 
+        $this->setRole('ROLE_EDITOR');
         $this->setAttribute('icon', 'icon-pencil');
         $this->resetBreadcrumb();
 

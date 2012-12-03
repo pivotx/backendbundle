@@ -8,18 +8,25 @@
                 <span class="icon-bar"></span>
             </a>
             <a class="brand" href="{{ ref('_page/dashboard') }}">{{ translate('header.button.pivotx') }}</a>
+
+            {% loadList 'Backend/Profilemenu' as menu %}
             <div class="btn-group pull-right">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="icon-user"></i> {{ backend.security.username }} <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Profile</a></li>
-                    <li class="divider"></li>
-                    <li><a href="{{ ref('_page/logout') }}">{{ translate('header.button.logout') }}</a></li>
-                </ul>
+            {% for menuitem in menu.items %}
+                {% if menuitem.ismenu %}
+                    <a class="btn dropdown-toggle {% if menuitem.attribute('switched_user') %}btn-warning{% endif %} }}" data-toggle="dropdown" href="#">
+                        <i class="{{ menuitem.attribute('icon') }}"></i> {{ menuitem.label }} <span class="caret"></span>
+                    </a>
+                    {% set submenu = menuitem.menu %}
+                    <ul class="dropdown-menu">
+                    {% for subitem in submenu.items %}
+                        <li class="{{ subitem.classes }}"><a href="{{ subitem.link }}">{{ subitem.label }}</a></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endfor %}
             </div>
 
-            {% loadList 'Backend/Topmenu' as menu %}
+            {% loadList 'Backend/Topmenu' as menu  %}
             <div class="nav-collapse">
                 <ul class="nav {{ menu.classes }}">
                 {% for menuitem in menu.items %}

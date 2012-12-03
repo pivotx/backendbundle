@@ -216,7 +216,23 @@ class EntitiesController extends Controller
     {
         $context = $this->getDefaultHtmlContext();
 
-        return $this->render('Siteadmin/entities.html.twig');
+        return $this->render('Entities/entities.html.twig', $context);
+    }
+
+    public function showEntityAction(Request $request)
+    {
+        $context = $this->getDefaultHtmlContext();
+
+        $entity_name = 'Entry';
+
+        $view = $this->get('pivotx.views')->findView('Backend/findEntities');
+        $view->setArguments(array('name'=>$entity_name));
+
+        $entity = $view->getValue();
+
+        $context['entity'] = $entity;
+
+        return $this->render('Entities/entity.html.twig', $context);
     }
 }
 

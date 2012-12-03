@@ -13,11 +13,17 @@ class Developer extends Item
         parent::__construct('development');
 
         $this->setAttribute('icon', 'icon-globe');
+        $this->setRole('ROLE_DEVELOPER');
         $this->resetBreadcrumb();
 
-        $this->addItem(new RouteItem('entities', '_entities/all'));
+        $this->addItem(new RouteItem('site', '_developer/site/new'));
+
+        $menu = $this->addItem(new RouteItem('entities', '_entities/all'));
+        $item = $menu->addItem(new RouteItem('entity', '_entity/{entity}'));
+        $item->resetInMenu();
 
         $this->addItem(new RouteItem('webresourcer', '_developer/webresourcer'));
+
         $this->addItem(new RouteItem('routing', '_developer/routing'));
         $this->addItem(new RouteItem('views', '_developer/views'));
         $this->addItem(new RouteItem('formats', '_developer/formats'));

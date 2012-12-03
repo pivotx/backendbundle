@@ -1,0 +1,80 @@
+{% extends "Base/content_and_meta.html.twig" %}
+
+{% block content %}
+
+    <h1>Entity {{ entity.name }}</h1>
+
+    {% if app.session.hasFlash('error') %}
+    <p class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{ app.session.flash('error') }}
+    </p>
+    {% endif %}
+    {% if app.session.hasFlash('notice') %}
+    <p class="alert">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{ app.session.flash('notice') }}
+    </p>
+    {% endif %}
+
+    {% if app.session.hasFlash('debug') %}
+    <pre>{{ app.session.flash('debug') }}</pre>
+    {% endif %}
+
+    <p>
+        On this page you edit the entity.
+    </p>
+
+    {% include 'Entities/_entity.html.twig' with { 'entity': entity } %}
+
+    <div class="hide">
+        <div class="edit-entity">
+            <form class="edit-entity-form" method="post" action="{{ ref('_entities/all/mutate') }}">
+                <input type="hidden" name="action" value="edit_entity" />
+                <input type="hidden" name="entity" value="" />
+                <label>
+                    Configuration:<br/>
+                    <textarea name="configuration"></textarea>
+                </label>
+            </form>
+        </div>
+        <div class="edit-field">
+            <form class="edit-field-form" method="post" action="{{ ref('_entities/all/mutate') }}">
+                <input type="hidden" name="action" value="edit_field" />
+                <input type="hidden" name="entity" value="" />
+                <input type="hidden" name="original_name" value="" />
+                <label>
+                    Name:<br/>
+                    <input type="text" class="identifier-type" name="name" value="" />
+                </label>
+                <label>
+                    Type:<br/>
+                    <select name="type">
+                    {% loadView 'Backend/findEntityFieldTypes' as types %}
+                        <option value="">(choose type)</option>
+                    {% for type in types.result %}
+                        <option value="{{ type.title }}">{{ type.title }}</option>
+                    {% endfor %}
+                    </select>
+                </label>
+                <label class="need-arguments">
+                    Arguments:<br/>
+                    <input type="text" name="arguments" value="" />
+                </label>
+                <label class="need-relation">
+                    Related to:<br/>
+                    <select name="relation">
+                        <option value="">(only select when applicable)</option>
+                    {% loadView 'Backend/findEntities' as entities %}
+                    {% for entity in entities.result %}
+                        <option value="{{ entity.name }}">{{ entity.name }}</option>
+                    {% endfor %}
+                    </select>
+                </label>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+

@@ -220,7 +220,6 @@ class CrudController extends Controller
                             break;
                     }
 
-                    // @todo temporary thing?
                     if (!isset($args['attr'])) {
                         $args['attr'] = array();
                     }
@@ -248,6 +247,9 @@ class CrudController extends Controller
 
         $builder = $this->createFormBuilder($item, $form_options);
         $builder->setCompound(true);
+
+        // @todo doesn't work
+        //$builder->setAttribute('autocomplete', 'off');
 
         foreach($form_items as $form_item) {
             $builder->add($form_item['name'], $form_item['type'], $form_item['options']);
@@ -390,10 +392,8 @@ class CrudController extends Controller
         $context['widgets'] = $widgets;
         $context['view']    = $view;
 
-        // @todo should not be hard-wired here of course
         $table_html = $this
             ->render(array(
-                    //'TwoKingsEBikeBundle:Crud:'.$crud['entity'].'.table.html.twig',
                     'Crud/'.$crud['entity'].'.table.html.twig',
                     'Crud/any.table.html.twig'
                 ), $context)

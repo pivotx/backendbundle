@@ -12,6 +12,7 @@ class Siteadmin extends Item
     {
         parent::__construct('site-administration');
 
+        $this->setRole('ROLE_ADMIN');
         $this->setAttribute('icon', 'icon-fire');
         $this->resetBreadcrumb();
 

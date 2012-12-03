@@ -92,6 +92,37 @@ class Controller extends CoreController
         return $context;
     }
 
+    private function setTheme($theme_name = null)
+    {
+        if (is_null($theme_name)) {
+            $sc = $this->get('security.context');
+            $tk = $sc->getToken();
+            if (!is_null($tk)) {
+                $ur = $tk->getUser();
+                if (!is_null($ur)) {
+                    $theme_name = $ur->getThemeName();
+                }
+            }
+            if (is_null($theme_name)) {
+                $theme_name = 'backend';
+            }
+        }
+
+        $path = '@BackendBundle/Resources/themes/'.$theme_name;
+        $realpath = $this->get('kernel')->locateResource($path);
+
+        $webresourcer = $this->get('pivotx.webresourcer');
+        $siteoptions  = $this->get('pivotx.siteoptions');
+
+        $webresource = $webresourcer->addWebresource(new DirectoryWebresource($path.'/theme.json'));
+        if ($siteoptions->getValue('themes.debug', false)) {
+            $webresource->allowDebugging();
+        }
+        $webresourcer->activateWebresource($webresource->getIdentifier());
+
+        $this->container->get('twig.loader')->addPath($realpath . '/twig');
+    }
+
     private function runOnce()
     {
         $views = $this->get('pivotx.views');
@@ -118,28 +149,21 @@ class Controller extends CoreController
             $webresourcer->addWebresourcesFromDirectory($directory);
         }
 
-        $webresource = $webresourcer->addWebresource(new DirectoryWebresource($siteoptions->getValue('themes.active'), true));
-        if ($siteoptions->getValue('themes.debug', false)) {
-            $webresource->allowDebugging();
-        }
-        $webresourcer->activateWebresource($webresource->getIdentifier());
+        // set the current theme
+        $this->setTheme();
 
-        /*
-        $outputter = $this->get('pivotx.outputter');
-        $webresourcer->finalizeWebresources($outputter);
-         */
-
-        // @todo not hardcoded of course
-        $twig_loader = $this->container->get('twig.loader');
-        $twig_loader->addPath('/raiddata/2kdata/dev/____users/marcel/px4/src/PivotX/BackendBundle/Resources/themes/backend/twig');
-
-
+        // top menu
         $topmenu = new \PivotX\Component\Lists\RouteItem('dashboard', '_page/dashboard');
         $contentmenu = $topmenu->addItem(new \PivotX\Backend\Lists\Content($this->get('pivotx.siteoptions')));
         $siteadminmenu = $topmenu->addItem(new \PivotX\Backend\Lists\Siteadmin());
         $developermenu = $topmenu->addItem(new \PivotX\Backend\Lists\Developer());
-
         $this->get('pivotx.lists')->addItem('Backend/Topmenu', $topmenu, false);
+
+        // profile menu
+        $repository = $this->get('doctrine')->getRepository('PivotX\CoreBundle\Entity\User');
+        $profilemenu = new \PivotX\Component\Lists\RouteItem('dashboard', '_page/dashboard');
+        $item = $profilemenu->addItem(new \PivotX\Backend\Lists\Profile($this->get('security.context'), $repository));
+        $this->get('pivotx.lists')->addItem('Backend/Profilemenu', $profilemenu, false);
     }
 
     public function render($view, array $parameters = array(), Response $response = null)

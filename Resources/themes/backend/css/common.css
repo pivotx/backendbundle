@@ -1,0 +1,35 @@
+
+/* @todo these should be more specified */
+
+.on-row-hover {
+    visibility: hidden;
+}
+
+.on-row-active {
+    visibility: visible !important;
+}
+
+.hide-on-row-hover {
+}
+
+
+.on-icon-button {
+    opacity: 0.3;
+}
+
+.on-icon-active {
+    opacity: 1;
+}
+
+tr:hover .on-row-hover {
+    visibility: visible;
+}
+
+tr:hover .hide-on-row-hover {
+    visibility: bidden;
+}
+
+.on-row-hover.btn-toolbar {
+    margin-top: 0;
+    margin-bottom: 0;
+}

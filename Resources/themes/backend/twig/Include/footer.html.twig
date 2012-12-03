@@ -16,6 +16,9 @@
             </span>
 
             <span class="navbar-text">
+                {# loadList 'Backend/BreadcrumbMenu' as menu #}
+                {# loadList ['Backend/Topmenu','Backend/Profilemenu','Backend/FooterMenu'] as menu #}
+                
                 {% loadList 'Backend/Topmenu' as menu %}
                 <ul class="breadcrumb">
                 {% for breadcrumb in menu.breadcrumbs %}

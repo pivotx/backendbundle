@@ -48,14 +48,14 @@ routes:
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_table/{entity}"
       public:       "table/{entity}"
-      defaults:     { _controller: "BackendBundle:Crud:showTable" }
+      defaults:     { _controller: "BackendBundle:Crud:showTable", _role: "ROLE_EDITOR" }
       requirements:
           entity: "[A-Za-z_]+[A-Za-z0-9]+"
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_table/{entityref}/{id}/{entity}"
       public:       "table/{entityref}/{id}/{entity}"
-      defaults:     { _controller: "BackendBundle:Crud:showSubTable" }
+      defaults:     { _controller: "BackendBundle:Crud:showSubTable", _role: "ROLE_EDITOR" }
       requirements:
           entity:    "[A-Za-z_]+[A-Za-z0-9_]+"
           entityref: "[A-Za-z_]+[A-Za-z0-9_]+"
@@ -64,7 +64,7 @@ routes:
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_table/{entity}/{id}"
       public:       "table/{entity}/{id}"
-      defaults:     { _controller: "BackendBundle:Crud:showRecord" }
+      defaults:     { _controller: "BackendBundle:Crud:showRecord", _role: "ROLE_EDITOR" }
       requirements:
           entity:   "[A-Za-z_]+[A-Za-z0-9_]+"
           id:       "[0-9]+"
@@ -72,7 +72,7 @@ routes:
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_table/{entity}/suggest/{field}"
       public:       "table/{entity}/suggest/{field}"
-      defaults:     { _controller: "BackendBundle:Crud:suggestFieldValue" }
+      defaults:     { _controller: "BackendBundle:Crud:suggestFieldValue", _role: "ROLE_EDITOR" }
       requirements:
           entity:   "[A-Za-z_]+[A-Za-z0-9_]+"
           field:    "[A-Za-z_]+[A-Za-z0-9_]+"
@@ -80,22 +80,22 @@ routes:
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_api/fileupload"
       public:       "api/fileupload"
-      defaults:     { _controller: "BackendBundle:Upload:processUpload" }
+      defaults:     { _controller: "BackendBundle:Upload:processUpload", _role: "ROLE_EDITOR" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_developer/routing"
       public:       "developer/routing"
-      defaults:     { _controller: "BackendBundle:Developer:showRouting" }
+      defaults:     { _controller: "BackendBundle:Developer:showRouting", _role: "ROLE_DEVELOPER" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_developer/views"
       public:       "developer/views"
-      defaults:     { _controller: "BackendBundle:Developer:showViews" }
+      defaults:     { _controller: "BackendBundle:Developer:showViews", _role: "ROLE_DEVELOPER" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_developer/formats"
       public:       "developer/formats"
-      defaults:     { _controller: "BackendBundle:Developer:showFormats" }
+      defaults:     { _controller: "BackendBundle:Developer:showFormats", _role: "ROLE_DEVELOPER" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_entities/all"
@@ -103,14 +103,26 @@ routes:
       defaults:     { _controller: "BackendBundle:Entities:showEntities" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+      pattern:      "_entity/{entity}"
+      public:       "entity/{entity}"
+      defaults:     { _controller: "BackendBundle:Entities:showEntity", _role: "ROLE_ADMIN" }
+      requirements:
+          entity:    "[A-Za-z_]+[A-Za-z0-9_]+"
+
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_entities/all/mutate"
       public:       "entities/all/mutate"
-      defaults:     { _controller: "BackendBundle:Entities:showMutate" }
+      defaults:     { _controller: "BackendBundle:Entities:showMutate", _role: "ROLE_ADMIN" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_developer/site/new"
       public:       "site/new"
-      defaults:     { _controller: "BackendBundle:Developer:showSite" }
+      defaults:     { _controller: "BackendBundle:Developer:showSite", _role: "ROLE_ADMIN" }
+
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
+      pattern:      "_profile/home"
+      public:       "profile/home"
+      defaults:     { _controller: "BackendBundle:Backend:any", _view: "Core/dashboard.html.twig" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_page/not-found"
