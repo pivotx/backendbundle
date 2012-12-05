@@ -64,6 +64,7 @@ THEEND;
             'name' => $name,
             'bundle' => false,
             'fields' => array(),
+            'features' => array()
         );
 
         if (!isset($this->arguments['verbose']) || ($this->arguments['verbose'] === true)) {
@@ -113,6 +114,11 @@ THEEND;
             $entity['fields'] = $definition['fields'];
         }
 
+        if (!isset($definition['features'])) {
+            $definition['features'] = array();
+        }
+        $entity['features'] = $definition['features'];
+
         return $entity;
     }
 
@@ -125,6 +131,7 @@ THEEND;
             'mediatype' => 'text/x-yaml',
             'source' => $value,
             'fields' => array(),
+            'features' => array()
         );
 
         $definition = \Symfony\Component\Yaml\Yaml::parse($value);
@@ -192,7 +199,9 @@ THEEND;
         foreach($entities as $entity) {
             $record = $this->loadEntity($entity);
 
-            $data[] = $record;
+            if ((!isset($this->arguments['name'])) || $this->arguments['name'] == $record['name']) {
+                $data[] = $record;
+            }
         }
 
         return $data;

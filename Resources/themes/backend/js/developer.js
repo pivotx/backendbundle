@@ -1,4 +1,4 @@
-function correctIdentifierType(element)
+function correctInputType(element, kind)
 {
     var in_value = $(element).val();
     var allow_uppercase = false;
@@ -8,9 +8,29 @@ function correctIdentifierType(element)
         allow_uppercase = true;
     }
 
-    out_value = out_value.replace(/^ +/, '');
-    out_value = out_value.replace(/ +$/, '');
-    out_value = out_value.replace(/[^a-zA-Z0-9_]+/g, '_');
+    out_value = out_value.trim();
+
+    switch (kind) {
+        case 'variable':
+            out_value = out_value.replace(/[^a-zA-Z0-9_]+/g, '_');
+            break;
+
+        case 'identifier':
+            out_value = out_value.replace(/[^a-zA-Z0-9_-]+/g, '-');
+            break;
+
+        case 'uri':
+            out_value = out_value.replace(/[^a-zA-Z0-9_-]+/g, '-');
+            break;
+
+        case 'host':
+            out_value = out_value.replace(/[^a-zA-Z0-9_.-]+/g, '-');
+            break;
+
+        default:
+            out_value = out_value.replace(/[^a-zA-Z0-9_]+/g, '_');
+            break;
+    }
 
     if (!allow_uppercase) {
         out_value = out_value.toLowerCase();
@@ -42,8 +62,10 @@ $(function(){
         }
     });
 
-    $(document).on('blur', 'input.identifier-type', function(e){
-        correctIdentifierType(this);
+    $(document).on('blur', 'input.correct-type', function(e){
+        var type = $(this).attr('data-type');
+
+        correctInputType(this, type);
     });
 });
 

@@ -16,7 +16,7 @@ class Siteadmin extends Item
         $this->setAttribute('icon', 'icon-fire');
         $this->resetBreadcrumb();
 
-        $menu = $this->addItem(new Item('status'));
+        $menu = $this->addItem(new RouteItem('status', '_siteadmin/status'));
         $menu = $this->addItem(new Item('configuration'));
         //$menu->resetBreadcrumb();
         //$submenu = $menu->addItem(new RouteItem('entry', '_siteadmin/entity/entry'));

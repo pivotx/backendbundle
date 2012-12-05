@@ -17,6 +17,11 @@ class EntitiesController extends Controller
     private function getEntityConfiguration($name)
     {
         if (is_null($name)) {
+            if ($this->getRequest()->attributes->has('entity')) {
+                $name = $this->getRequest()->attributes->get('entity');
+            }
+        }
+        if (is_null($name)) {
             if ($this->getRequest()->request->has('entity')) {
                 $name = $this->getRequest()->request->get('entity');
             }
@@ -59,7 +64,7 @@ class EntitiesController extends Controller
 
         $entity = $this->getEntityConfiguration(null);
         if (is_null($entity)) {
-            $this->get('session')->setFlash('error', 'Entity "'.$entity['name'].'" doesn\'t exist.');
+            $this->get('session')->setFlash('error', 'Entity "'.$name.'" doesn\'t exist.');
             return false;
         }
 
@@ -166,6 +171,83 @@ class EntitiesController extends Controller
         return false;
     }
 
+    public function handleEditFeature(ParameterBag $arguments)
+    {
+        $type = trim($arguments->get('type', ''));
+        $args = trim($arguments->get('arguments', ''));
+
+        if ($type == '') {
+            $this->get('session')->setFlash('error', 'Type has not been entered.');
+            return false;
+        }
+
+        $entity = $this->getEntityConfiguration(null);
+        if (is_null($entity)) {
+            $this->get('session')->setFlash('error', 'Entity "'.$name.'" doesn\'t exist.');
+            return false;
+        }
+
+        $suggestions = new \PivotX\Doctrine\Generator\Suggestions();
+
+        $feature = $suggestions->getFeature($type, $args);
+
+        if (true) {
+            // new feature
+
+            $entity['features'][] = $feature;
+
+            $this->get('session')->setFlash('notice', 'New feature "'.$type.'" for entity "'.$entity['name'].'" has been added.');
+        }
+
+        $json = json_encode($entity);
+
+        $siteoptions = $this->get('pivotx.siteoptions');
+        $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+
+        //$this->get('session')->setFlash('debug', var_export($entity, true));
+
+        return true;
+    }
+
+    public function handleDeleteFeature(ParameterBag $arguments)
+    {
+        $type = trim($arguments->get('type', ''));
+
+        if ($type == '') {
+            $this->get('session')->setFlash('error', 'Type has not been entered.');
+            return false;
+        }
+
+        $entity = $this->getEntityConfiguration(null);
+        if (is_null($entity)) {
+            $this->get('session')->setFlash('error', 'Entity "..." doesn\'t exist.');
+            return false;
+        }
+
+        $idx = false;
+        for($i=0; $i < count($entity['features']); $i++) {
+            if ($entity['features'][$i]['type'] == $type) {
+                $idx = $i;
+                break;
+            }
+        }
+
+        if ($idx !== false) {
+            array_splice($entity['features'], $idx, 1);
+
+            $this->get('session')->setFlash('notice', 'Feature "'.$type.'" for entity "'.$entity['name'].'" has been deleted.');
+
+            $json = json_encode($entity);
+
+            $siteoptions = $this->get('pivotx.siteoptions');
+            $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+
+            return true;
+        }
+
+        return false;
+    }
+
     public function handleNewEntity(ParameterBag $arguments)
     {
         $name = trim($arguments->get('name', ''));
@@ -189,7 +271,9 @@ class EntitiesController extends Controller
 
     public function showMutateAction(Request $request)
     {
-        $url = $this->get('pivotx.routing')->buildUrl('_entities/all');
+        $entity_name = $this->getRequest()->request->get('entity');
+
+        $url = $this->get('pivotx.routing')->buildUrl('_entity/'.$entity_name);
 
         switch ($request->request->get('action', '')) {
             case 'add_entity':
@@ -204,10 +288,20 @@ class EntitiesController extends Controller
                 // @todo flash vars don't work because we redirect twice
                 $this->handleDeleteField($request->request);
                 break;
+
+            case 'edit_feature':
+                $this->handleEditFeature($request->request);
+                break;
+
+            case 'delete_feature':
+                // @todo flash vars don't work because we redirect twice
+                $this->handleDeleteFeature($request->request);
+                break;
         }
 
         $siteoptions = $this->get('pivotx.siteoptions');
-        $siteoptions->set('config.check.entities', 0, 'x-value/boolean', false, false, 'all');
+        $siteoptions->set('config.check.entities', 1, 'x-value/boolean', false, false, 'all');
+        $siteoptions->set('config.check.any', 1, 'x-value/boolean', false, false, 'all');
 
         return $this->redirect($url);
     }
@@ -223,7 +317,7 @@ class EntitiesController extends Controller
     {
         $context = $this->getDefaultHtmlContext();
 
-        $entity_name = 'Entry';
+        $entity_name = $this->getRequest()->attributes->get('entity');
 
         $view = $this->get('pivotx.views')->findView('Backend/findEntities');
         $view->setArguments(array('name'=>$entity_name));

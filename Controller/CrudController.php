@@ -23,14 +23,15 @@ class CrudController extends Controller
                 //var_dump($class);
 
                 $_p = explode('\\',$class->name);
-                $base_class = $_p[count($_p)-1];
+                $base_class = end($_p);
+
+                //echo 'Base-class: '.$base_class."\n";
 
                 if ($base_class == $name) {
                     return $class->name;
                 }
 
                 //var_dump($paths,$base_class);
-                //echo 'Base-class: '.$base_class."\n";
             }
         }
 

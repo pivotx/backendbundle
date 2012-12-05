@@ -28,6 +28,22 @@
         {% endblock %}
         </div>
 
+        {% if backend.messages %}
+        <div class="container">
+            {% for message in backend.messages %}
+            <div class="alert alert-block {% if message.importance == 'very' %}alert-error{% endif %}">
+                {% if message.importance != 'very' %}
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                {% endif %}
+                {% if message.title is defined %}
+                <h4>{{ message.title }}</h4>
+                {% endif %}
+                {{ message.text }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <div class="body">
         {% block body %}
             Base body

@@ -54,6 +54,12 @@ class Service
         $this->pivotx_views->registerView($view);
         unset($view);
 
+        $suggestions = new \PivotX\Doctrine\Generator\Suggestions();
+        $types = $suggestions->getFeatures();
+        $view = new ArrayView($types, 'Backend/findEntityFeatures', 'PivotX/Backend', 'Return all the entity features', array('returnAll', 'Backend'));
+        $this->pivotx_views->registerView($view);
+        unset($view);
+
         $view = new findBundles($this->kernel, 'Backend/findBundles');
         $this->pivotx_views->registerView($view);
         unset($view);

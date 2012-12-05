@@ -1,0 +1,35 @@
+{% extends "Base/content_and_meta.html.twig" %}
+
+{% block content %}
+
+<div class="site span9">
+
+    <h1>Profile</h1>
+
+
+    <h2>Switch profiles</h2>
+
+    {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+
+    Click <a href="?_switch_user=_exit">here</a> to go back to the previous user.
+
+    {% elseif is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+
+    {% loadView 'User/findBy' as users with { 'orderBy': {'level':'desc','email':'asc'} } %}
+    {% for loopvar in users.htmliterator({'groupingby':'level'}) %}
+        {% set user = loopvar.value %}
+        {% if loopvar.group_start %}
+            <ul>
+                <h3>Users with level {{ user.level }}</h3>
+        {% elseif loopvar.group_end %}
+            </ul>
+        {% elseif loopvar.item %}
+                <li>Switch to <a href="?_switch_user={{ user.username|escape('url') }}">{{ user.username }}</a></li>
+        {% endif %}
+    {% endfor %}
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "Base/content_and_meta.html.twig" %}
+
+{% block content %}
+
+    <h1>
+        Site status
+    {% if badges.important > 0 %}
+        <span class="badge badge-important">{{ badges.important }}</span>
+    {% endif %}
+    {% if badges.warning > 0 %}
+        <span class="badge badge-warning">{{ badges.warning }}</span>
+    {% endif %}
+    </h1>
+
+    <p>
+        This page contains an overview of the current status of your site.
+    </p>
+
+
+    <h2>System subsystems</h2>
+
+    <dl class="dl-horizontal">
+    {% for check in checks %}
+        <dt>{{ check.name }}</dt>
+        <dd>
+        {% if check.attention %}
+            <span class="label label-important">{{ check.attention }}</span>
+        {% endif %}
+            {{ check.description }}
+        </dd>
+    {% endfor %}
+    </dl>
+
+
+    <h2>Updates</h2>
+
+    <dl class="dl-horizontal">
+        <dt>PivotX</dt>
+        <dd>4.0.0 installed. Up to date.</dd>
+
+        <dt>Symfony</dt>
+        <dd>2.1.4 installed. <span class="label label-warning">2.1.6 available.</span> Minor update.</dd>
+
+        <dt>Twig</dt>
+        <dd>1.11.1 installed. <span class="label label-warning">1.16.1 available.</span> Security update. <span class="label label-important">Update recommended.</span></dd>
+    </dl>
+
+{% endblock %}
+
+

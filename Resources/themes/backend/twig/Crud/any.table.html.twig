@@ -51,9 +51,11 @@ table.crud-bike th.column-reviews {
                 <input type="checkbox" name="id-toggle" data-id="id-toggle">
             </th>
             <th class="column-id"                                   >Id</th>
+            {#
         {% for field in crud.fields %}
             <th>{{ field }}</th>
         {% endfor %}
+#}
         </tr>
     </thead>
 
@@ -67,6 +69,7 @@ table.crud-bike th.column-reviews {
                 № {{ item.id }}
             </td>
 
+{#
         {% for field in crud.fields %}
             {% set shown_buttons = false %}
             {% set field = field|replace({'_':''}) %}
@@ -84,6 +87,7 @@ table.crud-bike th.column-reviews {
             </td>
             {% endif %}
         {% endfor %}
+#}
         </tr>
     {% endfor %}
     </tbody>

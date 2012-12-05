@@ -46,6 +46,11 @@ routes:
       defaults:     { _controller: "BackendBundle:Backend:any", _view: "Core/logout.html.twig" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+      pattern:      "_siteadmin/status"
+      public:       "siteadmin/status"
+      defaults:     { _controller: "BackendBundle:Siteadmin:showStatus", _role: "ROLE_EDITOR" }
+
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_table/{entity}"
       public:       "table/{entity}"
       defaults:     { _controller: "BackendBundle:Crud:showTable", _role: "ROLE_EDITOR" }
@@ -119,10 +124,20 @@ routes:
       public:       "site/new"
       defaults:     { _controller: "BackendBundle:Developer:showSite", _role: "ROLE_ADMIN" }
 
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+      pattern:      "_developer/site/mutate"
+      public:       "site/mutate"
+      defaults:     { _controller: "BackendBundle:Developer:showMutateSite", _role: "ROLE_ADMIN" }
+
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+      pattern:      "_developer/site/load"
+      public:       "site/load"
+      defaults:     { _controller: "BackendBundle:Developer:showLoadSite", _role: "ROLE_ADMIN" }
+
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_profile/home"
       public:       "profile/home"
-      defaults:     { _controller: "BackendBundle:Backend:any", _view: "Core/dashboard.html.twig" }
+      defaults:     { _controller: "BackendBundle:Backend:any", _view: "Developer/profile.html.twig" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_page/not-found"

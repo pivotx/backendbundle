@@ -30,7 +30,7 @@
                 {% else %}
                     <!-- <span class="label label-info">Unchangable</span> -->
                     <div class="btn-group on-row-hover">
-                        <a class="btn btn-mini btn-danger siteadmin-delete" href="{{ ref('_siteadmin/entities/mutate') }}"><i class="icon-trash icon-white"></i> delete</a>
+                        <a class="btn btn-mini btn-danger siteadmin-delete" href="{{ ref('_entities/entities/mutate') }}"><i class="icon-trash icon-white"></i> delete</a>
                     </div>
                 {% endif %}
             {% else %}
@@ -57,6 +57,46 @@
                     <em>new field</em><span class="field-name"></span>
                     <div class="btn-group on-row-hover">
                         <a class="btn btn-mini siteadmin-edit siteadmin-add" href="#"><i class="icon-pencil"></i> add</a>
+                    </div>
+                </td>
+                <td>
+                    <em>( .. )</em>
+                </td>
+            </tr>
+        {% endif %}
+        </tbody>
+    <table>
+
+    <table class="siteadmin table table-striped table-bordered" data-entity="{{ entity.name }}">
+        <thead>
+            <tr>
+                <td>name</td>
+                <td>definition</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for feature in entity.features %}
+            <tr>
+                <td>
+                    <span class="feature-type">{{ feature.type }}</span><br/>
+                    <div class="btn-group on-row-hover">
+                        <a class="btn btn-mini btn-danger siteadmin-delete-feature" href="{{ ref('_entities/all/mutate') }}"><i class="icon-trash icon-white"></i> delete</a>
+                    </div>
+                </td>
+                <td>
+                    {{ feature.description }}<br/>
+
+                    {# @todo oh, how lazy we are #}
+                    {{ pxdump(feature.orm.auto_entity.timesliceable.fields) }}
+                </td>
+            </tr>
+        {% endfor %}
+        {% if entity.mediatype == 'application/json' %}
+            <tr>
+                <td>
+                    <em>new feature</em><span class="field-name"></span>
+                    <div class="btn-group on-row-hover">
+                        <a class="btn btn-mini siteadmin-edit-feature siteadmin-add-feature" href="#"><i class="icon-pencil"></i> add</a>
                     </div>
                 </td>
                 <td>

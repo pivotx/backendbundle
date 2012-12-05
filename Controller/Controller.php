@@ -74,20 +74,49 @@ class Controller extends CoreController
         return $parameters;
     }
 
+    /**
+     * Overruled version for the backend
+     */
     public function getDefaultHtmlContext()
     {
-        $context = array(
-            'html' => array(
-                'title' => 'PivotX',
-                'meta' => array(
-                    'charset' => 'utf-8'
-                )
-            )
-        );
+        $context = parent::getDefaultHtmlContext();
+
+        $context['html']['title'] = 'PivotX';
+        $context['html']['meta']['charset'] = 'utf-8';
+
+        $messages = array();
 
         $context['backend'] = array(
-            'security' => $this->checkLogin($this->getRequest())
+            'security' => $this->checkLogin($this->getRequest()),
+            'messages' => false
         );
+
+        $siteoptions = $this->container->get('pivotx.siteoptions');
+        if ($siteoptions->getValue('config.check.any', false, 'all')) {
+            $href = $this->container->get('pivotx.routing')->buildUrl('_siteadmin/status');
+            $message = array(
+                'importance' => 'very',
+                'title' => 'Check configuration',
+                'text' => new \Twig_Markup('The configuration is out of date. Check the <a href="'.$href.'">status</a> page.', 'utf-8')
+            );
+
+            $routing    = $this->container->get('pivotx.routing');
+            $routematch = $routing->getLatestRouteMatch();
+            if (!is_null($routematch)) {
+                if ($routematch->buildReference()->buildLocalTextReference() == '_siteadmin/status') {
+                    // if we ARE on the status page, then don't show the message
+                    $message['text'] = 'The configuration is out of date. Check the page below.';
+                }
+            }
+
+            $messages[] = $message;
+        }
+
+        if (count($messages) > 0) {
+            $context['backend']['messages'] = $messages;
+        }
+
+        //var_dump($context);
 
         return $context;
     }
@@ -123,7 +152,10 @@ class Controller extends CoreController
         $this->container->get('twig.loader')->addPath($realpath . '/twig');
     }
 
-    private function runOnce()
+    /**
+     * Overruled runOnce
+     */
+    protected function runOnce()
     {
         $views = $this->get('pivotx.views');
 
@@ -164,19 +196,8 @@ class Controller extends CoreController
         $profilemenu = new \PivotX\Component\Lists\RouteItem('dashboard', '_page/dashboard');
         $item = $profilemenu->addItem(new \PivotX\Backend\Lists\Profile($this->get('security.context'), $repository));
         $this->get('pivotx.lists')->addItem('Backend/Profilemenu', $profilemenu, false);
-    }
 
-    public function render($view, array $parameters = array(), Response $response = null)
-    {
-        static $once = false;
-
-        if ($once === false) {
-            $once = true;
-
-            $this->runOnce();
-        }
-
-        return parent::render($view, $parameters, $response);
+        parent::runOnce();
     }
 
     public function xyzanyAction(Request $request)

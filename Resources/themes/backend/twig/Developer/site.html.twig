@@ -3,97 +3,119 @@
 {% block content %}
 
 <div class="site span9">
-    <form class="form table-form" method="post" action="">
+    <form class="form table-form site-form" method="post" action="{{ ref('_developer/site/mutate') }}">
 
     <h1>Site configuration "new"</h1>
 
-    <h2>Basic information</h2>
+    <fieldset class="basic">
+        <legend>Basic information</legend>
 
-    <table class="table table-condensed">
-        <tbody>
-            <tr>
-                <th class="span12" colspan="3">
-                    Site
-                </th>
-            </tr>
-            <tr>
-                <td class="span5" colspan="2"><label for="siteid">Site identifier</label></td>
-                <td class="span7"><input type="text" id="siteid" class="span8 identifier-type" value="main" /></td>
-            </tr>
-            <tr>
-                <td class="span5" colspan="2"><label for="primary_domain">Primary domain</label></td>
-                <td class="span7"><input type="text" id="primary_domain" class="span8 host-type" value="" placeholder="example.com" /></td>
-            </tr>
+        <table class="table table-condensed">
+            <tbody>
+                <tr>
+                    <th class="span12" colspan="3">
+                        Site
+                    </th>
+                </tr>
+                <tr>
+                    <td class="span5" colspan="2"><label for="siteid">Site identifier</label></td>
+                    <td class="span7"><input type="text" id="siteid" class="span8 correct-type" data-type="identifier" name="site" placeholder="main-site" /></td>
+                </tr>
+                <tr>
+                    <td class="span5" colspan="2"><label for="primary_domain">Primary domain</label></td>
+                    <td class="span7"><input type="text" id="primary_domain" class="span8 correct-type host" data-type="host" name="domain" value="" placeholder="example.com" /></td>
+                </tr>
 
-            <tr>
-                <th class="span12" colspan="3">
-                    Theme / URL schemes
-                </th>
-            </tr>
-            <tr>
-                <td class="span3 checkbox"><span>#1</span><input type="checkbox" name="" value="" checked="checked" /></td>
-                <td class="span2"><input class="span12 identifier-type" type="text" name="" value="desktop" /></td>
-                <td class="span7"><input class="span8" type="text" name="" value="Desktop version" /></td>
-            </tr>
-            <tr>
-                <td class="span3 checkbox"><span>#2</span><input type="checkbox" name="" value="" /></td>
-                <td class="span2"><input class="span12 identifier-type" type="text" name="" value="mobile" /></td>
-                <td class="span7"><input class="span8" type="text" name="" value="Mobile version" /></td>
-            </tr>
+                <tr>
+                    <th class="span12" colspan="3">
+                        Theme / URL schemes
+                    </th>
+                </tr>
+                <tr class="hide target-template">
+                    <td class="span3 checkbox number"><span></span><input type="checkbox" name="" /></td>
+                    <td class="span2 name"><input class="span12 identifier-type" type="text" name="" value="" /></td>
+                    <td class="span7 description"><input class="span8" type="text" name="" value="" /></td>
+                </tr>
+                <tr class="add-target">
+                    <td></td>
+                    <td colspan="2">
+                        <span>Add <a href="#" class="add-target" data-name="" data-description="">new</a> target</span>
+                        <span>/ Add <a href="#" class="add-target" data-name="desktop" data-description="Desktop version">desktop</a></span>
+                        <span>/ Add <a href="#" class="add-target" data-name="mobile" data-description="Mobile version">mobile</a></span>
+                    </td>
+                </tr>
 
-            <tr>
-                <th class="span12" colspan="3">
-                    Languages
-                </th>
-            </tr>
-            <tr>
-                <td class="span3 checkbox"><span>#1</span><input type="checkbox" name="" value="" /></td>
-                <td class="span2"><input class="span12 identifier-type" type="text" name="" value="en" /></td>
-                <td class="span7">
-                    <input class="span3" type="text" name="" value="en_GB.utf-8" />
-                    &#160;
-                    <input class="span5" type="text" name="" value="English language" />
-                </td>
-            </tr>
-            <tr>
-                <td class="span3 checkbox"><span>#2</span><input type="checkbox" name="" value="" /></td>
-                <td class="span2"><input class="span12 identifier-type" type="text" name="" value="nl" /></td>
-                <td class="span6">
-                    <input class="span3" type="text" name="" value="nl_NL.utf-8" />
-                    &#160;
-                    <input class="span5" type="text" name="" value="Dutch language" />
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                <tr>
+                    <th class="span12" colspan="3">
+                        Languages
+                    </th>
+                </tr>
+                <tr class="language-template hide">
+                    <td class="span3 checkbox number"><span></span><input type="checkbox" name="" /></td>
+                    <td class="span2 name"><input class="span12 identifier-type" type="text" name="" value="" /></td>
+                    <td class="span7 locale_description">
+                        <input class="span3 locale" type="text" name="" value="" />
+                        &#160;
+                        <input class="span5 description" type="text" name="" value="" />
+                    </td>
+                </tr>
+                <!--
+                <tr>
+                    <td class="span3 checkbox"><span>#2</span><input type="checkbox" name="" value="" /></td>
+                    <td class="span2"><input class="span12 identifier-type" type="text" name="" value="nl" /></td>
+                    <td class="span6">
+                        <input class="span3" type="text" name="" value="nl_NL.utf-8" />
+                        &#160;
+                        <input class="span5" type="text" name="" value="Dutch language" />
+                    </td>
+                </tr>
+                -->
+                <tr class="add-language">
+                    <td></td>
+                    <td colspan="2">
+                        <span>Add <a href="#" class="add-language" data-name="" data-description="">new</a> language</span>
+                        <span>/ Add <a href="#" class="add-language" data-name="en" data-locale="en_EN.utf-8" data-description="English">English</a></span>
+                        <span>/ Add <a href="#" class="add-language" data-name="nl" data-locale="nl_NL.utf-8" data-description="Dutch">Dutch</a></span>
+                    </td>
+                </tr>
 
 
-    <hr />
+                <tr class="buttons">
+                    <td></td>
+                    <td colspan="2">
+                        <button class="btn btn-alert disabled continue" type="button">Continue</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </fieldset>
 
+    <fieldset class="hosts hide">
+        <legend>Hostname setup</legend>
 
-    <h2>Hostname setup</h2>
-
-    <table class="table table-condensed">
-        <tbody>
-            <tr>
-                <td class="span2"></td>
-                <td class="span2">desktop</td>
-                <td class="span2">mobile</td>
-            </tr>
-            <tr>
-                <td class="span2 target-language">en</td>
-                <td class="span2"><input class="span12" type="text" value="http://example.com/" /></td>
-                <td class="span2"><input class="span12" type="text" value="http://example.com/mobile/" /></td>
-            </tr>
-            <tr>
-                <td class="span2 target-language">nl</td>
-                <td class="span2"><input class="span12" type="text" value="http://example.com/nl/" /></td>
-                <td class="span2"><input class="span12" type="text" value="http://example.com/mobile/nl/" /></td>
-            </tr>
-        </tbody>
-    </table>
+        <table class="table table-condensed">
+            <tbody>
+            </tbody>
+        </table>
+    </fieldset>
 
     </form>
 </div>
+
+<script type="text/javascript">
+
+$(function(){
+    $.ajax({
+        url: "{{ ref('_developer/site/load') }}",
+        dataType: 'json',
+        success: function(data, textStatus, jqXHR){
+            var form_el = $('form.site-form');
+
+            siteLoadSetup(form_el, data);
+        }
+    });
+});
+
+</script>
 
 {% endblock %}

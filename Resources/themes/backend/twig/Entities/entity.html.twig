@@ -73,6 +73,26 @@
                 </label>
             </form>
         </div>
+        <div class="edit-feature">
+            <form class="edit-feature-form" method="post" action="{{ ref('_entities/all/mutate') }}">
+                <input type="hidden" name="action" value="edit_feature" />
+                <input type="hidden" name="entity" value="" />
+                <label>
+                    Type:<br/>
+                    <select name="type">
+                    {% loadView 'Backend/findEntityFeatures' as features %}
+                        <option value="">(choose type)</option>
+                    {% for feature in features.result %}
+                        <option value="{{ feature.title }}">{{ feature.title }}</option>
+                    {% endfor %}
+                    </select>
+                </label>
+                <label class="need-arguments">
+                    Arguments:<br/>
+                    <input type="text" name="arguments" value="" />
+                </label>
+            </form>
+        </div>
     </div>
 
 {% endblock %}

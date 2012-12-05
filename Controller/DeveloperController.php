@@ -76,13 +76,7 @@ class DeveloperController extends Controller
 
     public function showRoutingAction(Request $request)
     {
-        $html = array(
-            'language' => 'en',
-            'meta' => array(
-                'charset' => 'utf-8',
-            ),
-            'title' => 'PivotX back-end'
-        );
+        $context = $this->getDefaultHtmlContext();
 
         $prefixeses = $this->get('pivotx.routing')->getRouteSetup()->getRoutePrefixeses();
         $prefixes   = array();
@@ -100,11 +94,8 @@ class DeveloperController extends Controller
         // @todo we shouldn't do this when we have priorities
         usort($routes, array(get_class($this), 'cmpRoute'));
 
-        $context = array(
-            'html' => $html,
-            'prefixes' => new \PivotX\Component\Views\ArrayView($prefixes, 'Developing/Routing/Prefixes', 'PivotX/Devend', 'Dynamic view to show the routeprefixes'),
-            'routes' => new \PivotX\Component\Views\ArrayView($routes, 'Developing/Routing/Routes', 'PivotX/Devend', 'Dynamic view to show the routes')
-        );
+        $context['prefixes'] = new \PivotX\Component\Views\ArrayView($prefixes, 'Developing/Routing/Prefixes', 'PivotX/Devend', 'Dynamic view to show the routeprefixes');
+        $context['routes'] = new \PivotX\Component\Views\ArrayView($routes, 'Developing/Routing/Routes', 'PivotX/Devend', 'Dynamic view to show the routes');
 
         return $this->render('Developer/routing.html.twig', $context);
     }
@@ -187,13 +178,7 @@ class DeveloperController extends Controller
 
     public function showViewsAction(Request $request)
     {
-        $html = array(
-            'language' => 'en',
-            'meta' => array(
-                'charset' => 'utf-8',
-            ),
-            'title' => 'PivotX back-end'
-        );
+        $context = $this->getDefaultHtmlContext();
 
         $all_views = $this->get('pivotx.views')->getRegisteredViews();
         usort($all_views, array(get_class($this), 'cmpViews'));
@@ -202,11 +187,8 @@ class DeveloperController extends Controller
 
         $views = $this->filterViews($all_views, $request->query->all());
 
-        $context = array(
-            'html' => $html,
-            'views' => new \PivotX\Component\Views\ArrayView($views, 'Developing/Views', 'Dynamic view to show all views'),
-            'tags' => new \PivotX\Component\Views\ArrayView($tags, 'Developing/Views/Tags', 'Dynamic view to show all tags of the views')
-        );
+        $context['views'] = new \PivotX\Component\Views\ArrayView($views, 'Developing/Views', 'Dynamic view to show all views');
+        $context['tags'] = new \PivotX\Component\Views\ArrayView($tags, 'Developing/Views/Tags', 'Dynamic view to show all tags of the views');
 
         return $this->render('Developer/views.html.twig', $context);
     }
@@ -223,33 +205,106 @@ class DeveloperController extends Controller
 
     public function showFormatsAction(Request $request)
     {
-        $html = array(
-            'language' => 'en',
-            'meta' => array(
-                'charset' => 'utf-8',
-            ),
-            'title' => 'PivotX back-end'
-        );
-
-        $formats = $this->get('pivotx.formats')->getRegisteredFormats();
-
-        usort($formats, array(get_class($this), 'cmpFormats'));
-
-        $context = array(
-            'html' => $html,
-            'items' => new \PivotX\Component\Views\ArrayView($formats, 'Developing/Formats', 'Dynamic view to show all formats')
-        );
-
-        return $this->render('Developer/formats.html.twig', $context);
-    }
-
-    public function showSiteAction(Request $request)
-    {
         $context = $this->getDefaultHtmlContext();
 
         $formats = $this->get('pivotx.formats')->getRegisteredFormats();
 
         usort($formats, array(get_class($this), 'cmpFormats'));
+
+        $context['items'] = new \PivotX\Component\Views\ArrayView($formats, 'Developing/Formats', 'Dynamic view to show all formats');
+
+        return $this->render('Developer/formats.html.twig', $context);
+    }
+
+    public function showLoadSiteAction(Request $request)
+    {
+        $siteoptions = $this->get('pivotx.siteoptions');
+
+        $sites = explode("\n", $siteoptions->getValue('config.sites', array(), 'all'));
+
+        $site = false;
+        foreach($sites as $_site) {
+            if ($_site != 'pivotx-backend') {
+                $site = $_site;
+                break;
+            }
+        }
+
+        $siteoption = $siteoptions->getSiteOption('routing.setup', $site);
+
+        $content = $siteoption->getValue();
+
+        return new \Symfony\Component\HttpFoundation\Response($content, 200);
+    }
+
+    public function showMutateSiteAction(Request $request)
+    {
+        $data = array(
+            'ok' => false
+        );
+
+        $valid = false;
+        $json_data = null;
+        if ($request->request->has('setup')) {
+            $json_data = json_decode($request->request->get('setup'), true);
+
+            if (is_array($json_data)) {
+                $data['ok'] = true;
+                $valid = true;
+            }
+        }
+
+        if ($valid) {
+            $siteoptions = $this->get('pivotx.siteoptions');
+
+            $site = $json_data['site'];
+
+            $siteoptions->clearSiteOptions($site, 'routing');
+
+            $siteoptions->set('routing.setup', json_encode($json_data), 'application/json', false, false, $site);
+            $siteoptions->set('routing.targets', json_encode($json_data['targets']), 'application/json', true, false, $site);
+            $siteoptions->set('routing.languages', json_encode($json_data['languages']), 'application/json', true, false, $site);
+
+            $routeprefixes = array();
+            foreach($json_data['hosts'] as $target => $languages) {
+                foreach($languages as $language => $_hosts) {
+                    $hosts = explode("\n", trim($_hosts));
+                    foreach($hosts as &$host) {
+                        $host = str_replace('.', '[.]', $host);
+                        $host = preg_replace('|(https?://)([^/]+)(.*/)|', '\\1.+\\3', $host);
+                    }
+                    $prefix = '|^'.$hosts[0].'|';
+                    $routeprefix = array(
+                        'filter' => array(
+                            'target' => $target,
+                            'site' => $site,
+                            'language' => $language
+                        ),
+                        'prefix' => $prefix
+                    );
+                    if (count($hosts) > 1) {
+                        $aliases = $hosts;
+                        array_shift($aliases);
+                        foreach($aliases as &$alias) {
+                            $alias = '|^'.$alias.'|';
+                        }
+                        $routeprefix['aliases'] = $aliases;
+                    }
+
+                    $routeprefixes[] = $routeprefix;
+                }
+            }
+            $siteoptions->set('routing.routeprefixes', json_encode($routeprefixes), 'application/json', true, false, $site);
+        }
+
+        $content = json_encode($data);
+
+        return new \Symfony\Component\HttpFoundation\Response($content, 200);
+    }
+
+    public function showSiteAction(Request $request)
+    {
+        $context = $this->getDefaultHtmlContext();
 
         return $this->render('Developer/site.html.twig', $context);
     }

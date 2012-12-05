@@ -25,8 +25,9 @@ class Profile extends Item
         $this->setAttribute('switched_user', false);
         $this->resetBreadcrumb();
 
-        $this->addItem(new Item('my profile'));
+        $this->addItem(new RouteItem('profile', '_profile/home'));
 
+        /*
         if (!is_null($token)) {
             if ($security_context->isGranted('ROLE_PREVIOUS_ADMIN')) {
                 // warn this is not the default user
@@ -54,8 +55,8 @@ class Profile extends Item
                 $switchmenu->setAsItemsHolder();
             }
         }
+         */
 
-        $this->addItem(new SeparatorItem());
         $this->addItem(new RouteItem('logout', '_page/logout'));
     }
 }
