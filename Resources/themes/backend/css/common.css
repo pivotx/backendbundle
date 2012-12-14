@@ -33,3 +33,34 @@ tr:hover .hide-on-row-hover {
     margin-top: 0;
     margin-bottom: 0;
 }
+
+
+
+/* Modal */
+
+#default-modal.modal-snippets { width: 800px; margin-left: -400px}
+
+.modal-header {
+    background-color: #222;
+    color: #fff;
+}
+
+.modal-header h3 {
+    font-weight: normal;
+}
+
+.modal-header .close {
+    color: #fff;
+}
+
+#default-modal.modal-snippets .modal-body {
+    padding: 15px 0;
+}
+
+.modal-body, div.modal-footer {
+    background-color: #F6F2F0;
+}
+
+div.modal-footer {
+    
+}

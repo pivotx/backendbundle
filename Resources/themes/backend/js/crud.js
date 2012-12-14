@@ -3,6 +3,8 @@ var crud_tables = {};
 var crud_last_toggle = -1;
 var crud_clear_selection = true;
 
+var crud_slug_timer = false; // @todo we support only 1 slug update
+
 
 /**
  * Activate the right text and update the count
@@ -326,10 +328,12 @@ function updateCrudUniqueField(unique_el, field, sources)
                         other = 1;
                     }
                 }
+                $('div.suggestions ul li.select-this').remove();
                 var html = '<ul>';
-                html += '<li><a class="btn btn-mini unique-select edit-self" href="#">edit</a></li>';
+                html += $('div.suggestions ul', unique_el).html();
+                html += '<li class="select-this select-this-first"><a class="btn btn-mini unique-select select-this" href="#">' + data[0] + '</a></li>';
                 if (other >= 0) {
-                    html += '<li><a class="btn btn-mini unique-select select-this" href="#">' + data[other] + '</a></li>';
+                    html += '<li class="select-this"><a class="btn btn-mini unique-select select-this" href="#">' + data[other] + '</a></li>';
                 }
                 html += '</ul>';
                 // @todo this should be directer (in now searches the complete html)
@@ -356,7 +360,12 @@ function fixCrudUniqueSources(form_el, unique_el, field, sources_text)
 
             $('input[name="form['+source+']"]').on('change keyup', function(e){
                 if ($(this).attr('data-previous') != $(this).val()) {
-                    updateCrudUniqueField(unique_el, field, sources);
+                    if (crud_slug_timer !== false) {
+                        clearTimeout(crud_slug_timer);
+                    }
+
+                    crud_slug_timer = setTimeout(function(){ updateCrudUniqueField(unique_el, field, sources); }, 500);
+
                     $(this).attr('data-previous', $(this).val());
                 }
             });
@@ -747,12 +756,17 @@ $(function(){
         var field = $(unique_el).attr('data-field');
         if ($(this).hasClass('select-this')) {
             var value = $(this).text();
+            $('li.edit-self', unique_el).show();
+            $('li.select-this-first', unique_el).hide();
             $('span.current', unique_el).html(value).show();
             $('input', unique_el).val(value).hide();
         }
         else {
+            // edit-self
+            $('li.edit-self', unique_el).hide();
+            $('li.select-this-first', unique_el).show();
             $('span.current', unique_el).hide();
-            $('input', unique_el).show().focus();
+            $('input', unique_el).show().focus().addClass('correct-type').attr('data-type', 'slug');
         }
     });
 

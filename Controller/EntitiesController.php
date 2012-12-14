@@ -250,34 +250,45 @@ class EntitiesController extends Controller
 
     public function handleNewEntity(ParameterBag $arguments)
     {
-        $name = trim($arguments->get('name', ''));
-        $type = trim($arguments->get('entity_type', ''));
+        $name   = trim($arguments->get('name', ''));
+        $type   = trim($arguments->get('entity_type', ''));
+        $bundle = trim($arguments->get('bundle', ''));
 
-        if (($name == '') || ($type == '')) {
+        if (($name == '') || ($type == '') || ($bundle == '')) {
             $this->get('session')->setFlash('error', 'Either name or type has not been entered.');
             return false;
         }
 
-        $entity = $this->getEntityConfiguration($name);
-        if (!is_null($entity)) {
+        $check_entity = $this->getEntityConfiguration($name);
+        if (!is_null($check_entity)) {
             $this->get('session')->setFlash('error', 'Entity "'.$name.'" already exists.');
+            return false;
+        }
+
+        $suggestions = new \PivotX\Doctrine\Generator\Suggestions();
+        $entity = $suggestions->buildEntity($type, $name, $bundle);
+        if (is_null($entity)) {
+            $this->get('session')->setFlash('error', 'Entity type "'.$type.'" is not available.');
             return false;
         }
 
         $this->get('session')->setFlash('notice', 'Entity "'.$name.'" has been added.');
 
-        return true;
+        $json = json_encode($entity);
+
+        $siteoptions = $this->get('pivotx.siteoptions');
+        $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+
+        return $name;
     }
 
     public function showMutateAction(Request $request)
     {
         $entity_name = $this->getRequest()->request->get('entity');
 
-        $url = $this->get('pivotx.routing')->buildUrl('_entity/'.$entity_name);
-
         switch ($request->request->get('action', '')) {
             case 'add_entity':
-                $this->handleNewEntity($request->request);
+                $entity_name = $this->handleNewEntity($request->request);
                 break;
 
             case 'edit_field':
@@ -297,6 +308,13 @@ class EntitiesController extends Controller
                 // @todo flash vars don't work because we redirect twice
                 $this->handleDeleteFeature($request->request);
                 break;
+        }
+
+        if (!is_null($entity_name)) {
+            $url = $this->get('pivotx.routing')->buildUrl('_entity/'.$entity_name);
+        }
+        else {
+            $url = $this->get('pivotx.routing')->buildUrl('_entities/all');
         }
 
         $siteoptions = $this->get('pivotx.siteoptions');

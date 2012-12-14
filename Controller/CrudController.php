@@ -681,7 +681,7 @@ class CrudController extends Controller
      */
     public function suggestFieldValueAction(Request $request)
     {
-        $entity_class = $this->getEntityClass($request->get('entity'));
+        $entity_class   = $this->getEntityClass($request->get('entity'));
         $entity_manager = $this->get('doctrine')->getEntityManager();
         $repository     = $this->get('doctrine')->getRepository($entity_class);
 

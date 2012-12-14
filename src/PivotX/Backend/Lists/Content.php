@@ -30,7 +30,7 @@ class Content extends Item
         $entities = $siteoptions_service->getValue('config.entities', null, 'all');
         foreach($entities as $entity) {
             $name = strtolower($entity);
-            $pluralname = $name . 's';
+            $pluralname = \PivotX\Component\Translations\Inflector::pluralize($name);
 
             $menu = $this->addItem(new \PivotX\Component\Lists\RouteItem($pluralname, '_table/'.$entity));
             $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem($name, '_table/'.$entity.'/{id}'));

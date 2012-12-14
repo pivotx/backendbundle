@@ -25,6 +25,13 @@
                 <div class="span6">
                     <h2>Backend sitemap</h2>
 
+                    {% loadView 'Entry/findByEventsBetweenDates' as items with { 'date_first': '2012-12-01', 'date_last': '2012-12-22' } %}
+                    <ul>
+                    {% for entry in items.result %}
+                        <li>{{ entry.id }}: {{ entry.title }} - {{ entry.datecreated|formatas('Backend/Auto') }}</li>
+                    {% endfor %}
+                    </ul>
+
                     {% loadList 'Backend/Topmenu' as menu %}
                     {% set item = menu.item %}
                     <ul>

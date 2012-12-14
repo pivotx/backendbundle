@@ -25,7 +25,7 @@ function modalAll(title, text)
     $('h3', dm_el).html(title);
     $('div.modal-body', dm_el).html(text);
     $('a.btn', dm_el).hide().off('click');
-    $('a[data-modal-kind="close"]').show();
+    //$('a[data-modal-kind="close"]').show();
 
     return dm_el;
 }

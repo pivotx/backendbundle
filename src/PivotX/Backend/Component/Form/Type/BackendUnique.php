@@ -25,7 +25,6 @@ class BackendUnique extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        // @todo guessing this is new
         $this->options = $options;
 
         $view

@@ -1,0 +1,56 @@
+{% macro button(id, title) %}
+
+<a class="btn btn-mini snippets-button" href="#snippets-{{ id }}" data-modal-title="{{ title }}">snippets</a>
+
+{% endmacro %}
+
+
+{% macro buttonrow(id, title) %}
+    {% import _self as snippets %}
+
+<div class="on-row-hover btn-group">
+    {{ snippets.button(id, title) }}
+</div>
+
+{% endmacro %}
+
+
+{% macro modal(id, snippets) %}
+
+<div class="hide snippets" id="snippets-{{ id }}">
+
+    <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs">
+        {% for snippet in snippets %}
+            <li class="{% if loop.first %}active{% endif %}">
+                <a href="#snippets-{{ id }}-{{ loop.index }}" data-toggle="tab">{{ snippet.title }}</a>
+            </li>
+        {% endfor %}
+        {#
+            <li class="active"><a href="#snippet-{{ id }}-documentation" data-toggle="tab">Documentation</a></li>
+            <li><a href="#snippet-{{ id }}-twig-1" data-toggle="tab">Twig example #1</a></li>
+        #}
+        </ul>
+
+        <div class="tab-content">
+        {% for snippet in snippets %}
+            <div class="tab-pane {% if loop.first %}active{% endif %}" data-become-id="snippets-{{ id }}-{{ loop.index }}">
+                {% if snippet.type == 'default' %}
+                    {{ snippet.text }}
+                {% elseif snippet.type == 'php' %}
+                    {% set code = ['<pre class="prettyprint lang-java">', snippet.text, '</pre>']|join %}
+
+                    {{ code|raw }}
+                {% elseif snippet.type == 'twig' or snippet.type == 'html' %}
+                    {% set code = ['<pre class="prettyprint lang-html">', snippet.text, '</pre>']|join %}
+
+                    {{ code|raw }}
+                {% endif %}
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+{% endmacro %}

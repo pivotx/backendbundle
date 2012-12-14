@@ -4,6 +4,7 @@ namespace PivotX\Backend\Lists;
 
 use PivotX\Component\Lists\Item;
 use PivotX\Component\Lists\RouteItem;
+use PivotX\Component\Lists\UrlItem;
 use PivotX\Component\Lists\SeparatorItem;
 
 class Siteadmin extends Item
@@ -17,7 +18,7 @@ class Siteadmin extends Item
         $this->resetBreadcrumb();
 
         $menu = $this->addItem(new RouteItem('status', '_siteadmin/status'));
-        $menu = $this->addItem(new Item('configuration'));
+        $menu = $this->addItem(new UrlItem('configuration', '#'));
         //$menu->resetBreadcrumb();
         //$submenu = $menu->addItem(new RouteItem('entry', '_siteadmin/entity/entry'));
         //$submenu = $menu->addItem(new RouteItem('page', '_siteadmin/entity/page'));

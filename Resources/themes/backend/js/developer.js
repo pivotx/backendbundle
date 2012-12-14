@@ -11,6 +11,7 @@ function correctInputType(element, kind)
     out_value = out_value.trim();
 
     switch (kind) {
+        case 'tablename':
         case 'variable':
             out_value = out_value.replace(/[^a-zA-Z0-9_]+/g, '_');
             break;
@@ -19,6 +20,7 @@ function correctInputType(element, kind)
             out_value = out_value.replace(/[^a-zA-Z0-9_-]+/g, '-');
             break;
 
+        case 'slug':
         case 'uri':
             out_value = out_value.replace(/[^a-zA-Z0-9_-]+/g, '-');
             break;
@@ -71,4 +73,27 @@ $(function(){
 
 $(window).load(function(){
     prettyPrint();
+
+    $(document).on('click', 'a.snippets-button', function(e){
+        e.preventDefault();
+
+        var snippets_el = this;
+        var id = $(this).attr('href');
+        var title = $(this).attr('data-modal-title');
+        var text = $(id).html();
+        text = text.replace(/data-become-/g, '');
+        var dm_el = modalAll(title, text);
+        dm_el.addClass('modal-snippets');
+        var btn_el = $('a[data-modal-kind="ok"]', dm_el);
+        btn_el.show().on('click', function(e){
+            e.preventDefault();
+            dm_el.hide();
+            dm_el.removeClass('modal-snippets');
+        });
+        // @todo below doesn't work
+        dm_el.on('hide', function(){
+            $(snippets_el).removeClass('active').closest('div').removeClass('on-row-active');
+        });
+        dm_el.show();
+    });
 });
