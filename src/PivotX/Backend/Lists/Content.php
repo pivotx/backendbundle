@@ -29,6 +29,8 @@ class Content extends Item
 
         $entities = $siteoptions_service->getValue('config.entities', null, 'all');
         foreach($entities as $entity) {
+            // @todo fixed entities should not be in this menu
+
             $name = strtolower($entity);
             $pluralname = \PivotX\Component\Translations\Inflector::pluralize($name);
 

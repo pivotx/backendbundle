@@ -46,16 +46,16 @@ table.crud-bike th.column-reviews {
 
 <table class="crud crud-any table table-striped" data-crud-table="{{ crud.htmlid }}">
     <thead>
-        <tr data-order-href="{{ ref(['_table/',crud.entity]) }}', view.queryarguments({'table-order':''})) }}" data-order-current="{{ view.queryarguments['table-order']|default('title') }}">
+        <tr data-order-href="{{ ref(['_table/',crud.entity.name]) }}', view.queryarguments({'table-order':''})) }}" data-order-current="{{ view.queryarguments['table-order']|default('title') }}">
             <th class="column-checkbox select-checkbox">
                 <input type="checkbox" name="id-toggle" data-id="id-toggle">
             </th>
-            <th class="column-id"                                   >Id</th>
-            {#
-        {% for field in crud.fields %}
-            <th>{{ field }}</th>
+{#            <th class="column-id"                                   >Id</th> #}
+        {% for field in crud.entity.fields %}
+            {% if field.in_crud %}
+                <th>{{ field.name }}</th>
+            {% endif %}
         {% endfor %}
-#}
         </tr>
     </thead>
 
@@ -65,29 +65,28 @@ table.crud-bike th.column-reviews {
             <td class="select-checkbox">
                 <input type="checkbox" name="id{{ item.id }}" data-id="{{ item.id }}">
             </td>
-            <td>
+{#            <td>
                 № {{ item.id }}
             </td>
+#}
 
-{#
-        {% for field in crud.fields %}
+        {% for field in crud.entity.fields %}
             {% set shown_buttons = false %}
-            {% set field = field|replace({'_':''}) %}
-            {% if attribute(item, field) is defined %}
+            {% if field.in_crud %}
             <td>
-                {{ attribute(item, field) }}
+                {% set fieldname = field.name|replace({'_':''}) %}
+                {{ attribute(item, fieldname)|formatas('Backend/Auto') }}
 
                 {% if not shown_buttons %}
                     {% set shown_buttons = true %}
                 <div class="btn-group on-row-hover">
-                    <a class="btn btn-mini crud-button-link" data-loading-text="Starting edit&hellip;" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments) }}"><i class="icon-pencil"></i> {{ translate('entity.button.edit') }}</a>
-                    <a class="btn btn-mini btn-danger crud-button-confirm" data-modal-text-selector=".text-delete-{{ item.id }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments({'action':'delete'})) }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
+                    <a class="btn btn-mini crud-button-link" data-loading-text="Starting edit&hellip;" href="{{ ref(['_table/',crud.entity.name,'/',item.id],view.queryarguments) }}"><i class="icon-pencil"></i> {{ translate('entity.button.edit') }}</a>
+                    <a class="btn btn-mini btn-danger crud-button-confirm" data-modal-text-selector=".text-delete-{{ item.id }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity.name,'/',item.id],view.queryarguments({'action':'delete'})) }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
                 </div>
                 {% endif %}
             </td>
             {% endif %}
         {% endfor %}
-#}
         </tr>
     {% endfor %}
     </tbody>

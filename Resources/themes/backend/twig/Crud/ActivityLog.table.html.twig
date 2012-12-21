@@ -1,0 +1,107 @@
+
+{# @todo define this somewhere else #}
+
+<style type="text/css">
+
+table.crud-activitylog th.column-context {
+    width: 20%;
+}
+
+table.crud-activitylog th.column-whenwho {
+    width: 15%;
+}
+
+table.crud-activitylog th.column-message {
+    width: 55%;
+}
+
+
+</style>
+
+<div class="crud crud-filter">
+{#
+    <form method="get" action="" class="well form-inline">
+        {% loadView 'Crud/SiteOption/findAll' as ttexts %}
+        <select name="filter-siteandgroup">
+            <option value="">(filter on site &amp; group)</option>
+        {% for loopvar in ttexts.htmliterator({'groupingby':'sitename,groupname'}) %}
+            {% if loopvar.item_first %}
+                {% set ttext = loopvar.value %}
+                {% set value = [ ttext.sitename,'/',ttext.groupname]| join %}
+                {% set selected = '' %}
+                {% if value == view.queryarguments['filter-siteandgroup']|default('') %}
+                    {% set selected = ' selected="selected"' %}
+                {% endif %}
+                <option value="{{ value }}"{{ selected }}>{{ ttext.sitename }} / {{ ttext.groupname }}</option>
+            {% endif %}
+        {% endfor %}
+        </select>
+
+        <input type="text" class="input-medium" name="filter-name" placeholder="Search by key name" value="{{ view.queryarguments['filter-name']|default('') }}" />
+
+        <button type="submit" class="btn">filter</button>
+    </form>
+#}
+</div>
+
+<table class="crud crud-activitylog table table-striped" data-crud-table="{{ crud.htmlid }}">
+    <thead>
+        <tr>
+            <th class="column-id">Id</th>
+            <th class="column-context">Context</th>
+            <th class="column-whenwho">When/Who</th>
+            <th class="column-message">Message</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for item in view.result %}
+        {% set techdump = pxdump(item.technicalcontext) %}
+        <tr class="{# item.crudGetRowClass() #}">
+            <td>
+                № {{ item.id }}
+                <br/>
+                {% set ilabel = '' %}
+                {% if item.importance >= 900 %}
+                    {% set ilabel = 'label-important' %}
+                {% elseif item.importance >= 500 %}
+                    {% set ilabel = 'label-info' %}
+                {% endif %}
+                <span class="label {{ ilabel }}">{{ item.friendlyimportance }}</span>
+            </td>
+            <td>
+                <span class="sitename">{{ item.sitename }}</span>
+                <br/>
+                {% set ilabel = 'label-info' %}
+                {% if item.importance >= 900 %}
+                    {% set ilabel = '' %}
+                {% elseif item.importance >= 800 %}
+                    {% set ilabel = 'label-important' %}
+                {% elseif item.importance >= 500 %}
+                    {% set ilabel = 'label-success' %}
+                {% endif %}
+                <span class="label {{ ilabel }}">{{ item.friendlylevel }}</span>
+            </td>
+            <td>
+                <span class="date-logged">{{ item.datelogged_date }} {{ item.datelogged_time }}</span>
+                <br/>
+                {% if item.user is not null %}
+                <strong>{{ item.user.username }}</strong>
+                {% endif %}
+            </td>
+            <td>
+                <span class="friendly-message">{{ item.compiledfriendlymessage }}</span>
+                <br/>
+                <div class="btn-group on-row-hover">
+                    <a class="btn btn-mini btn-info crud-button-text" data-modal-title-text="Dump of technical context"  data-modal-text-selector=".text-dump-{{ item.id }}" href="#"><i class="icon-zoom-in"></i> {{ translate('entity.button.dump') }}</a>
+                </div>
+
+                <span class="crud-hide text-dump-{{ item.id }}">
+                    Message: <strong>{{ item.compiledfriendlymessage }}</strong><br/>
+                    <pre>{{ techdump }}</pre>
+                </span>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

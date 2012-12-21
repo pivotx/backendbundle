@@ -185,4 +185,71 @@ $(function(){
         );
     });
 
+    $('a.delete-entity-button').on('click', function(e){
+        e.preventDefault();
+
+        var entity = $(e.target).attr('data-entity');
+
+        var title = 'Are you absolutely sure?';
+        var text = 'You are about to delete the entity "' + entity + '".';
+
+        var del_url = $(e.target).attr('href');
+        var post = '';
+        post += 'action=delete_entity';
+        post += '&entity=' + escape(entity);
+
+        modalConfirm(title, text,
+            function(){
+                $.ajax({
+                    type: 'PUT',
+                    url: del_url,
+                    data: post,
+                    success: handleAjaxResponse
+                });
+            },
+            function(){
+            }
+        );
+    });
+
+    $('.siteadmin-sortable tbody').sortable({
+        handle: 'td.sort-handle',
+        update: function(event, ui){
+            var body_el = $(this).closest('tbody');
+            var fields = body_el.sortable('serialize', { attribute: 'data-field', expression: /(.+?)[-=_](.+)/ });
+            var post = '';
+            post += 'action=sort_entity';
+            post += '&entity=' + escape(body_el.attr('data-entity'));
+            post += '&' + fields;
+
+            $.ajax({
+                type: 'PUT',
+                url: body_el.attr('data-action'),
+                data: post,
+                success: handleAjaxResponse,
+                error: handleAjaxError('Something went wrong while saving the new order.')
+            });
+        }
+    });
+    $('.siteadmin-sortable tbody td.crud-checkbox input').on('change', function(e){
+        var body_el = $(this).closest('tbody');
+        var crud_fields = [];
+        $('input[type="checkbox"]:checked', body_el).each(function(){
+            var field = $(this).attr('name').substring(5);
+            crud_fields.push(field);
+        });
+
+        var post = '';
+        post += 'action=crudcheck_entity';
+        post += '&entity=' + escape(body_el.attr('data-entity'));
+        post += '&crud=' + crud_fields.join(',');
+
+        $.ajax({
+            type: 'PUT',
+            url: body_el.attr('data-action'),
+            data: post,
+            success: handleAjaxResponse,
+            error: handleAjaxError('Something went wrong while saving CRUD settings.')
+        });
+    });
 });

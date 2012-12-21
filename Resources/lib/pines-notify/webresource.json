@@ -1,0 +1,13 @@
+{
+    "identifier": "pines-notify",
+    "version": "1.2.0",
+
+    "files": [
+        "js/jquery.pnotify.min.js",
+        "css/jquery.pnotify.default.css"
+    ],
+
+    "dependencies": [
+        "jquery"
+    ]
+}

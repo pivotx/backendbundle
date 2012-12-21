@@ -27,15 +27,15 @@ table.crud-user th.column-level {
 
 <table class="crud crud-user table table-striped" data-crud-table="{{ crud.htmlid }}">
     <thead>
-        <tr data-order-href="{{ ref(['_table/',crud.entity], view.queryarguments({'table-order':''})) }}" data-order-current="{{ view.queryarguments['table-order']|default('email') }}">
+        <tr data-order-href="{{ ref(['_table/',crud.entity.name], view.queryarguments({'table-order':''})) }}" data-order-current="{{ view.queryarguments['table-order']|default('email') }}">
             <th class="column-checkbox select-checkbox">
                 <input type="checkbox" name="id-toggle" data-id="id-toggle">
             </th>
-            <th class="column-id"                                         >{{ translate([crud.entity,'.crud-heading.id']) }}</th>
-            <th class="column-enabled"                                    >{{ translate([crud.entity,'.crud-heading.enabled']) }}</th>
-            <th class="column-email sort-by"   data-order="email"         >{{ translate([crud.entity,'.crud-heading.email']) }}</th>
-            <th class="column-last-login sort-by" data-order="!last_login">{{ translate([crud.entity,'.crud-heading.last_login']) }}</th>
-            <th class="column-level"                                      >{{ translate([crud.entity,'.crud-heading.level']) }}</th>
+            <th class="column-id"                                         >{{ translate([crud.entity.name,'.crud-heading.id']) }}</th>
+            <th class="column-enabled"                                    >{{ translate([crud.entity.name,'.crud-heading.enabled']) }}</th>
+            <th class="column-email sort-by"   data-order="email"         >{{ translate([crud.entity.name,'.crud-heading.email']) }}</th>
+            <th class="column-last-login sort-by" data-order="!last_login">{{ translate([crud.entity.name,'.crud-heading.last_login']) }}</th>
+            <th class="column-level"                                      >{{ translate([crud.entity.name,'.crud-heading.level']) }}</th>
         </tr>
     </thead>
 
@@ -66,8 +66,8 @@ table.crud-user th.column-level {
 
                 <div class="btn-toolbar on-row-hover">
                     <div class="btn-group">
-                        <a class="btn btn-mini crud-button-link" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments) }}"><i class="icon-pencil"></i> {{ translate('entity.button.edit') }}</a>
-                        <a class="btn btn-mini btn-danger crud-button-confirm" data-modal-text-selector=".text-delete-{{ item.id }}" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments({'action':'delete'})) }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
+                        <a class="btn btn-mini crud-button-link" href="{{ ref(['_table/',crud.entity.name,'/',item.id],view.queryarguments) }}"><i class="icon-pencil"></i> {{ translate('entity.button.edit') }}</a>
+                        <a class="btn btn-mini btn-danger crud-button-confirm" data-modal-text-selector=".text-delete-{{ item.id }}" href="{{ ref(['_table/',crud.entity.name,'/',item.id],view.queryarguments({'action':'delete'})) }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
                     </div>
                 </div>
             </td>

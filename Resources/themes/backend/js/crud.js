@@ -700,11 +700,7 @@ $(function(){
                     case 204:
                         // no content (accepted)
                         if (!$(click_el).hasClass('form-no-redirect')) {
-                            var headers = jqXHR.getAllResponseHeaders();
-                            var x_location = jqXHR.getResponseHeader('x-location');
-                            if (x_location !== undefined) {
-                                document.location = x_location;
-                            }
+                            handleAjaxResponse(data, textStatus, jqXHR);
                         }
                         else {
                             $(click_el).button('reset');

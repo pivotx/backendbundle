@@ -14,8 +14,8 @@
         "jquery",
         "jquery-ui",
         "jquery-fileupload",
+        "pines-notify",
         "bootstrap/js-only",
-        "redactor",
         "google-code-prettify"
     ]
 }

@@ -338,16 +338,33 @@ class CrudController extends Controller
             return new \Symfony\Component\HttpFoundation\Response($content, 200);
         }
 
+        $entity_name = $request->get('entity');
+
         $crud = array(
             'htmlid' => 'id'.rand(100,999),
-            'entity' => $request->get('entity'),
             'fields' => $this->getEntityFields($this->getEntityClass($request->get('entity')))
         );
 
-        $view = \PivotX\Component\Views\Views::loadView('Crud/'.$crud['entity'].'/findAll');
+
+        // retrieve entity defintion
+
+        $views = $this->get('pivotx.views');
+        $view  = $views->findView('Backend/findEntities');
+        if (is_null($view)) {
+            return null;
+        }
+        $view->setArguments(array('verbose' => false, 'name' => $entity_name));
+        $crud['entity'] = $view->getValue();
+        if ($crud['entity'] === false) {
+        }
+
+
+        // init the CRUD view
+
+        $view = \PivotX\Component\Views\Views::loadView('Crud/'.$entity_name.'/findAll');
         if (($view === false) || ($view instanceof \PivotX\Component\Views\EmptyView)) {
             // custom view not found, use the default
-            $view = \PivotX\Component\Views\Views::loadView($crud['entity'].'/findAll');
+            $view = \PivotX\Component\Views\Views::loadView($entity_name.'/findAll');
         }
 
         $view->setCurrentPage(1, 10);
@@ -378,7 +395,7 @@ class CrudController extends Controller
         }
 
         $widgets = array();
-        if ($crud['entity'] == 'GenericResource') {
+        if ($entity_name == 'GenericResource') {
             $widgets[] = 'CrudWidgets/GenericResourceGeneral.html.twig';
         }
         else {
@@ -386,6 +403,8 @@ class CrudController extends Controller
         }
         $widgets[] = 'CrudWidgets/Selection.html.twig';
         $widgets[] = 'CrudWidgets/ExportImport.html.twig';
+
+
 
         $context = $this->getDefaultHtmlContext();
 
@@ -395,7 +414,7 @@ class CrudController extends Controller
 
         $table_html = $this
             ->render(array(
-                    'Crud/'.$crud['entity'].'.table.html.twig',
+                    'Crud/'.$crud['entity']['name'].'.table.html.twig',
                     'Crud/any.table.html.twig'
                 ), $context)
             ->getContent()

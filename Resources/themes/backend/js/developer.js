@@ -87,13 +87,14 @@ $(window).load(function(){
         var btn_el = $('a[data-modal-kind="ok"]', dm_el);
         btn_el.show().on('click', function(e){
             e.preventDefault();
-            dm_el.hide();
+            dm_el.modal('hide');
             dm_el.removeClass('modal-snippets');
         });
         // @todo below doesn't work
         dm_el.on('hide', function(){
             $(snippets_el).removeClass('active').closest('div').removeClass('on-row-active');
         });
-        dm_el.show();
+
+        $(dm_el).modal();
     });
 });

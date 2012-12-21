@@ -39,6 +39,8 @@ THEEND;
         $field = array(
             'name' => $name,
             'created' => true,
+            'fixed' => false,
+            'in_crud' => true,
             'type' => '-',
             'type_description' => 'choose type',
             'nullable' => false,
@@ -62,6 +64,7 @@ THEEND;
     {
         $entity = array(
             'name' => $name,
+            'fixed' => false,
             'bundle' => false,
             'fields' => array(),
             'features' => array()
@@ -96,10 +99,17 @@ THEEND;
                 if (isset($fieldconfig['created'])) {
                     $field['created']  = $fieldconfig['created'];
                 }
+                if (isset($fieldconfig['fixed'])) {
+                    $field['fixed']  = $fieldconfig['fixed'];
+                }
+                if (isset($fieldconfig['in_crud'])) {
+                    $field['in_crud']  = $fieldconfig['in_crud'];
+                }
 
                 if ($field['type'] == 'entity.id') {
                     // don't ever allow this to be overridden
                     $field['created'] = true;
+                    $field['fixed']   = true;
                 }
 
                 $twigfield = $suggestions->getTwigFieldFromType($fieldconfig['type']);
@@ -119,6 +129,10 @@ THEEND;
         }
         $entity['features'] = $definition['features'];
 
+        if (isset($definition['delete'])) {
+            $entity['delete'] = true;
+        }
+
         return $entity;
     }
 
@@ -128,6 +142,7 @@ THEEND;
     {
         $entity = array(
             'name' => $name,
+            'fixed' => false,
             'mediatype' => 'text/x-yaml',
             'source' => $value,
             'fields' => array(),
@@ -161,6 +176,50 @@ THEEND;
 
         return $entity;
     }
+
+    /**
+     */
+    private function convertMetadataToEntity($name, $class)
+    {
+        $entity = array(
+            'name' => $name,
+            'fixed' => true,
+            'mediatype' => 'text/x-yaml',
+            'source' => null,
+            'fields' => array(),
+            'features' => array()
+        );
+
+        foreach($class->fieldMappings as $key => $config) {
+            $field = $this->createFieldArray($key);
+
+            $field['created']   = true;
+            $field['fixed']     = true;
+
+            $entity['fields'][] = $field;
+        }
+
+        return $entity;
+    }
+
+    /**
+     */
+    private function findAndConvertMetadataToEntity($name)
+    {
+        foreach ($this->doctrine_registry->getEntityManagers() as $em) {
+            $classes = $em->getMetadataFactory()->getAllMetadata();
+            foreach($classes as $class) {
+                $_p = explode('\\',$class->name);
+                $base_class = $_p[count($_p)-1];
+
+                if ($base_class == $name) {
+                    return $this->convertMetaDataToEntity($name, $class);
+                }
+            }
+        }
+
+        return null;
+    }
     
     /**
      * Load the entity from the configuration
@@ -172,6 +231,10 @@ THEEND;
     private function loadEntity($name)
     {
         $siteoption = $this->siteoptions_service->getSiteOption('entities.entity.'.$name, 'all');
+        if (is_null($siteoption)) {
+            return $this->findAndConvertMetadataToEntity($name);
+            return null;
+        }
         switch ($siteoption->getMediatype()) {
             case 'text/x-yaml':
                 return $this->decodeYamlEntity($name, $siteoption->getValue());
@@ -198,6 +261,10 @@ THEEND;
 
         foreach($entities as $entity) {
             $record = $this->loadEntity($entity);
+
+            if (is_null($record)) {
+                continue;
+            }
 
             if ((!isset($this->arguments['name'])) || $this->arguments['name'] == $record['name']) {
                 $data[] = $record;

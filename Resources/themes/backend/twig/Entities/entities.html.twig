@@ -29,12 +29,29 @@
 {% for entity in entities.result %}
     <h2>{{ entity.name }}</h2>
 
-    <p>Description..</p>
+    {% if entity.delete is not defined %}
+        <p>
+        {% if entity.fixed %}
+            This entity is only editable by hand.
+        {% else %}
+            This entity can be edited.
+        {% endif %}
+        </p>
 
-    <div class="btn-group">
-        <a class="btn btn-mini" href="{{ ref(['_entity/',entity.name]) }}">Edit entity</a>
-        <a class="btn btn-mini btn-danger" href="{{ ref(['_entity/',entity.name]) }}">Delete entity</a>
-    </div>
+        <div class="btn-group">
+            <a class="btn btn-mini" href="{{ ref(['_entity/',entity.name]) }}">Edit entity</a>
+            <a class="btn btn-mini btn-danger delete-entity-button" data-entity="{{ entity.name }}" href="{{ ref('_entities/all/mutate') }}">Delete entity</a>
+        </div>
+    {% else %}
+        <p>
+            <span class="alert alert-error">
+                Entity has been deleted. Update your configuration to remove this message.
+            </span>
+        </p>
+        <p>
+            Please note this will only remove the YAML configuration. The model and entity code files will not be removed.
+        </p>
+    {% endif %}
 {% endfor %}
 
     <h2>Add a new entity</h2>
@@ -48,7 +65,7 @@
                 <input type="hidden" name="action" value="add_entity" />
                 <label>
                     Name:<br/>
-                    <input type="text" class="correct-type" data-type="identifier" name="name" value="" />
+                    <input type="text" class="correct-type" data-type="identifier" data-identifier-allow="uppercase" name="name" value="" />
                 </label>
                 <label>
                     Bundle:<br/>

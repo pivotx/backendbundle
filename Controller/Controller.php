@@ -31,6 +31,11 @@ class Controller extends CoreController
         if ($parameters['logged'] != $currently_logged) {
             $activity = $this->get('pivotx.activity');
 
+            $context = array(
+                'headers' => $request->headers->all(),
+                'server' => $request->server->all()
+            );
+
             if (!$currently_logged) {
                 $activity
                     ->administrativeMessage(
@@ -41,6 +46,7 @@ class Controller extends CoreController
                             'client_ip' => $request->getClientIp()
                         )
                     )
+                    ->addContext($context)
                     ->log();
 
                 $user_id = null;

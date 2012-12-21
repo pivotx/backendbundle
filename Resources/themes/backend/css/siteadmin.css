@@ -1,0 +1,15 @@
+
+table.siteadmin td.sort-handle {
+    width: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+table.siteadmin th.crud-checkbox,
+table.siteadmin td.crud-checkbox {
+    width: 100px;
+}
+
+table.siteadmin td.crud-checkbox {
+    text-align: center;
+}

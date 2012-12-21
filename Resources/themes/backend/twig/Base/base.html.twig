@@ -27,7 +27,7 @@
         {% endblock %}
         </div>
 
-        {% if backend.messages %}
+        {% if backend.security.logged and backend.messages %}
         <div class="container">
             {% for message in backend.messages %}
             <div class="alert alert-block {% if message.importance == 'very' %}alert-error{% endif %}">

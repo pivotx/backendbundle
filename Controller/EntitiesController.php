@@ -37,15 +37,10 @@ class EntitiesController extends Controller
         if (is_null($view)) {
             return null;
         }
-        $view->setArguments(array('verbose' => false));
 
-        foreach($view->getResult() as $entity) {
-            if ($entity['name'] == $name) {
-                return $entity;
-            }
-        }
+        $view->setArguments(array('verbose' => false, 'name' => $name));
 
-        return null;
+        return $view->getValue();
     }
 
     public function handleEditField(ParameterBag $arguments)
@@ -167,6 +162,9 @@ class EntitiesController extends Controller
 
             return true;
         }
+        else {
+            $this->get('session')->setFlash('notice', 'Field "'.$name.'" for entity "'.$entity['name'].'" could not been deleted (it was not found).');
+        }
 
         return false;
     }
@@ -282,6 +280,84 @@ class EntitiesController extends Controller
         return $name;
     }
 
+    public function handleDeleteEntity(ParameterBag $arguments)
+    {
+        $entity = $this->getEntityConfiguration(null);
+        if (is_null($entity)) {
+            $name = $this->getRequest()->request->get('entity');
+            $this->get('session')->setFlash('error', 'Entity "'.$name.'" doesn\'t exist.');
+            return false;
+        }
+
+        $entity['delete'] = true;
+        $entity['fields'] = array();
+
+        $json = json_encode($entity);
+
+        $siteoptions = $this->get('pivotx.siteoptions');
+        $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+
+        return false;
+    }
+
+    public function handleSortEntity(ParameterBag $arguments)
+    {
+        $entity = $this->getEntityConfiguration(null);
+        if (is_null($entity)) {
+            $name = $this->getRequest()->request->get('entity');
+            $this->get('session')->setFlash('error', 'Entity "'.$name.'" doesn\'t exist.');
+            return false;
+        }
+
+        $field_order = $arguments->get('order', array());
+        $old_fields  = $entity['fields'];
+        $new_fields  = array();
+        foreach($field_order as $field) {
+            $idx = false;
+            for($i=0; $i < count($old_fields); $i++) {
+                if ($old_fields[$i]['name'] == $field) {
+                    $idx = $i;
+                    break;
+                }
+            }
+            if ($idx !== false) {
+                $new_fields[] = $old_fields[$idx];
+                array_splice($old_fields, $idx, 1);
+            }
+        }
+
+        $entity['fields'] = array_merge($new_fields, $old_fields);
+
+        $json = json_encode($entity);
+
+        $siteoptions = $this->get('pivotx.siteoptions');
+        $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+
+        return false;
+    }
+
+    public function handleCrudCheckEntity(ParameterBag $arguments)
+    {
+        $entity = $this->getEntityConfiguration(null);
+        if (is_null($entity)) {
+            $name = $this->getRequest()->request->get('entity');
+            $this->get('session')->setFlash('error', 'Entity "'.$name.'" doesn\'t exist.');
+            return false;
+        }
+
+        $crud_fields = explode(',', $arguments->get('crud'));
+        foreach($entity['fields'] as &$field) {
+            $field['in_crud'] = in_array($field['name'], $crud_fields);
+        }
+
+        $json = json_encode($entity);
+
+        $siteoptions = $this->get('pivotx.siteoptions');
+        $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+
+        return false;
+    }
+
     public function showMutateAction(Request $request)
     {
         $entity_name = $this->getRequest()->request->get('entity');
@@ -289,6 +365,33 @@ class EntitiesController extends Controller
         switch ($request->request->get('action', '')) {
             case 'add_entity':
                 $entity_name = $this->handleNewEntity($request->request);
+                $entity_name = false;
+                // @todo we cannot redirect to entity until the setup has been updated
+                break;
+
+            case 'delete_entity':
+                $this->handleDeleteEntity($request->request);
+                $entity_name = null;
+                break;
+
+            case 'sort_entity':
+                $this->handleSortEntity($request->request);
+                $notification = json_encode(array(
+                    'title' => 'Success',
+                    'text' => 'The new order has been saved.',
+                    'type' => 'success',
+                ));
+                return new \Symfony\Component\HttpFoundation\Response($notification, 200, array('X-Notification' => 'yes'));
+                break;
+
+            case 'crudcheck_entity':
+                $this->handleCrudCheckEntity($request->request);
+                $notification = json_encode(array(
+                    'title' => 'Success',
+                    'text' => 'CRUD settings have been saved.',
+                    'type' => 'success',
+                ));
+                return new \Symfony\Component\HttpFoundation\Response($notification, 200, array('X-Notification' => 'yes'));
                 break;
 
             case 'edit_field':
@@ -296,7 +399,6 @@ class EntitiesController extends Controller
                 break;
 
             case 'delete_field':
-                // @todo flash vars don't work because we redirect twice
                 $this->handleDeleteField($request->request);
                 break;
 
@@ -305,12 +407,11 @@ class EntitiesController extends Controller
                 break;
 
             case 'delete_feature':
-                // @todo flash vars don't work because we redirect twice
                 $this->handleDeleteFeature($request->request);
                 break;
         }
 
-        if (!is_null($entity_name)) {
+        if ((!is_null($entity_name)) && ($entity_name !== false)) {
             $url = $this->get('pivotx.routing')->buildUrl('_entity/'.$entity_name);
         }
         else {
@@ -321,7 +422,11 @@ class EntitiesController extends Controller
         $siteoptions->set('config.check.entities', 1, 'x-value/boolean', false, false, 'all');
         $siteoptions->set('config.check.any', 1, 'x-value/boolean', false, false, 'all');
 
-        return $this->redirect($url);
+        if ($request->getMethod() == 'POST') {
+            return $this->redirect($url);
+        }
+
+        return new \Symfony\Component\HttpFoundation\Response('', 204, array('X-Location' => $url));
     }
 
     public function showEntitiesAction(Request $request)

@@ -26,7 +26,10 @@ class CrudTables extends Item
 
             case 'siteadmin':
                 $menu = $this->addItem(new \PivotX\Component\Lists\RouteItem('users', '_table/User'));
-                $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem('user', '_table/user/{id}'));
+                $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem('user', '_table/User/{id}'));
+                $submenu->resetInMenu();
+                $menu = $this->addItem(new \PivotX\Component\Lists\RouteItem('activitylog', '_table/ActivityLog'));
+                $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem('activitylog', '_table/ActivityLog/{id}'));
                 $submenu->resetInMenu();
                 break;
 

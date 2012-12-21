@@ -76,11 +76,11 @@ table.crud-translationtext th.column-text4 {
             <th class="column-checkbox select-checkbox">
                 <input type="checkbox" name="id-toggle" data-id="id-toggle">
             </th>
-            <th class="column-id sort-by" data-order="id"                 >{{ translate([crud.entity,'.crud-heading.id']) }}</th>
-            <th class="column-site sort-by" data-order="key"              >{{ translate([crud.entity,'.crud-heading.sitename']) }}</th>
-            <th class="column-key sort-by" data-order="key"               >{{ translate([crud.entity,'.crud-heading.key']) }}</th>
-            <th class="column-text_nl"                                    >{{ translate([crud.entity,'.crud-heading.text_nl']) }}</th>
-            <th class="column-text_en"                                    >{{ translate([crud.entity,'.crud-heading.text_en']) }}</th>
+            <th class="column-id sort-by" data-order="id"                 >{{ translate([crud.entity.name,'.crud-heading.id']) }}</th>
+            <th class="column-site sort-by" data-order="key"              >{{ translate([crud.entity.name,'.crud-heading.sitename']) }}</th>
+            <th class="column-key sort-by" data-order="key"               >{{ translate([crud.entity.name,'.crud-heading.key']) }}</th>
+            <th class="column-text_nl"                                    >{{ translate([crud.entity.name,'.crud-heading.text_nl']) }}</th>
+            <th class="column-text_en"                                    >{{ translate([crud.entity.name,'.crud-heading.text_en']) }}</th>
         </tr>
     </thead>
 
@@ -111,8 +111,8 @@ table.crud-translationtext th.column-text4 {
                 </span>
 
                 <div class="btn-group on-row-hover">
-                    <a class="btn btn-mini crud-button-link" data-loading-text="Starting edit&hellip;" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments) }}"><i class="icon-pencil"></i> {{ translate('entity.button.edit') }}</a>
-                    <a class="btn btn-mini btn-danger crud-button-confirm" data-modal-text-selector=".text-delete-{{ item.id }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments({'action':'delete'})) }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
+                    <a class="btn btn-mini crud-button-link" data-loading-text="Starting edit&hellip;" href="{{ ref(['_table/',crud.entity.name,'/',item.id],view.queryarguments) }}"><i class="icon-pencil"></i> {{ translate('entity.button.edit') }}</a>
+                    <a class="btn btn-mini btn-danger crud-button-confirm" data-modal-text-selector=".text-delete-{{ item.id }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity.name,'/',item.id],view.queryarguments({'action':'delete'})) }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
                 </div>
             </td>
             <td>

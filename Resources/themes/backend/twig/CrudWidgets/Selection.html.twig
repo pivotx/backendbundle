@@ -31,9 +31,9 @@
                 <p>
                     <!-- <a class="btn" href="#">Batch edit</a> -->
                     <div class="btn-group">
-                        <!-- <a class="btn disabled crud-button-link" href="{{ ref(['_table/',crud.entity],view.queryarguments) }}">Show selection</a> -->
-                        <a class="btn btn-success disabled crud-button-link" href="{{ ref(['_table/',crud.entity],view.queryarguments({'action':'edit-multiple'})) }}">Edit in sequence</a>
-                        <a class="btn btn-danger disabled crud-button-confirm" data-modal-text-selector=".crud-selection-summary-{{ crud.htmlid }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity],view.queryarguments({'action':'delete-multiple'})) }}">Delete</a>
+                        <!-- <a class="btn disabled crud-button-link" href="{{ ref(['_table/',crud.entity.name],view.queryarguments) }}">Show selection</a> -->
+                        <a class="btn btn-success disabled crud-button-link" href="{{ ref(['_table/',crud.entity.name],view.queryarguments({'action':'edit-multiple'})) }}">Edit in sequence</a>
+                        <a class="btn btn-danger disabled crud-button-confirm" data-modal-text-selector=".crud-selection-summary-{{ crud.htmlid }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity.name],view.queryarguments({'action':'delete-multiple'})) }}">Delete</a>
                     </div>
                 </p>
                 <p>

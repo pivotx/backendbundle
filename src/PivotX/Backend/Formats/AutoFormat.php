@@ -42,6 +42,9 @@ class AutoFormat extends AbstractFormat
                     return 'object class:'.get_class($in);
             }
         }
+        else if (is_scalar($in)) {
+            return $in;
+        }
 
         return 'Unknown source';
     }

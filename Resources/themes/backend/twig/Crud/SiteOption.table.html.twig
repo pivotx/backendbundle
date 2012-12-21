@@ -107,8 +107,8 @@ table.crud-translationtext th.column-text4 {
 
                 {% if item.humaneditable %}
                 <div class="btn-group on-row-hover">
-                    <a class="btn btn-mini crud-button-link" data-loading-text="Starting edit&hellip;" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments) }}"><i class="icon-pencil"></i> {{ translate('entity.button.edit') }}</a>
-                    <a class="btn btn-mini btn-danger crud-button-confirm" data-modal-text-selector=".text-delete-{{ item.id }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity,'/',item.id],view.queryarguments({'action':'delete'})) }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
+                    <a class="btn btn-mini crud-button-link" data-loading-text="Starting edit&hellip;" href="{{ ref(['_table/',crud.entity.name,'/',item.id],view.queryarguments) }}"><i class="icon-pencil"></i> {{ translate('entity.button.edit') }}</a>
+                    <a class="btn btn-mini btn-danger crud-button-confirm" data-modal-text-selector=".text-delete-{{ item.id }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity.name,'/',item.id],view.queryarguments({'action':'delete'})) }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
                 </div>
                 {% endif %}
             </td>

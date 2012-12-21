@@ -6,16 +6,23 @@
         <dd>{{ entity.bundle }}</dd>
     </dl>
 
-    <table class="siteadmin table table-striped table-bordered" data-entity="{{ entity.name }}">
+    <table class="siteadmin siteadmin-sortable table table-striped table-bordered" data-entity="{{ entity.name }}">
         <thead>
             <tr>
-                <td>name</td>
-                <td>definition</td>
+                <th class="sort-handle"></th>
+                <th>name</th>
+                <th>definition</th>
+                <th class="crud-checkbox">
+                    in CRUD table
+                </th>
             </tr>
         </thead>
-        <tbody>
+        <tbody data-action="{{ ref('_entities/all/mutate') }}" data-entity="{{ entity.name }}">
         {% for field in entity.fields %}
-            <tr>
+            <tr data-field="order_{{ field.name }}">
+                <td class="sort-handle">
+                    <i class="icon-align-justify"></i>
+                </td>
                 <td>
             {% if not field.created %}
                     <em>(<strong>new</strong>)</em>
@@ -27,10 +34,10 @@
                         <a class="btn btn-mini siteadmin-edit" href="{{ ref('_entities/all/mutate') }}"><i class="icon-pencil"></i> edit</a>
                         <a class="btn btn-mini btn-danger siteadmin-delete" href="{{ ref('_entities/all/mutate') }}"><i class="icon-trash icon-white"></i> delete</a>
                     </div>
-                {% else %}
+                {% elseif not field.fixed %}
                     <!-- <span class="label label-info">Unchangable</span> -->
                     <div class="btn-group on-row-hover">
-                        <a class="btn btn-mini btn-danger siteadmin-delete" href="{{ ref('_entities/entities/mutate') }}"><i class="icon-trash icon-white"></i> delete</a>
+                        <a class="btn btn-mini btn-danger siteadmin-delete" href="{{ ref('_entities/all/mutate') }}"><i class="icon-trash icon-white"></i> delete</a>
                     </div>
                 {% endif %}
             {% else %}
@@ -49,10 +56,14 @@
                         {% if field.relation is defined %} / <span class="field-relation">{{ field.relation }}</span>{% endif %}
                     )</small>
                 </td>
+                <td class="crud-checkbox">
+                    <input type="checkbox" name="crud_{{ field.name }}" />
+                </td>
             </tr>
         {% endfor %}
         {% if entity.mediatype == 'application/json' %}
             <tr>
+                <td class="sort-handle"></td>
                 <td>
                     <em>new field</em><span class="field-name"></span>
                     <div class="btn-group on-row-hover">
@@ -61,6 +72,8 @@
                 </td>
                 <td>
                     <em>( .. )</em>
+                </td>
+                <td class="crud-checkbox">
                 </td>
             </tr>
         {% endif %}

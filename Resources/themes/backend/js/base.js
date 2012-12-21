@@ -154,6 +154,52 @@ function modalConfirm(title, text, confirm_callback, cancel_callback)
     $(dm_el).modal();
 }
 
+/**
+ * Show a notification
+ *
+ * @param notification  a hashmap with { title, text, type }
+ */
+function showNotification(notification)
+{
+    notification['animate_speed'] = 'fast';
+    notification['sticker'] = false;
+
+    $.pnotify(notification);
+}
+
+/**
+ */
+function handleAjaxResponse(data, textStatus, jqXHR)
+{
+    var headers = jqXHR.getAllResponseHeaders();
+    var x_location = jqXHR.getResponseHeader('x-location');
+    if ((x_location !== null) && (typeof x_location !== 'undefined')) {
+        document.location = x_location;
+        return;
+    }
+
+    var x_notification = jqXHR.getResponseHeader('x-notification');
+    if ((x_notification !== null) && (typeof x_notification !== 'undefined') && (x_notification == 'yes')) {
+        var notification = $.parseJSON(data);
+        showNotification(notification);
+    }
+}
+
+function handleAjaxError(text, title)
+{
+    if ((title === null) || (typeof title == 'undefined')) {
+        title = 'Error';
+    }
+    return function(data, textStatus, jqXHR){
+        var notification = {
+            title: title,
+            text: text,
+            type: 'error',
+        };
+        showNotification(notification);
+    };
+}
+
 
 /**
  * Complicated (too) way to call a specific event for a 'dynamic' object
@@ -166,6 +212,12 @@ function triggerElementLoad()
 {
     $('#elementload').trigger('elementloader');
 }
+
+
+
+/**
+ * Add load and ready events
+ */
 
 $(window).load(function(){
     triggerElementLoad();
@@ -180,4 +232,7 @@ $(document).ready(function(){
         $('textarea.wysiwyg-redactor').trigger('elementload');
         $('div.execute-function').trigger('elementload');
     });
+
+    // disable notification history
+    $.pnotify.defaults.history = false;
 });

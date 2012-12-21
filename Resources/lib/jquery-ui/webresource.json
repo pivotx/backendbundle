@@ -3,7 +3,7 @@
     "version": "1.8.21",
 
     "files": [
-        "js/jquery-ui.18.21.custom.min.js",
+        "js/jquery-ui-1.8.21.custom.min.js",
         "css/ui-lightness/jquery-ui-1.8.21.custom.css"
     ],
 

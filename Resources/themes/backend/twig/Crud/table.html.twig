@@ -4,7 +4,7 @@
 
     {{ table|raw }}
 
-    {% include "Include/pagination.html.twig" with {'view':view, 'link':['_table/',crud.entity], 'class':'crud-pagination'} %}
+    {% include "Include/pagination.html.twig" with {'view':view, 'link':['_table/',crud.entity.name], 'class':'crud-pagination'} %}
 
 {% endblock %}
 
