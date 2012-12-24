@@ -9,9 +9,12 @@
                 <p>There are {{ view.length }} items.</p>
             {% endif %}
             </li>
+
+            {% if is_granted(crud.entity.roles.create) %}
             <li>
                 <p>
                     <a class="btn" href="{{ ref(['_table/',crud.entity.name,'/0']) }}">Add a new item</a>
                 </p>
             </li>
+            {% endif %}
         </ul>

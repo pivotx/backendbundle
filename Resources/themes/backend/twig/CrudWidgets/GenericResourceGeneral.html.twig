@@ -9,6 +9,7 @@
                 <p>There are {{ view.length }} items.</p>
             {% endif %}
             </li>
+            {% if is_granted(crud.entity.roles.create) %}
             <li>
                 <p>
                     <a class="btn" href="{{ ref('_table/LocalEmbedResource/0') }}">Add a new local resource</a>
@@ -19,4 +20,5 @@
                 </p>
                 #}
             </li>
+            {% endif %}
         </ul>

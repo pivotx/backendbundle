@@ -1,4 +1,5 @@
         {#
+        {% if is_granted(crud.entity.roles.read) or is_granted(crud.entity.roles.update) %}
         <ul class="nav nav-list">
             <li class="nav-header">Export and import</li>
             <li>
@@ -12,11 +13,16 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
+                        {% if is_granted(crud.entity.roles.read) %}
                             <li><a href="#">Export as tab seperated</a></li>
+                        {% endif %}
+                        {% if is_granted(crud.entity.roles.update) %}
                             <li><a href="#">Import items</a></li>
+                        {% endif %}
                         </ul>
                     </div>
                 </p>
             </li>
         </ul>
+        {% endif %}
         #}

@@ -8,6 +8,10 @@ class findEntities extends AbstractView
 {
     private $doctrine_registry;
     private $siteoptions_service;
+
+    private $default_entity_roles;
+    private $hardcoded_entities;
+
     private $data = false;
 
     public function __construct($doctrine_registry, $siteoptions_service, $name)
@@ -30,6 +34,61 @@ THEEND;
         $this->arguments    = array();
         $this->range_limit  = null;
         $this->range_offset = null;
+
+        $this->default_entity_roles = array(
+            'create' => 'ROLE_EDITOR',
+            'read'   => 'ROLE_USER',
+            'update' => 'ROLE_EDITOR',
+            'delete' => 'ROLE_EDITOR',
+        );
+        $this->hardcoded_entities = array(
+            'SiteOption'      => array(
+                'create' => 'ROLE_SUPER_ADMIN',
+                'read'   => 'ROLE_ADMIN',
+                'update' => 'ROLE_SUPER_ADMIN',
+                'delete' => 'ROLE_SUPER_ADMIN',
+            ),
+            'TranslationText' => array(
+                'create' => 'ROLE_ADMIN',
+                'read'   => 'ROLE_EDITOR',
+                'update' => 'ROLE_EDITOR',
+                'delete' => 'ROLE_ADMIN',
+            ),
+            'User'            => array(
+                'create' => 'ROLE_ADMIN',
+                'read'   => 'ROLE_EDITOR',
+                'update' => 'ROLE_ADMIN',
+                'delete' => 'ROLE_ADMIN',
+            ),
+            'ActivityLog'     => array(
+                'create' => 'ROLE_SUPER_ADMIN',
+                'read'   => 'ROLE_ADMIN',
+                'update' => 'ROLE_SUPER_ADMIN',
+                'delete' => 'ROLE_SUPER_ADMIN',
+            ),
+            'GenericResource' => array(
+                'create' => 'ROLE_EDITOR',
+                'read'   => 'ROLE_EDITOR',
+                'update' => 'ROLE_EDITOR',
+                'delete' => 'ROLE_EDITOR',
+            ),
+        );
+    }
+
+    /**
+     */
+    private function createEntityArray($name)
+    {
+        $field = array(
+            'name' => $name,
+            'roles' => $this->default_entity_roles,
+            'fixed' => false,
+            'bundle' => false,
+            'fields' => array(),
+            'features' => array()
+        );
+
+        return $field;
     }
 
     /**
@@ -62,13 +121,7 @@ THEEND;
      */
     private function decodeJsonEntity($name, $value)
     {
-        $entity = array(
-            'name' => $name,
-            'fixed' => false,
-            'bundle' => false,
-            'fields' => array(),
-            'features' => array()
-        );
+        $entity = $this->createEntityArray($name);
 
         if (!isset($this->arguments['verbose']) || ($this->arguments['verbose'] === true)) {
             $entity['mediatype'] = 'application/json';
@@ -140,14 +193,9 @@ THEEND;
      */
     private function decodeYamlEntity($name, $value)
     {
-        $entity = array(
-            'name' => $name,
-            'fixed' => false,
-            'mediatype' => 'text/x-yaml',
-            'source' => $value,
-            'fields' => array(),
-            'features' => array()
-        );
+        $entity = $this->createEntityArray($name);
+        $entity['mediatype'] = 'text/x-yaml';
+        $entity['source']    = $value;
 
         $definition = \Symfony\Component\Yaml\Yaml::parse($value);
 
@@ -181,14 +229,10 @@ THEEND;
      */
     private function convertMetadataToEntity($name, $class)
     {
-        $entity = array(
-            'name' => $name,
-            'fixed' => true,
-            'mediatype' => 'text/x-yaml',
-            'source' => null,
-            'fields' => array(),
-            'features' => array()
-        );
+        $entity = $this->createEntityArray($name);
+        $entity['fixed']     = true;
+        $entity['mediatype'] = 'text/x-yaml';
+        $entity['source']    = null;
 
         foreach($class->fieldMappings as $key => $config) {
             $field = $this->createFieldArray($key);
@@ -232,19 +276,27 @@ THEEND;
     {
         $siteoption = $this->siteoptions_service->getSiteOption('entities.entity.'.$name, 'all');
         if (is_null($siteoption)) {
-            return $this->findAndConvertMetadataToEntity($name);
-            return null;
+            $entity = $this->findAndConvertMetadataToEntity($name);
         }
-        switch ($siteoption->getMediatype()) {
-            case 'text/x-yaml':
-                return $this->decodeYamlEntity($name, $siteoption->getValue());
-                break;
-            case 'application/json':
-                return $this->decodeJsonEntity($name, $siteoption->getValue());
-                break;
+        else {
+            switch ($siteoption->getMediatype()) {
+                case 'text/x-yaml':
+                    $entity = $this->decodeYamlEntity($name, $siteoption->getValue());
+                    break;
+                case 'application/json':
+                    $entity = $this->decodeJsonEntity($name, $siteoption->getValue());
+                    break;
+            }
         }
 
-        return null;
+        if (!is_null($entity)) {
+            // enforce hardcoded entity roles
+            if (isset($this->hardcoded_entities[$entity['name']])) {
+                $entity['roles'] = $this->hardcoded_entities[$entity['name']];
+            }
+        }
+
+        return $entity;
     }
 
     /**
@@ -258,6 +310,9 @@ THEEND;
         $data = array();
 
         $entities = $this->siteoptions_service->getValue('config.entities', null, 'all');
+
+        $hardcoded = array_keys($this->hardcoded_entities);
+        $entities  = array_merge($entities, $hardcoded);
 
         foreach($entities as $entity) {
             $record = $this->loadEntity($entity);

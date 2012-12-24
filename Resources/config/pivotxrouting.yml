@@ -45,6 +45,11 @@ routes:
       public:       "logout"
       defaults:     { _controller: "BackendBundle:Backend:any", _view: "Core/logout.html.twig" }
 
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
+      pattern:      "_page/no_access"
+      public:       "no-access"
+      defaults:     { _controller: "BackendBundle:Backend:any", _view: "Core/no_access.html.twig" }
+
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
       pattern:      "_siteadmin/status"
       public:       "siteadmin/status"
