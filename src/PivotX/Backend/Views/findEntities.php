@@ -76,6 +76,9 @@ THEEND;
     }
 
     /**
+     * Create an empty entity array
+     *
+     * @todo upgrade this to a proper object
      */
     private function createEntityArray($name)
     {
@@ -84,6 +87,7 @@ THEEND;
             'roles' => $this->default_entity_roles,
             'fixed' => false,
             'bundle' => false,
+            'settings' => false,
             'fields' => array(),
             'features' => array()
         );
@@ -184,6 +188,10 @@ THEEND;
 
         if (isset($definition['delete'])) {
             $entity['delete'] = true;
+        }
+
+        if (isset($definition['settings'])) {
+            $entity['settings'] = $definition['settings'];
         }
 
         return $entity;

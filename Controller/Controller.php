@@ -127,6 +127,9 @@ class Controller extends CoreController
         return $context;
     }
 
+    /**
+     * Set the theme
+     */
     private function setTheme($theme_name = null)
     {
         if (is_null($theme_name)) {
@@ -135,7 +138,10 @@ class Controller extends CoreController
             if (!is_null($tk)) {
                 $ur = $tk->getUser();
                 if (!is_null($ur)) {
-                    $theme_name = $ur->getThemeName();
+                    $settings = $ur->getSettings();
+                    if (isset($settings['backend.theme_name'])) {
+                        $theme_name = $settings['backend.theme_name'];
+                    }
                 }
             }
             if (is_null($theme_name)) {
@@ -156,6 +162,67 @@ class Controller extends CoreController
         $webresourcer->activateWebresource($webresource->getIdentifier());
 
         $this->container->get('twig.loader')->addPath($realpath . '/twig');
+    }
+
+    /**
+     * Get the current site
+     */
+    protected function getCurrentSite()
+    {
+        $siteoptions = $this->get('pivotx.siteoptions');
+        $sites = explode("\n", $siteoptions->getValue('config.sites', array(), 'all'));
+
+        $token = $this->get('security.context')->getToken();
+        $user  = null;
+        if (!is_null($token)) {
+            $user = $token->getUser();
+        }
+
+        $_current_site = null;
+        if (!is_null($user)) {
+            $settings = $user->getSettings();
+            if (isset($settings['backend.current_site'])) {
+                $_current_site = $settings['backend.current_site'];
+            }
+        }
+
+        $current_site = null;
+        foreach($sites as $site) {
+            if ($site == $_current_site) {
+                $current_site = $site;
+            }
+        }
+
+        if (is_null($current_site)) {
+            $current_site = $sites[0];
+        }
+
+        return $current_site;
+    }
+
+    /**
+     * Set the current site for the user
+     */
+    private function setCurrentSite($current_site)
+    {
+        $siteoptions = $this->get('pivotx.siteoptions');
+        $sites = explode("\n", $siteoptions->getValue('config.sites', array(), 'all'));
+
+        $token = $this->get('security.context')->getToken();
+        $user  = null;
+        if (!is_null($token)) {
+            $user = $token->getUser();
+        }
+
+        $_current_site = null;
+        if (!is_null($user)) {
+            $settings = $user->getSettings();
+            $settings['backend.current_site'] = $current_site;
+            $user->setSettings($settings);
+
+            $this->get('doctrine')->getEntityManager()->persist($user);
+            $this->get('doctrine')->getEntityManager()->flush();
+        }
     }
 
     /**
@@ -200,10 +267,25 @@ class Controller extends CoreController
         // profile menu
         $repository = $this->get('doctrine')->getRepository('PivotX\CoreBundle\Entity\User');
         $profilemenu = new \PivotX\Component\Lists\RouteItem('dashboard', '_page/dashboard');
-        $item = $profilemenu->addItem(new \PivotX\Backend\Lists\Profile($this->get('security.context'), $repository));
+        $item = $profilemenu->addItem(new \PivotX\Backend\Lists\Profile($this->get('security.context'), $repository, $this->get('pivotx.siteoptions')));
         $this->get('pivotx.lists')->addItem('Backend/Profilemenu', $profilemenu, false);
 
-        parent::runOnce();
+        if ($this->getRequest()->query->has('_switch_site')) {
+            $this->setCurrentSite($this->getRequest()->query->get('_switch_site'));
+
+            $routing    = $this->get('pivotx.routing');
+            $routematch = $routing->getLatestRouteMatch();
+            if (!is_null($routematch)) {
+                $url = $routing->buildUrl($routematch->buildReference()->buildTextReference());
+            }
+            else {
+                $url = $routing->buildUrl('_page/dashboard');
+            }
+
+            return $this->redirect($url);
+        }
+
+        return parent::runOnce();
     }
 
     public function xyzanyAction(Request $request)

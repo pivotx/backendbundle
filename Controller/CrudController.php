@@ -219,7 +219,8 @@ class CrudController extends Controller
                         if ($mapping['type'] & ClassMetaDataInfo::TO_ONE) {
                             $type = 'entity';
                             $args['class'] = $mapping['targetEntity'];
-                            $args['property'] = 'title';
+                            $args['property'] = 'generic_title';
+                            $args['empty_value'] = $this->get('pivotx.translations')->translate('form.choices.empty-value');
                             //$args['choices'] = array( '0' => 'kies' );
                         }
                     }
@@ -354,7 +355,7 @@ class CrudController extends Controller
         if (!$done) {
             $preferred_fields = array ( 'title', 'name', 'email' );
             foreach($fields as &$field) {
-                if ($field['in_crud'] && in_array($field['name'], $preferred_fields)) {
+                if (isset($field['in_crud']) && $field['in_crud'] && in_array($field['name'], $preferred_fields)) {
                     $field['show_buttons'] = true;
                     $done = true;
                     break;
@@ -365,7 +366,7 @@ class CrudController extends Controller
         // method: first field
         if (!$done) {
             foreach($fields as &$field) {
-                if ($field['in_crud']) {
+                if (isset($field['in_crud']) && $field['in_crud']) {
                     $field['show_buttons'] = true;
                     $done = true;
                     break;

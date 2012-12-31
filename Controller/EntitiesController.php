@@ -5,6 +5,7 @@ namespace PivotX\BackendBundle\Controller;
 use PivotX\BackendBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use PivotX\CoreBundle\Entity\TranslationText;
 
 
 class EntitiesController extends Controller
@@ -270,12 +271,19 @@ class EntitiesController extends Controller
             return false;
         }
 
+        $suggestions->setTranslationsForNewEntity($this->get('pivotx.translations'), $this->getCurrentSite(), $entity['name']);
+
         $this->get('session')->setFlash('notice', 'Entity "'.$name.'" has been added.');
 
         $json = json_encode($entity);
 
         $siteoptions = $this->get('pivotx.siteoptions');
         $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+
+        $siteoption = $siteoptions->getSiteOption('config.entities', 'all');
+        $entities   = $siteoption->getUnpackedValue();
+        $entities[] = $entity['name'];
+        $siteoption->setUnpackedValue($entities);
 
         return $name;
     }
@@ -436,6 +444,120 @@ class EntitiesController extends Controller
         return $this->render('Entities/entities.html.twig', $context);
     }
 
+    /*
+    private function getSites()
+    {
+        $siteoptions = $this->get('pivotx.siteoptions');
+        $_sites = explode("\n", $siteoptions->getValue('config.sites', array(), 'all'));
+
+        $sites = array();
+        foreach($_sites as $site) {
+            if ($site != 'pivotx-backend') {
+                $sites[] = $site;
+            }
+        }
+
+        return $sites;
+    }
+     */
+
+    /*
+    private function getLanguagesForSite($site)
+    {
+        $siteoptions = $this->get('pivotx.siteoptions');
+
+        return $siteoptions->getValue('routing.languages', array(), $site);
+    }
+     */
+
+    private function handleEntityForm(Request $request, $entity)
+    {
+        $variants = array(
+            'singular_title' => 'singular title',
+            'singular_slug' => 'singular slug',
+            'plural_title' => 'plural title',
+            'plural_slug' => 'plural slug',
+        );
+
+        $default_data = array();
+
+        $routing_generator = new \PivotX\Doctrine\Generator\Routing($this->get('pivotx.siteoptions'), $this->get('pivotx.translations'));
+
+        $sites = $routing_generator->getSites();
+        $translations = $this->get('pivotx.translations');
+
+        foreach($sites as $site) {
+            $languages = $routing_generator->getLanguagesForSite($site);
+            $usite     = str_replace('-', '_', $site);
+
+            foreach($languages as $language) {
+                $name = $language['name'];
+
+                foreach($variants as $k => $v) {
+                    $default_data[$usite.'_'.$name.'_'.$k] = $translations->translate('entry.common.'.$k, '&site='.$site.'&language='.$name);
+                }
+
+            }
+        }
+
+        $builder = $this->createFormBuilder($default_data);
+        foreach($sites as $site) {
+            $languages = $routing_generator->getLanguagesForSite($site);
+            $usite     = str_replace('-', '_', $site);
+
+            foreach($languages as $language) {
+                $name = $language['name'];
+
+                foreach($variants as $k => $v) {
+                    $builder->add($usite.'_'.$name.'_'.$k, 'text', array(
+                        'label' => $site . '/' . $name . ' '.$v,
+                        'required' => false
+                    ));
+                }
+            }
+        }
+        $form = $builder->getForm();
+
+        if ($request->isMethod('POST')) {
+            $form->bind($request);
+
+            $data = $form->getData();
+
+            foreach($sites as $site) {
+                $languages = $routing_generator->getLanguagesForSite($site);
+                $usite     = str_replace('-', '_', $site);
+
+                foreach($variants as $k => $v) {
+                    $texts = array();
+                    foreach($languages as $language) {
+                        $name = $language['name'];
+
+                        $value = $data[$usite.'_'.$name.'_'.$k];
+                        if (is_null($value) || (trim($value) == '')) {
+                            $value = '';
+                        }
+                        $texts[$name] = $value;
+                    }
+
+                    $translations->setTexts('entry', 'common.'.$k, $site, null, $texts, TranslationText::STATE_VALID);
+                }
+
+                $routing_generator->updateRoutes($entity['name']);
+                $site_routing = new \PivotX\Component\Siteoptions\Routing($this->get('pivotx.siteoptions'));
+                $site_routing->compileSiteRoutes($site);
+            }
+
+            $json = json_encode($entity);
+
+            $siteoptions = $this->get('pivotx.siteoptions');
+            $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+
+            return false;
+        }
+
+        return $form;
+    }
+
     public function showEntityAction(Request $request)
     {
         $context = $this->getDefaultHtmlContext();
@@ -447,7 +569,16 @@ class EntitiesController extends Controller
 
         $entity = $view->getValue();
 
+        if (($form = $this->handleEntityForm($request, $entity)) === false) {
+            // form submission has been handled
+
+            $url = $this->get('pivotx.routing')->buildUrl('_entity/'.$entity_name);
+
+            return $this->redirect($url);
+        }
+
         $context['entity'] = $entity;
+        $context['form']   = $form->createView();
 
         return $this->render('Entities/entity.html.twig', $context);
     }

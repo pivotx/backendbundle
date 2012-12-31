@@ -18,11 +18,20 @@ languages:
       description:  "English"
       locale:       "en_GB.utf-8"
 
+    - name:         "none"
+      description:  "Shared resources"
+      locale:       ""
+
 
 routeprefixes:
     - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
-      prefix:       "|^(http://.+/pivotx/en/)|"
-# @todo should not do regexes but something simpler?
+      prefix:       "http://%request.host%/pivotx/en/"
+
+    - filter:       { target: "desktop", site: "pivotx-backend", language: "nl" }
+      prefix:       "http://%request.host%/pivotx/nl/"
+
+    - filter:       { target: false, site: "pivotx-backend", language: "none" }
+      prefix:       "http://%request.host%/pivotx/"
 
 routes:
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
@@ -50,19 +59,19 @@ routes:
       public:       "no-access"
       defaults:     { _controller: "BackendBundle:Backend:any", _view: "Core/no_access.html.twig" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_siteadmin/status"
       public:       "siteadmin/status"
       defaults:     { _controller: "BackendBundle:Siteadmin:showStatus", _role: "ROLE_EDITOR" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_table/{entity}"
       public:       "table/{entity}"
       defaults:     { _controller: "BackendBundle:Crud:showTable", _role: "ROLE_EDITOR" }
       requirements:
           entity: "[A-Za-z_]+[A-Za-z0-9]+"
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_table/{entityref}/{id}/{entity}"
       public:       "table/{entityref}/{id}/{entity}"
       defaults:     { _controller: "BackendBundle:Crud:showSubTable", _role: "ROLE_EDITOR" }
@@ -71,7 +80,7 @@ routes:
           entityref: "[A-Za-z_]+[A-Za-z0-9_]+"
           id:        "[0-9]+"
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_table/{entity}/{id}"
       public:       "table/{entity}/{id}"
       defaults:     { _controller: "BackendBundle:Crud:showRecord", _role: "ROLE_EDITOR" }
@@ -79,7 +88,7 @@ routes:
           entity:   "[A-Za-z_]+[A-Za-z0-9_]+"
           id:       "[0-9]+"
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_table/{entity}/suggest/{field}"
       public:       "table/{entity}/suggest/{field}"
       defaults:     { _controller: "BackendBundle:Crud:suggestFieldValue", _role: "ROLE_EDITOR" }
@@ -87,54 +96,54 @@ routes:
           entity:   "[A-Za-z_]+[A-Za-z0-9_]+"
           field:    "[A-Za-z_]+[A-Za-z0-9_]+"
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_api/fileupload"
       public:       "api/fileupload"
       defaults:     { _controller: "BackendBundle:Upload:processUpload", _role: "ROLE_EDITOR" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_developer/routing"
       public:       "developer/routing"
       defaults:     { _controller: "BackendBundle:Developer:showRouting", _role: "ROLE_DEVELOPER" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_developer/views"
       public:       "developer/views"
       defaults:     { _controller: "BackendBundle:Developer:showViews", _role: "ROLE_DEVELOPER" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_developer/formats"
       public:       "developer/formats"
       defaults:     { _controller: "BackendBundle:Developer:showFormats", _role: "ROLE_DEVELOPER" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_entities/all"
       public:       "entities/all"
       defaults:     { _controller: "BackendBundle:Entities:showEntities" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_entity/{entity}"
       public:       "entity/{entity}"
       defaults:     { _controller: "BackendBundle:Entities:showEntity", _role: "ROLE_ADMIN" }
       requirements:
           entity:    "[A-Za-z_]+[A-Za-z0-9_]+"
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_entities/all/mutate"
       public:       "entities/all/mutate"
       defaults:     { _controller: "BackendBundle:Entities:showMutate", _role: "ROLE_ADMIN" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_developer/site/new"
       public:       "site/new"
       defaults:     { _controller: "BackendBundle:Developer:showSite", _role: "ROLE_ADMIN" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_developer/site/mutate"
       public:       "site/mutate"
       defaults:     { _controller: "BackendBundle:Developer:showMutateSite", _role: "ROLE_ADMIN" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_developer/site/load"
       public:       "site/load"
       defaults:     { _controller: "BackendBundle:Developer:showLoadSite", _role: "ROLE_ADMIN" }
@@ -144,7 +153,14 @@ routes:
       public:       "profile/home"
       defaults:     { _controller: "BackendBundle:Backend:any", _view: "Developer/profile.html.twig" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: "en" }
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_page/not-found"
       public:       "page-not-found"
       defaults:     { _nothing: "not-found" }
+
+    - filter:       { target: false, site: "pivotx-backend", language: "none" }
+      pattern:      "_cwr/{file}"
+      public:       "cwr/{file}"
+      defaults:     { _controller: "CoreBundle:Cwr:cwr" }
+      requirements:
+          file:     "[A-Za-z0-9_.-]+[.][A-Za-z0-9]+"

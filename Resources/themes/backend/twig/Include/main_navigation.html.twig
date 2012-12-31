@@ -21,7 +21,13 @@
                     {% set submenu = menuitem.menu %}
                     <ul class="dropdown-menu">
                     {% for subitem in submenu.items %}
-                        <li class="{{ subitem.classes }}"><a href="{{ subitem.link }}">{{ subitem.label }}</a></li>
+                        <li class="{{ subitem.classes }}">
+                        {% if subitem.haslink %}
+                            <a href="{{ subitem.link }}">{{ subitem.label }}{% if subitem.attribute('selected')==true %} <i class="icon-ok"></i>{% endif %}</a>
+                        {% else %}
+                            {{ subitem.label }}
+                        {% endif %}
+                        </li>
                     {% endfor %}
                     </ul>
                 {% endif %}

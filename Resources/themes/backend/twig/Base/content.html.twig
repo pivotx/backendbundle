@@ -1,0 +1,22 @@
+{% extends "Base/default.html.twig" %}
+
+{#
+    This is the content-meta template to extend.
+    Contains regular header, footer and a content and meta block
+#}
+
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row-fluid">
+
+        <div class="span12 content">
+        {% block content %}
+            Put your own information here.
+        {% endblock %}
+        </div><!--/span-->
+
+    </div><!--/row-->
+
+{% endblock %}
+

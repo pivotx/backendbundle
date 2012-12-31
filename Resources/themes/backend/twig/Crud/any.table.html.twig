@@ -44,15 +44,16 @@ table.crud-bike th.column-reviews {
 </div>
 #}
 
+{% if view.length > 0 %}
+
 <table class="crud crud-any table table-striped" data-crud-table="{{ crud.htmlid }}">
     <thead>
         <tr data-order-href="{{ ref(['_table/',crud.entity.name]) }}', view.queryarguments({'table-order':''})) }}" data-order-current="{{ view.queryarguments['table-order']|default('title') }}">
             <th class="column-checkbox select-checkbox">
                 <input type="checkbox" name="id-toggle" data-id="id-toggle">
             </th>
-{#            <th class="column-id"                                   >Id</th> #}
         {% for field in crud.entity.fields %}
-            {% if field.in_crud %}
+            {% if field.in_crud is defined and field.in_crud %}
                 <th>{{ field.name }}</th>
             {% endif %}
         {% endfor %}
@@ -71,7 +72,7 @@ table.crud-bike th.column-reviews {
 #}
 
         {% for field in crud.entity.fields %}
-            {% if field.in_crud %}
+            {% if field.in_crud is defined and field.in_crud %}
             <td>
                 {% set fieldname = field.name|replace({'_':''}) %}
                 {{ attribute(item, fieldname)|formatas('Backend/Auto') }}
@@ -93,3 +94,13 @@ table.crud-bike th.column-reviews {
     {% endfor %}
     </tbody>
 </table>
+
+{% else %}
+
+    <div class="alert alert-block">
+        <p>
+            There are no records.
+        </p>
+    </div>
+
+{% endif %}

@@ -1,28 +1,43 @@
 
 {% block entity_content %}
 
+    <h2>Information</h2>
+
     <dl>
+        <dt>Name</dt>
+        <dd>{{ entity.name }}</dd>
+    {% if entity.bundle %}
         <dt>Bundle</dt>
         <dd>{{ entity.bundle }}</dd>
+    {% endif %}
     </dl>
+
+
+    <h2>Field definitions</h2>
 
     <table class="siteadmin siteadmin-sortable table table-striped table-bordered" data-entity="{{ entity.name }}">
         <thead>
             <tr>
+            {% if not entity.fixed %}
                 <th class="sort-handle"></th>
+            {% endif %}
                 <th>name</th>
                 <th>definition</th>
+            {% if not entity.fixed %}
                 <th class="crud-checkbox">
                     in CRUD table
                 </th>
+            {% endif %}
             </tr>
         </thead>
         <tbody data-action="{{ ref('_entities/all/mutate') }}" data-entity="{{ entity.name }}">
         {% for field in entity.fields %}
             <tr data-field="order_{{ field.name }}">
+            {% if not entity.fixed %}
                 <td class="sort-handle">
                     <i class="icon-align-justify"></i>
                 </td>
+            {% endif %}
                 <td>
             {% if not field.created %}
                     <em>(<strong>new</strong>)</em>
@@ -56,9 +71,11 @@
                         {% if field.relation is defined %} / <span class="field-relation">{{ field.relation }}</span>{% endif %}
                     )</small>
                 </td>
+            {% if not entity.fixed %}
                 <td class="crud-checkbox">
-                    <input type="checkbox" name="crud_{{ field.name }}" />
+                    <input type="checkbox" name="crud_{{ field.name }}"{{ field.in_crud ? ' checked="checked"' : '' }} />
                 </td>
+            {% endif %}
             </tr>
         {% endfor %}
         {% if entity.mediatype == 'application/json' %}
@@ -78,7 +95,10 @@
             </tr>
         {% endif %}
         </tbody>
-    <table>
+    </table>
+
+
+    <h2>Feature configuration</h2>
 
     <table class="siteadmin table table-striped table-bordered" data-entity="{{ entity.name }}">
         <thead>
@@ -120,9 +140,19 @@
         </tbody>
     </table>
 
+{#
     {% if entity.mediatype == 'text/x-yaml' %}
         <span class="hide" "{{ entity.name }}">{{ entity.source }}</textarea>
     {% endif %}
+#}
+
+    <h2>Other configuration</h2>
+
+    <form action="" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+
+        <input type="submit" />
+    </form>
 
 {% endblock %}
 
