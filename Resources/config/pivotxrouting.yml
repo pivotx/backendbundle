@@ -154,7 +154,7 @@ routes:
       defaults:     { _controller: "BackendBundle:Backend:any", _view: "Developer/profile.html.twig" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
-      pattern:      "_page/not-found"
+      pattern:      "_http/404"
       public:       "page-not-found"
       defaults:     { _nothing: "not-found" }
 
