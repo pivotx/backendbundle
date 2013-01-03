@@ -338,6 +338,7 @@ function updateCrudUniqueField(unique_el, field, sources)
                 html += '</ul>';
                 // @todo this should be directer (in now searches the complete html)
                 $('div.suggestions', unique_el).html(html);
+                $('input[type="text"]', unique_el).val(data[0]);
             }
         },
         error: function(data, textStatus, jqXHR){
