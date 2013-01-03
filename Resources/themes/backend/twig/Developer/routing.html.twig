@@ -6,7 +6,6 @@
         <caption>Prefixes</caption>
         <thead>
             <tr>
-                <th>Site</th>
                 <th>Target</th>
                 <th>Language</th>
                 <th>URL prefix</th>
@@ -15,7 +14,6 @@
     {% for prefix in prefixes.result %}
         <tbody>
             <tr>
-                <td>{{ prefix.filter.site }}</td>
                 <td>{{ prefix.filter.target }}</td>
                 <td>{{ prefix.filter.language }}</td>
                 <td>
@@ -33,7 +31,6 @@
         <caption>Routes</caption>
         <thead>
             <tr>
-                <th>Site</th>
                 <th>Target</th>
                 <th>Language</th>
                 <th>Local reference</th>
@@ -42,13 +39,6 @@
     {% for route in routes.result %}
         <tbody>
             <tr>
-                <td>
-                    {% if route.filter.site|length==0 %}
-                        <em>any</em>
-                    {% else %}
-                        {{ route.filter.site|join(', ') }}
-                    {% endif %}
-                </td>
                 <td>
                     {% if route.filter.target|length==0 %}
                         <em>any</em>

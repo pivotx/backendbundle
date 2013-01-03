@@ -78,21 +78,52 @@ class DeveloperController extends Controller
     {
         $context = $this->getDefaultHtmlContext();
 
+        $site = $this->getCurrentSite();
+
         $prefixeses = $this->get('pivotx.routing')->getRouteSetup()->getRoutePrefixeses();
-        $prefixes   = array();
+        $_prefixes  = array();
         foreach($prefixeses as $p) {
-            $prefixes = array_merge($prefixes, $p->getAll());
+            $_prefixes = array_merge($_prefixes, $p->getAll());
         }
         // @todo we shouldn't do this when we have priorities
-        usort($prefixes, array(get_class($this), 'cmpRoutePrefixes'));
+        $prefixes = array();
+        foreach($_prefixes as $prefix) {
+            $filter = $prefix->getFilter();
+            if (isset($filter['site'])) {
+                if (is_array($filter['site'])) {
+                    if (in_array($site, $filter['site'])) {
+                        $prefixes[] = $prefix;
+                    }
+                }
+                else {
+                    if ($filter['site'] == $site) {
+                        $prefixes[] = $prefix;
+                    }
+                }
+            }
+        }
 
         $collections = $this->get('pivotx.routing')->getRouteSetup()->getRouteCollections();
-        $routes      = array();
+        $_routes     = array();
         foreach($collections as $c) {
-            $routes = array_merge($routes, $c->getAll());
+            $_routes = array_merge($_routes, $c->getAll());
         }
-        // @todo we shouldn't do this when we have priorities
-        usort($routes, array(get_class($this), 'cmpRoute'));
+        $routes = array();
+        foreach($_routes as $route) {
+            $filter = $route->getFilter();
+            if (isset($filter['site'])) {
+                if (is_array($filter['site'])) {
+                    if (in_array($site, $filter['site'])) {
+                        $routes[] = $route;
+                    }
+                }
+                else {
+                    if ($filter['site'] == $site) {
+                        $routes[] = $route;
+                    }
+                }
+            }
+        }
 
         $context['prefixes'] = new \PivotX\Component\Views\ArrayView($prefixes, 'Developing/Routing/Prefixes', 'PivotX/Devend', 'Dynamic view to show the routeprefixes');
         $context['routes'] = new \PivotX\Component\Views\ArrayView($routes, 'Developing/Routing/Routes', 'PivotX/Devend', 'Dynamic view to show the routes');
@@ -259,7 +290,7 @@ class DeveloperController extends Controller
 
             $site = $json_data['site'];
 
-            $siteoptions->clearSiteOptions($site, 'routing');
+            //$siteoptions->clearSiteOptions($site, 'routing');
 
             $siteoptions->set('routing.setup', json_encode($json_data), 'application/json', false, false, $site);
             $siteoptions->set('routing.targets', json_encode($json_data['targets']), 'application/json', true, false, $site);
@@ -295,6 +326,12 @@ class DeveloperController extends Controller
                 }
             }
             $siteoptions->set('routing.routeprefixes', json_encode($routeprefixes), 'application/json', true, false, $site);
+
+
+            // recompile routes
+
+            $site_routing = new \PivotX\Component\Siteoptions\Routing($siteoptions);
+            $site_routing->compileSiteRoutes($site);
         }
 
         $content = json_encode($data);
