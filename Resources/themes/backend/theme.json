@@ -6,8 +6,7 @@
 
     "files": [
         "css/*.css",
-        "js/*.js",
-        "less/bootstrap.less"
+        "js/*.js"
     ],
 
     "dependencies": [
@@ -15,7 +14,7 @@
         "jquery-ui",
         "jquery-fileupload",
         "pines-notify",
-        "bootstrap/js-only",
+        "bootstrap",
         "google-code-prettify"
     ]
 }

@@ -1,42 +1,9 @@
 {
     "identifier": "bootstrap",
-    "version": "2.1.0",
+    "version": "2.2.2",
 
     "files": [
-        "js/bootstrap-tooltip.js",
-        "js/bootstrap-affix.js",
-        "js/bootstrap-alert.js",
-        "js/bootstrap-button.js",
-        "js/bootstrap-carousel.js",
-        "js/bootstrap-collapse.js",
-        "js/bootstrap-dropdown.js",
-        "js/bootstrap-modal.js",
-        "js/bootstrap-popover.js",
-        "js/bootstrap-scrollspy.js",
-        "js/bootstrap-tab.js",
-        "js/bootstrap-transition.js",
-        "js/bootstrap-typeahead.js",
-
-        "less/bootstrap.less"
-    ],
-
-    "variants": {
-        "js-only": {
-            "files": [
-                "js/bootstrap-tooltip.js",
-                "js/bootstrap-affix.js",
-                "js/bootstrap-alert.js",
-                "js/bootstrap-button.js",
-                "js/bootstrap-carousel.js",
-                "js/bootstrap-collapse.js",
-                "js/bootstrap-dropdown.js",
-                "js/bootstrap-modal.js",
-                "js/bootstrap-popover.js",
-                "js/bootstrap-scrollspy.js",
-                "js/bootstrap-tab.js",
-                "js/bootstrap-transition.js",
-                "js/bootstrap-typeahead.js"
-            ]
-        }
-    }
+        "css/bootstrap.min.css",
+        "js/bootstrap.min.js"
+    ]
 }
