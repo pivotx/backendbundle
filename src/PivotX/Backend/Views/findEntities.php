@@ -4,6 +4,11 @@ namespace PivotX\Backend\Views;
 
 use \PivotX\Component\Views\AbstractView;
 
+/**
+ * Find all entities
+ *
+ * @todo an entity is now a regular array should be upgraded to an object
+ */
 class findEntities extends AbstractView
 {
     private $doctrine_registry;
@@ -77,8 +82,6 @@ THEEND;
 
     /**
      * Create an empty entity array
-     *
-     * @todo upgrade this to a proper object
      */
     private function createEntityArray($name)
     {
@@ -129,12 +132,18 @@ THEEND;
 
         if (!isset($this->arguments['verbose']) || ($this->arguments['verbose'] === true)) {
             $entity['mediatype'] = 'application/json';
-            $entity['source']    = $value;
+            //$entity['source']    = $value;
+            $entity['source']    = false;
         }
 
         $definition = json_decode($value, true);
 
         $entity['bundle'] = $definition['bundle'];
+
+        $parts = explode('\\', $definition['bundle']);
+        array_pop($parts);
+        $entity['entity_class']  = implode('\\',$parts).'\\Entity\\'.$name;
+        //$entity['repository_class']  = implode('\\',$parts).'\\Model\\'.$name.'Repository';
 
         $suggestions = new \PivotX\Doctrine\Generator\Suggestions();
 
@@ -282,7 +291,7 @@ THEEND;
      */
     private function loadEntity($name)
     {
-        $siteoption = $this->siteoptions_service->getSiteOption('entities.entity.'.$name, 'all');
+        $siteoption = $this->siteoptions_service->getSiteOption('entities.entity.'.strtolower($name), 'all');
         if (is_null($siteoption)) {
             $entity = $this->findAndConvertMetadataToEntity($name);
         }

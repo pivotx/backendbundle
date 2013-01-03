@@ -44,6 +44,14 @@ class EntitiesController extends Controller
         return $view->getValue();
     }
 
+    private function saveEntity($entity)
+    {
+        $json = json_encode($entity);
+
+        $siteoptions = $this->get('pivotx.siteoptions');
+        $siteoptions->set('entities.entity.'.strtolower($entity['name']), $json, 'application/json', false, false, 'all');
+    }
+
     public function handleEditField(ParameterBag $arguments)
     {
         $orig = trim($arguments->get('original_name', ''));
@@ -118,10 +126,7 @@ class EntitiesController extends Controller
             $this->get('session')->setFlash('notice', 'Field "'.$orig.'" for entity "'.$entity['name'].'" has been edited.');
         }
 
-        $json = json_encode($entity);
-
-        $siteoptions = $this->get('pivotx.siteoptions');
-        $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+        $this->saveEntity($entity);
 
         //$this->get('session')->setFlash('debug', var_export($entity, true));
 
@@ -156,10 +161,7 @@ class EntitiesController extends Controller
 
             $this->get('session')->setFlash('notice', 'Field "'.$name.'" for entity "'.$entity['name'].'" has been deleted.');
 
-            $json = json_encode($entity);
-
-            $siteoptions = $this->get('pivotx.siteoptions');
-            $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+            $this->saveEntity($entity);
 
             return true;
         }
@@ -198,10 +200,7 @@ class EntitiesController extends Controller
             $this->get('session')->setFlash('notice', 'New feature "'.$type.'" for entity "'.$entity['name'].'" has been added.');
         }
 
-        $json = json_encode($entity);
-
-        $siteoptions = $this->get('pivotx.siteoptions');
-        $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+        $this->saveEntity($entity);
 
         //$this->get('session')->setFlash('debug', var_export($entity, true));
 
@@ -236,10 +235,7 @@ class EntitiesController extends Controller
 
             $this->get('session')->setFlash('notice', 'Feature "'.$type.'" for entity "'.$entity['name'].'" has been deleted.');
 
-            $json = json_encode($entity);
-
-            $siteoptions = $this->get('pivotx.siteoptions');
-            $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+            $this->saveEntity($entity);
 
             return true;
         }
@@ -275,10 +271,7 @@ class EntitiesController extends Controller
 
         $this->get('session')->setFlash('notice', 'Entity "'.$name.'" has been added.');
 
-        $json = json_encode($entity);
-
-        $siteoptions = $this->get('pivotx.siteoptions');
-        $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+        $this->saveEntity($entity);
 
         $siteoption = $siteoptions->getSiteOption('config.entities', 'all');
         $entities   = $siteoption->getUnpackedValue();
@@ -300,10 +293,7 @@ class EntitiesController extends Controller
         $entity['delete'] = true;
         $entity['fields'] = array();
 
-        $json = json_encode($entity);
-
-        $siteoptions = $this->get('pivotx.siteoptions');
-        $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+        $this->saveEntity($entity);
 
         return false;
     }
@@ -336,10 +326,7 @@ class EntitiesController extends Controller
 
         $entity['fields'] = array_merge($new_fields, $old_fields);
 
-        $json = json_encode($entity);
-
-        $siteoptions = $this->get('pivotx.siteoptions');
-        $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+        $this->saveEntity($entity);
 
         return false;
     }
@@ -358,10 +345,7 @@ class EntitiesController extends Controller
             $field['in_crud'] = in_array($field['name'], $crud_fields);
         }
 
-        $json = json_encode($entity);
-
-        $siteoptions = $this->get('pivotx.siteoptions');
-        $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+        $this->saveEntity($entity);
 
         return false;
     }
@@ -547,10 +531,7 @@ class EntitiesController extends Controller
                 $site_routing->compileSiteRoutes($site);
             }
 
-            $json = json_encode($entity);
-
-            $siteoptions = $this->get('pivotx.siteoptions');
-            $siteoptions->set('entities.entity.'.$entity['name'], $json, 'application/json', false, false, 'all');
+            $this->saveEntity($entity);
 
             return false;
         }
