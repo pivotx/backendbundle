@@ -79,8 +79,6 @@
         {% endif %}
         </ul>
 
-        <hr/>
-
         {#
         <ul class="nav nav-list">
             <li class="nav-header">Publishing</li>
@@ -106,6 +104,53 @@
             </li>
         </ul>
         #}
+
+        {% if crud.links|length > 0 %}
+
+        <hr/>
+
+        <ul class="nav nav-list">
+            <li class="nav-header">Links</li>
+            <li>
+                <p>
+                    You can communicate the following links to this page:
+                </p>
+                <ul>
+                {% for link in crud.links %}
+                    <li>
+                        {% autoescape %}<a href="{{ link }}">{{ link }}</a>{% endautoescape %}
+                    </li>
+                {% endfor %}
+                </ul>
+            </li>
+        </ul>
+        {% endif %}
+
+        {% if crud.snippets|length > 0 %}
+
+        <hr/>
+
+        <ul class="nav nav-list">
+            <li class="nav-header">Development</li>
+            <li>
+                <p>
+                {% if crud.snippets|length == 1 %}
+                    You can use the following snippet in your templates:
+                {% else %}
+                    You can use any of the following snippets in your templates:
+                {% endif %}
+                </p>
+
+                <ul>
+                {% for snippet in crud.snippets %}
+                    <li>
+                        <code>{{ snippet }}</code>
+                    </li>
+                {% endfor %}
+                </ul>
+            </li>
+        </ul>
+        {% endif %}
     </div>
 
 {% endblock %}

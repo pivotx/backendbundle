@@ -561,9 +561,32 @@ class CrudController extends Controller
             }
         }
 
+        $crud_links = array();
+        $crud_snippets = array();
+        if (($this->get('security.context')->isGranted('ROLE_DEVELOPER')) && ($item->getId() > 0)) {
+            $entity_name = strtolower($context['crud']['entity']['name']);
+            $id          = $item->getId();
+
+            $url = $this->get('pivotx.routing')->buildUrl($entity_name.'/'.$id);
+
+            if (!is_null($url)) {
+                $crud_links[] = $url;
+
+                if (method_exists($item, 'getSlug')) {
+                    $crud_snippets[] = '{{ ref(\''.$entity_name.'/'.$item->getSlug().'\') }}';
+                }
+
+                $crud_snippets[] = '{{ ref(\''.$entity_name.'/'.$id.'\') }}';
+
+            }
+        }
+
+
         $context['crud']['id']                  = $request->get('id');
         $context['crud']['selection']           = $selection;
         $context['crud']['selection_next_href'] = $selection_next_href;
+        $context['crud']['links']               = $crud_links;
+        $context['crud']['snippets']            = $crud_snippets;
 
         $context['item'] = $item;
         $context['form'] = $form->createView();
