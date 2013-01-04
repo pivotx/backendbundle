@@ -816,30 +816,63 @@ class CrudController extends Controller
             $item = new $entity_class;
         }
 
-        // unsophisticated way to set the temporary fields
-        foreach($request->request->all() as $name => $value) {
-            $method = 'set'.ucfirst($name);
-            if (method_exists($item, $method)) {
-                $item->$method($value);
-            }
-        }
-
         $field_name = $request->get('field');
+        $values     = $request->request->all();
 
         $suggestions = array();
+        if ((count($values) == 2) && (isset($values['id'])) && (isset($values[$field_name]))) {
+            // test slug suggestions
 
-        $counter = 0;
-        while (($counter < 1000) && (count($suggestions) < 2)) {
-            $try_value = $item->getSlugSuggestion($counter++);
+            $suggestion = \PivotX\Doctrine\Feature\Sluggable\Helpers::normalizeSlug($values[$field_name]);
+            $counter    = 0;
+            while (($counter < 1000) && (count($suggestions) < 2)) {
+                if ($counter == 0) {
+                    $try_value = $suggestion;
+                }
+                else {
+                    $try_value = $suggestion . '-' . $counter;
+                }
+                $counter++;
 
-            $q = $entity_manager
-                ->createQuery('select t from '.$entity_class.' t where t.'.$field_name.' = :value')
-                ->setParameter('value', $try_value)
-                ;
+                $q = $entity_manager
+                    ->createQuery('select t from '.$entity_class.' t where t.'.$field_name.' = :value')
+                    ->setParameter('value', $try_value)
+                    ;
 
-            $items = $q->getResult();
-            if (count($items) == 0) {
-                $suggestions[] = $try_value;
+                $items = $q->getResult();
+                if (count($items) == 0) {
+                    $suggestions[] = $try_value;
+                }
+                else if (count($items) == 1) {
+                    if ($items[0]->getId() == $values['id']) {
+                        $suggestions[] = $try_value;
+                    }
+                }
+            }
+        }
+        else {
+            // generate suggestions
+
+            foreach($values as $name => $value) {
+                $method = 'set'.ucfirst($name);
+                if (method_exists($item, $method)) {
+                    $item->$method($value);
+                }
+            }
+
+            $counter = 0;
+            while (($counter < 1000) && (count($suggestions) < 2)) {
+                $try_value = $item->getSlugSuggestion($counter++);
+
+                $q = $entity_manager
+                    ->createQuery('select t from '.$entity_class.' t where t.'.$field_name.' = :value')
+                    ->setParameter('value', $try_value)
+                    ;
+
+                $items = $q->getResult();
+                if (count($items) == 0) {
+                    $suggestions[] = $try_value;
+                }
             }
         }
 

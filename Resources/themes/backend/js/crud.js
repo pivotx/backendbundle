@@ -3,7 +3,7 @@ var crud_tables = {};
 var crud_last_toggle = -1;
 var crud_clear_selection = true;
 
-var crud_slug_timer = false; // @todo we support only 1 slug update
+var crud_unique_timer = false; // @todo we support only 1 slug update
 
 
 /**
@@ -286,6 +286,7 @@ function activateFileSelection(field_row_el, args)
     });
 }
 
+
 /**
  * Handler to update the unique value
  * 
@@ -298,6 +299,11 @@ function updateCrudUniqueField(unique_el, field, sources)
     var post = {};
     var url = '';
     var automatic = $(unique_el).attr('data-automatic');
+
+    if (automatic == 'keep') {
+        // no need to do anything
+        return;
+    }
 
     for(var i=0; i < sources.length; i++) {
         var source = sources[i];
@@ -315,30 +321,52 @@ function updateCrudUniqueField(unique_el, field, sources)
         dataType: 'json',
         success: function(data, textStatus, jqXHR){
             if (data.length > 0) {
-                var other = 0;
-                if (automatic == 'autofill') {
-                    $(unique_el).val(data[0]);
-                    if (data[0] == '') {
-                        var empty_value = $(unique_el).find('span.current').attr('data-empty');
-                        $(unique_el).find('span.current').html(empty_value);
-                        other = -1;
-                    }
-                    else {
-                        $(unique_el).find('span.current').html(data[0]);
-                        other = 1;
-                    }
+                var value = data[0];
+
+                $('.value', unique_el).html(value);
+                $('input[type="text"]', unique_el).val(value);
+            }
+        },
+        error: function(data, textStatus, jqXHR){
+        }
+    });
+}
+
+/**
+ * Handle to verify unique value
+ */
+function verifyCrudUniqueField(unique_el, value)
+{
+    var field = $(unique_el).attr('data-field');
+    var post = {};
+
+    post[field] = value;
+
+    var my_location = new String(document.location);
+    var re = my_location.match(/(.+)\/([0-9]+)$/);
+    var url = re[1] + '/suggest/' + field;
+
+    post['id'] = re[2];
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: post,
+        dataType: 'json',
+        success: function(data, textStatus, jqXHR){
+            if (data.length > 0) {
+                var suggested_value = data[0];
+                if (suggested_value != value) {
+                    showNotification({
+                        title: 'Suggestion update',
+                        text: 'The value you entered was not unique.<br/>We changed it slightly to be unique.<br/><br/>Old value: <strong>' + value + '</strong><br/>New value: <strong>' + suggested_value + '</strong>',
+                        type:'info'}
+                    );
                 }
-                $('div.suggestions ul li.select-this').remove();
-                var html = '<ul>';
-                html += $('div.suggestions ul', unique_el).html();
-                html += '<li class="select-this select-this-first"><a class="btn btn-mini unique-select select-this" href="#">' + data[0] + '</a></li>';
-                if (other >= 0) {
-                    html += '<li class="select-this"><a class="btn btn-mini unique-select select-this" href="#">' + data[other] + '</a></li>';
-                }
-                html += '</ul>';
-                // @todo this should be directer (in now searches the complete html)
-                $('div.suggestions', unique_el).html(html);
-                $('input[type="text"]', unique_el).val(data[0]);
+                $('.value-auto .value', unique_el).html(suggested_value);
+                $('.value-edit input').val(suggested_value);
+                $('.value-edit input').hide();
+                $('.value-auto').show();
             }
         },
         error: function(data, textStatus, jqXHR){
@@ -349,7 +377,7 @@ function updateCrudUniqueField(unique_el, field, sources)
 /**
  * Add a handler to each field which can possible edit the unique field
  * 
- * @todo only works for input's as sources
+ * @todo currently only works for input's as sources
  */
 function fixCrudUniqueSources(form_el, unique_el, field, sources_text)
 {
@@ -361,11 +389,11 @@ function fixCrudUniqueSources(form_el, unique_el, field, sources_text)
 
             $('input[name="form['+source+']"]').on('change keyup', function(e){
                 if ($(this).attr('data-previous') != $(this).val()) {
-                    if (crud_slug_timer !== false) {
-                        clearTimeout(crud_slug_timer);
+                    if (crud_unique_timer !== false) {
+                        clearTimeout(crud_unique_timer);
                     }
 
-                    crud_slug_timer = setTimeout(function(){ updateCrudUniqueField(unique_el, field, sources); }, 500);
+                    crud_unique_timer = setTimeout(function(){ updateCrudUniqueField(unique_el, field, sources); }, 500);
 
                     $(this).attr('data-previous', $(this).val());
                 }
@@ -744,6 +772,29 @@ $(function(){
     $('.crud-edit-form input.primary-focus, .crud-edit-form textarea.primary-focus').each(function(){
         $(this).focus();
     });
+
+
+    // unique field
+    $('.crud-edit-form div.unique').each(function(){
+        fixCrudUniqueSources($(this).closest('.crud-edit-form'), this, $(this).attr('data-field'), $(this).attr('data-sources'));
+    });
+    $('.crud-edit-form').on('click', 'a.value-edit', function(e){
+        var unique_el = $(this).closest('div.unique');
+
+        e.preventDefault();
+
+        $('.value-auto').hide();
+        $('.value-edit input').show();
+    });
+    $('.crud-edit-form').on('blur', '.value-edit input', function(e){
+        var unique_el = $(this).closest('div.unique');
+        var input_el = $('.value-edit input', unique_el);
+        correctInputType(input_el, 'slug');
+        var value = input_el.val();
+        verifyCrudUniqueField(unique_el, value);
+    });
+
+    /*
     $('.crud-edit-form div.unique').each(function(){
         fixCrudUniqueSources($(this).closest('.crud-edit-form'), this, $(this).attr('data-field'), $(this).attr('data-sources'));
     });
@@ -766,6 +817,7 @@ $(function(){
             $('input', unique_el).show().focus().addClass('correct-type').attr('data-type', 'slug');
         }
     });
+    */
 
 
     // @todo only works because of stuff inside base.js

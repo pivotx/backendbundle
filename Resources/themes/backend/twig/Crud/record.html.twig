@@ -24,15 +24,19 @@
             <li class="nav-header">General information</li>
             <li>
                 <p>
-                {% if (item.datecreated is defined) and (item.datemodified is defined) and (item.datecreated==item.datemodified) %}
-                    This item was created on {{ item.datecreated|formatas('Backend/Auto') }}.
-                {% else %}
-                    {% if item.datecreated is defined %}
+                {% if item.id > 0 %}
+                    {% if (item.datecreated is defined) and (item.datemodified is defined) and (item.datecreated==item.datemodified) %}
                         This item was created on {{ item.datecreated|formatas('Backend/Auto') }}.
+                    {% else %}
+                        {% if item.datecreated is defined %}
+                            This item was created on {{ item.datecreated|formatas('Backend/Auto') }}.
+                        {% endif %}
+                        {% if item.datemodified is defined %}
+                            It was last edited on {{ item.datemodified|formatas('Backend/Auto') }}.
+                        {% endif %}
                     {% endif %}
-                    {% if item.datemodified is defined %}
-                        It was last edited on {{ item.datemodified|formatas('Backend/Auto') }}.
-                    {% endif %}
+                {% else %}
+                        This is a new item.
                 {% endif %}
                 </p>
             </li>

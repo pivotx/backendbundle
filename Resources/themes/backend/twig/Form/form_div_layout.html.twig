@@ -107,14 +107,11 @@
 {% spaceless %}
     {% set type = type|default('text') %}
     <div class="unique" data-field="{{ name }}" data-sources="{{ sources }}" data-automatic="{% if value == "" %}autofill{% else %}keep{% endif %}">
-        <div class="value">
-            <span class="label label-warning current" data-empty="{{ translate('form.backend_unique.empty-value') }}">{{ value }}</span>
-        {{ block('field_widget') }}
+        <div class="value-auto" data-empty="{{ translate('form.backend_unique.empty-value') }}">
+            http://px4.twokings.eu/entry/<strong class="value">{% if value is not empty %}{{ value }}{% endif %}</strong> - <a href="#" class="value-edit">edit</a>
         </div>
-        <div class="suggestions">
-            <ul>
-                <li class="edit-self"><a class="btn btn-mini unique-select edit-self" href="#">edit</a></li>
-            </ul>
+        <div class="value-edit">
+            {{ block('form_widget_simple') }}
         </div>
     </div>
 {% endspaceless %}
