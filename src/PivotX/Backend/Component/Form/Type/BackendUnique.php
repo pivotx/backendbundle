@@ -21,6 +21,7 @@ class BackendUnique extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->setAttribute('sources', $options['sources']);
+        $builder->setAttribute('slug_entity', $options['slug_entity']);
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
@@ -29,6 +30,7 @@ class BackendUnique extends AbstractType
 
         $view
             ->set('sources', $form->getAttribute('sources'))
+            ->set('slug_entity', $form->getAttribute('slug_entity'))
         ;
     }
 
@@ -41,7 +43,8 @@ class BackendUnique extends AbstractType
 
         $resolver->setDefaults(array(
             'compound' => false,
-            'sources' => $sources
+            'sources' => $sources,
+            'slug_entity' => $this->options['slug_entity']
         ));
     }
 

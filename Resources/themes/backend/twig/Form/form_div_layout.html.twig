@@ -108,7 +108,14 @@
     {% set type = type|default('text') %}
     <div class="unique" data-field="{{ name }}" data-sources="{{ sources }}" data-automatic="{% if value == "" %}autofill{% else %}keep{% endif %}">
         <div class="value-auto" data-empty="{{ translate('form.backend_unique.empty-value') }}">
-            http://px4.twokings.eu/entry/<strong class="value">{% if value is not empty %}{{ value }}{% endif %}</strong> - <a href="#" class="value-edit">edit</a>
+            {% set fakeslug = 'dit-ne-the-slug-wert' %}
+            {% set ref = [slug_entity,'/',fakeslug]|join %}
+            {% set url_complete = ref(ref) %}
+            {% set url_parts = url_complete|split(fakeslug) %}
+            {% set slug_prefix = url_parts[0] %}
+            {% set slug_postfix = url_parts[1] %}
+
+            {{ slug_prefix }}<strong class="value">{% if value is not empty %}{{ value }}{% endif %}</strong>{{ slug_postfix }} - <a href="#" class="value-edit">edit</a>
         </div>
         <div class="value-edit">
             {{ block('form_widget_simple') }}
