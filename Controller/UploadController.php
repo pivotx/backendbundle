@@ -21,6 +21,7 @@ class UploadController extends Controller
         $info['name']     = $file->getClientOriginalName();
         $info['mimetype'] = $file->getClientMimeType();
         $info['size']     = $file->getClientSize();
+        $info['message']  = 'Something unknown went wrong.';
 
         //echo '<pre>'; var_dump($file); echo '</pre>';
 
@@ -32,6 +33,7 @@ class UploadController extends Controller
 
         if (!is_dir($directory)) {
             // @todo error!!
+            $info['message'] = 'Could not create upload directory.';
             return $info;
         }
 
@@ -49,6 +51,7 @@ class UploadController extends Controller
 
         if (is_null($name)) {
             // @todo error
+            $info['message'] = 'Could not generate storage file.';
             return $info;
         }
 
@@ -62,11 +65,13 @@ class UploadController extends Controller
                 $moved_file = null;
             }
             if (is_null($moved_file)) {
+                $info['message'] = 'Could not move file to quarantaine location.';
                 return $info;
             }
 
             $info['valid']     = true;
             $info['tmp_name']  = $name;
+            $info['message']   = '';
             //$info['file']  = $moved_file;
         }
 

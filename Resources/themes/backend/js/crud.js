@@ -153,6 +153,9 @@ function updateCrudFileFieldRow(field_row_el, args, file_info, progress, filesta
         $('ul.files li[class!="no-file"]', field_row_el).remove();
     }
 
+    console.log(file_info);
+    console.log(file_info.message, filestatus);
+
     var file_el = $('li[data-name="'+file_info.name+'"]', field_row_el);
 
     if (file_el.length == 0) {
@@ -175,13 +178,27 @@ function updateCrudFileFieldRow(field_row_el, args, file_info, progress, filesta
     else {
         $('div.progress', file_el).hide();
 
-        if (filestatus == 200) {
+        if ((filestatus == 200) && (file_info.valid)) {
             $('span.status', file_el)
                 .addClass('label label-success')
                 .html(args.textDone)
                 ;
+
+            var title_input_el = $(field_row_el).closest('form').find('#form_title');
+            if ((title_input_el.length > 0) && (title_input_el.val() == '')) {
+                // set the default title to the filename
+                $(title_input_el).val(file_info.name);
+            }
         }
         else {
+            if (file_info.message) {
+                showNotification({
+                    title: 'Upload error',
+                    text: file_info.message,
+                    type: 'error'
+                });
+            }
+
             $('span.status', file_el)
                 .addClass('label label-important')
                 .html(args.textFail)

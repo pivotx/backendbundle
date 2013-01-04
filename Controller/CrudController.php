@@ -384,6 +384,13 @@ class CrudController extends Controller
     {
         $views = $this->get('pivotx.views');
 
+        switch ($name) {
+            case 'LocalEmbedResource':
+                // @todo sneaky pass-thru, should not be of course
+                $name = 'GenericResource';
+                break;
+        }
+
         $view  = $views->findView('Backend/findEntities');
         if (is_null($view)) {
             return null;
