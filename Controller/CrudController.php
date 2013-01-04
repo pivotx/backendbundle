@@ -567,10 +567,17 @@ class CrudController extends Controller
             $entity_name = strtolower($context['crud']['entity']['name']);
             $id          = $item->getId();
 
+            // we just use this to test for any routes
             $url = $this->get('pivotx.routing')->buildUrl($entity_name.'/'.$id);
 
             if (!is_null($url)) {
-                $crud_links[] = $url;
+                $routing_generator = new \PivotX\Doctrine\Generator\Routing($this->get('pivotx.siteoptions'), $this->get('pivotx.translations'));
+                $languages = $routing_generator->getLanguagesForSite($this->getCurrentSite());
+
+                foreach($languages as $language) {
+                    $url = $this->get('pivotx.routing')->buildUrl('(&language='.$language['name'].')@'.$entity_name.'/'.$id);
+                    $crud_links[] = $url;
+                }
 
                 if (method_exists($item, 'getSlug')) {
                     $crud_snippets[] = '{{ ref(\''.$entity_name.'/'.$item->getSlug().'\') }}';

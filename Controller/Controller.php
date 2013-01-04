@@ -288,7 +288,10 @@ class Controller extends CoreController
         return parent::runOnce();
     }
 
-    public function xyzanyAction(Request $request)
+    /**
+     * The default anyAction of the backend, inserts parameters
+     */
+    public function anyAction(Request $request)
     {
 /*
             echo 'hier';
@@ -302,6 +305,8 @@ class Controller extends CoreController
             echo 'pwd[ ' .$password. ' ]';
 //*/
 
-        return $this->render(null);
+        $parameters = $this->getDefaultHtmlContext();
+
+        return $this->render(null, $parameters);
     }
 }
