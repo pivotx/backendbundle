@@ -224,6 +224,8 @@ THEEND;
             break;
         }
 
+        $entity['entity_class'] = $classname;
+
         foreach($config['fields'] as $fieldid => $fieldconfig) {
             $field = $this->createFieldArray($fieldid);
 
@@ -247,9 +249,10 @@ THEEND;
     private function convertMetadataToEntity($name, $class)
     {
         $entity = $this->createEntityArray($name);
-        $entity['fixed']     = true;
-        $entity['mediatype'] = 'text/x-yaml';
-        $entity['source']    = null;
+        $entity['fixed']        = true;
+        $entity['mediatype']    = 'text/x-yaml';
+        $entity['source']       = null;
+        $entity['entity_class'] = $class->name;
 
         foreach($class->fieldMappings as $key => $config) {
             $field = $this->createFieldArray($key);
@@ -274,7 +277,7 @@ THEEND;
                 $base_class = $_p[count($_p)-1];
 
                 if ($base_class == $name) {
-                    return $this->convertMetaDataToEntity($name, $class);
+                    return $this->convertMetadataToEntity($name, $class);
                 }
             }
         }

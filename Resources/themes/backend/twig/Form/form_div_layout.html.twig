@@ -63,7 +63,11 @@
                     <tr>
                         <td>№ {{ resource.id }}</td>
                         <td>{{ resource.title }}</td>
-                        <td>Some more info</td>
+                        <td>
+                            {% if resource.isembeddable %}
+                                {{ resource.html(100,75) }}
+                            {% endif %}
+                        </td>
                         <td><span class="btn btn-mini file-add" data-id="{{ resource.id }}" data-name="{{ resource.title }}">Add file</span></td>
                     </tr>
                 {% endfor %}
@@ -93,6 +97,11 @@
             {{ form_widget(form.filesinfo) }}
         </span>
 
+        {% if attr.multiple %}
+        &#160;
+        <span class="btn btn-success crud-fileinput">
+        <s/span>
+
         <div class="crud-hide execute-function"
             data-function="activateJQueryFileUpload"
             data-name="{{ full_name }}"
@@ -113,7 +122,10 @@
             {% set url_complete = ref(ref) %}
             {% set url_parts = url_complete|split(fakeslug) %}
             {% set slug_prefix = url_parts[0] %}
-            {% set slug_postfix = url_parts[1] %}
+            {% set slug_postfix = '' %}
+            {% if url_parts|length > 1 %}
+                {% set slug_postfix = url_parts[1] %}
+            {% endif %}
 
             {{ slug_prefix }}<strong class="value">{% if value is not empty %}{{ value }}{% endif %}</strong>{{ slug_postfix }} - <a href="#" class="value-edit">edit</a>
         </div>

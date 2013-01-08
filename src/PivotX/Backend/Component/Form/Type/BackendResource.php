@@ -58,6 +58,7 @@ class BackendResource extends AbstractType
         $resolver->setDefaults(array(
             'compound' => true,
             'multiple' => false,
+            'data_class' => 'PivotX\CoreBundle\Entity\GenericResource',
             'files' => $files
         ));
     }

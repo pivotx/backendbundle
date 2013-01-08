@@ -62,10 +62,10 @@ table.crud-genericresource th.column-text4 {
             <th class="column-checkbox select-checkbox">
                 <input type="checkbox" name="id-toggle" data-id="id-toggle">
             </th>
-            <th class="column-id">Id</th>
-            <th class="column-type">Type</th>
-            <th class="column-title">Title</th>
-            <th class="column-info">Info</th>
+            <th class="column-id"                               >{{ translate([crud.entity.name,'.crud-heading.id']) }}</th>
+            <th class="column-type"                             >{{ translate([crud.entity.name,'.crud-heading.type']) }}</th>
+            <th class="column-title sort-by" data-order="title" >{{ translate([crud.entity.name,'.crud-heading.title']) }}</th>
+            <th class="column-preview"                          >{{ translate([crud.entity.name,'.crud-heading.preview']) }}</th>
         </tr>
     </thead>
 
@@ -98,11 +98,13 @@ table.crud-genericresource th.column-text4 {
                 </div>
             </td>
             <td>
-                {% if (item.html is defined) and (item.height is not null) and (item.height > 0) %}
+                {% if item.isembeddable %}
                     {{ item.html(200,150) }}
+
+                    <br/>Click <a href="{{ item.downloadlink }}">here</a> to download.
                 {% else %}
                 <span>
-                    Some information here.
+                    Click <a href="{{ item.downloadlink }}">here</a> to download.
                 </span>
                 {% endif %}
             </td>

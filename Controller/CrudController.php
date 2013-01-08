@@ -265,9 +265,6 @@ class CrudController extends Controller
         $builder = $this->createFormBuilder($item, $form_options);
         $builder->setCompound(true);
 
-        // @todo doesn't work
-        //$builder->setAttribute('autocomplete', 'off');
-
         foreach($form_items as $form_item) {
             $builder->add($form_item['name'], $form_item['type'], $form_item['options']);
         }
@@ -650,7 +647,7 @@ class CrudController extends Controller
 
         $form = $this->getForm($entity_manager, $item, $request->get('entity'));
 
-        $form->bindRequest($request);
+        $form->bind($request);
 
         if ($form->isValid()) {
             /*
@@ -658,8 +655,6 @@ class CrudController extends Controller
             var_dump($data);
             exit();
             //*/
-
-            //var_dump($item);
 
             if (method_exists($item, 'fixCrudBeforePersist')) {
                 $item->fixCrudBeforePersist();

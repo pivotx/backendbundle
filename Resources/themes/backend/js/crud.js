@@ -292,9 +292,10 @@ function activateFileSelection(field_row_el, args)
 
     $('span.file-add', field_row_el).on('click', function(e){
         var file_info = {};
-        file_info.valid = true;
-        file_info.id    = $(this).attr('data-id');
-        file_info.name  = $(this).attr('data-name');
+        file_info.valid   = true;
+        file_info.id      = $(this).attr('data-id');
+        file_info.name    = $(this).attr('data-name');
+        file_info.nessage = 'Added';
 
         updateCrudFileFieldRow(field_row_el, args, file_info, 100, 200);
 
@@ -515,9 +516,11 @@ $(function(){
             var order_current = $(tr_el).attr('data-order-current');
             var order_current_normalized = order_current;
             var order_current_reverse = '';
-            if (order_current_normalized.charAt(0) == '!') {
-                order_current_normalized = order_current.substring(1);
-                order_current_reverse = '!';
+            if (typeof order_current != 'undefined') {
+                if (order_current_normalized.charAt(0) == '!') {
+                    order_current_normalized = order_current.substring(1);
+                    order_current_reverse = '!';
+                }
             }
 
 

@@ -13,5 +13,3 @@ PivotX\CoreBundle\Entity\LocalEmbedResource:
   properties:
     title:
       - NotBlank: ~
-    filename:
-      - NotBlank: ~

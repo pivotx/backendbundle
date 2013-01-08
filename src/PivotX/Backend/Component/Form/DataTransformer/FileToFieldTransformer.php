@@ -33,6 +33,13 @@ class FileToFieldTransformer implements DataTransformerInterface
         var_dump($appValue); echo "<br/>\n";
         //*/
 
+        return array(
+            'valid' => true,
+            'mimetype' => false,
+            'size' => false,
+            'name' => $appValue
+        );
+
         return $appValue;
     }
 

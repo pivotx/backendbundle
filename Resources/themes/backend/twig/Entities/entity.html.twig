@@ -67,7 +67,7 @@
                         <option value="">(only select when applicable)</option>
                     {% loadView 'Backend/findEntities' as entities %}
                     {% for entity in entities.result %}
-                        <option value="{{ entity.name }}">{{ entity.name }}</option>
+                        <option value="{{ entity.entity_class }}">{{ entity.name }}</option>
                     {% endfor %}
                     </select>
                 </label>
