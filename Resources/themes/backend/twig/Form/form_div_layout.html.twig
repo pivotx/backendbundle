@@ -97,10 +97,13 @@
             {{ form_widget(form.filesinfo) }}
         </span>
 
-        {% if attr.multiple %}
+        {% if not attr.multiple %}
         &#160;
-        <span class="btn btn-success crud-fileinput">
-        <s/span>
+        <span class="btn btn-warning crud-fileinput">
+            <span class="icon-arrow-left icon-white"></span>
+            <span>{{ translate('form.backend_resource.removebutton-singular') }}</span>
+        </span>
+        {% endif %}
 
         <div class="crud-hide execute-function"
             data-function="activateJQueryFileUpload"
