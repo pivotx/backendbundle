@@ -120,6 +120,28 @@ form.crud-edit-form ul.files li span.label-important {
     margin-left: 10px;
 }
 
+form.crud-edit-form ul.files li div.file {
+    height: 62px;
+}
+
+form.crud-edit-form ul.files li div.file div.preview {
+    float: left;
+    margin-right: 10px;
+    border: 1px solid #888;
+    width: 90px;
+    height: 60px;
+    background-color: #eee;
+    font-size: 10px;
+    text-align: center;
+}
+
+form.crud-edit-form ul.files li div.file div.preview,
+form.crud-edit-form ul.files li div.file div.preview img {
+    border-radius: 3px;
+    max-width: 90px;
+    max-height: 60px;
+}
+
 
 form.crud-edit-form div.unique input {
     display: none;

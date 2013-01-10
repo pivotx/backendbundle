@@ -96,10 +96,24 @@ routes:
           entity:   "[A-Za-z_]+[A-Za-z0-9_]+"
           field:    "[A-Za-z_]+[A-Za-z0-9_]+"
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
-      pattern:      "_api/fileupload"
-      public:       "api/fileupload"
+    - filter:       { target: false, site: "pivotx-backend", language: false }
+      pattern:      "_backend/fileupload"
+      public:       "backend/fileupload"
       defaults:     { _controller: "BackendBundle:Upload:processUpload", _role: "ROLE_EDITOR" }
+
+    - filter:       { target: false, site: "pivotx-backend", language: false }
+      pattern:      "_backend/fileembed/{name}"
+      public:       "backend/fileembed/{name}"
+      defaults:     { _controller: "BackendBundle:Upload:getTemporaryEmbed", _role: "ROLE_EDITOR" }
+      requirements:
+          name:     "[0-9a-f-]+"
+
+    - filter:       { target: false, site: "pivotx-backend", language: false }
+      pattern:      "_backend/filetempdownload/{name}"
+      public:       "backend/filetempdownload/{name}"
+      defaults:     { _controller: "BackendBundle:Upload:getTemporaryFileDownload", _role: "ROLE_EDITOR" }
+      requirements:
+          name:     "[0-9a-f.-]+"
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_developer/routing"

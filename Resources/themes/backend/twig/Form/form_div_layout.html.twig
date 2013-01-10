@@ -1,7 +1,20 @@
 {# Fields #}
 
+{% block file_li_template %}
+<div class="file">
+    <div class="preview">No preview available.</div>
+    Name: <span class="name">{{ file_li.name }}</span><br/>
+    Type: <span class="type">{{ file_li.mimetype }}</span>, Size: <span class="size">{{ file_li.size }}</span> bytes<br/>
+    <a href="#">Remove file</a>
+</div>
+{% endblock %}
+
 {% block shared_file_widget %}
-        <div class="file-drop-target" data-drop-target="{{ full_name }}">
+        {% set show_target = '' %}
+        {% if files is defined and files|length > 0 %}
+            {% set show_target = ' style="display: none"' %}
+        {% endif %}
+        <div class="file-drop-target alert alert-success drag-target" data-drop-target="{{ full_name }}"{{ show_target|raw }}>
         {% if attr.multiple %}
             <span>{{ translate('form.backend_file.droparea-plural') }}</span>
         {% else %}
@@ -12,11 +25,16 @@
         {% if files is defined %}
             {% for file in files %}
             <li data-json="{{ file.json }}">
-                <span class="name">{{ file.name }}</span> (<span class="size">{{ file.size }} bytes)
+                {% set file_li = file %}
+                {{ block('file_li_template') }}
             </li>
             {% endfor %}
         {% endif %}
-            <li class="no-file">
+            <li class="no-file crud-hide file-template">
+                {% set file_li = { 'name': '', 'mimetype': '', 'size': '' } %}
+                {{ block('file_li_template') }}
+            </li>
+            <li class="no-file progress-template">
                 <span class="name">&#160;</span>
                 <div class="progress progress-striped">
                     <div class="bar" style="width: 0%;"></div>
@@ -45,7 +63,7 @@
         <div class="crud-hide execute-function"
             data-function="activateJQueryFileUpload"
             data-name="{{ full_name }}"
-            data-url="{{ ref('_api/fileupload', {'type':'jquery-fileupload','name':full_name}) }}"
+            data-url="{{ ref('_backend/fileupload', {'type':'jquery-fileupload','name':full_name}) }}"
             data-text-done="{{ translate('form.backend_file.status-done') }}"
             data-text-fail="{{ translate('form.backend_file.status-fail') }}"
         ></div>
@@ -68,7 +86,13 @@
                                 {{ resource.html(100,75) }}
                             {% endif %}
                         </td>
-                        <td><span class="btn btn-mini file-add" data-id="{{ resource.id }}" data-name="{{ resource.title }}">Add file</span></td>
+                        <td><span class="btn btn-mini file-add" data-id="{{ resource.id }}" data-name="{{ resource.title }}">
+                        {% if attr.multiple %}
+                            Add file
+                        {% else %}
+                            Select file
+                        {% endif %}
+                        </span></td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -108,7 +132,7 @@
         <div class="crud-hide execute-function"
             data-function="activateJQueryFileUpload"
             data-name="{{ full_name }}"
-            data-url="{{ ref('_api/fileupload', {'type':'jquery-fileupload','name':full_name}) }}"
+            data-url="{{ ref('_backend/fileupload', {'type':'jquery-fileupload','name':full_name}) }}"
             data-text-done="{{ translate('form.backend_resource.status-done') }}"
             data-text-fail="{{ translate('form.backend_resource.status-fail') }}"
         ></div>

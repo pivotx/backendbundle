@@ -4,6 +4,7 @@ namespace PivotX\BackendBundle\Controller;
 
 use PivotX\BackendBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\MinLength;
@@ -13,23 +14,45 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class UploadController extends Controller
 {
-    protected function handleFileUpload($file)
+    private function getQuarantaineDirectory()
     {
-        $info = array();
-
-        $info['valid']    = false;
-        $info['name']     = $file->getClientOriginalName();
-        $info['mimetype'] = $file->getClientMimeType();
-        $info['size']     = $file->getClientSize();
-        $info['message']  = 'Something unknown went wrong.';
-
-        //echo '<pre>'; var_dump($file); echo '</pre>';
-
         $directory = getcwd().'/data/upload-quarantaine';
         if (!is_dir($directory)) {
             @mkdir($directory, 0777);
             @chown($directory, 0777);
         }
+
+        if (!is_dir($directory)) {
+            return null;
+        }
+
+        return $directory;
+    }
+
+    private function getQuarantaineFile($name)
+    {
+        return $this->getQuarantaineDirectory().'/'.$name.'.dat';
+    }
+
+    private function getQuarantaineUrl($name)
+    {
+        return $this->get('pivotx.routing')->buildUrl('_backend/filetempdownload/'.$name);
+    }
+
+    protected function handleFileUpload($file)
+    {
+        $info = array();
+
+        $info['valid']     = false;
+        $info['name']      = $file->getClientOriginalName();
+        $info['mimetype']  = $file->getClientMimeType();
+        $info['size']      = $file->getClientSize();
+        $info['embed_url'] = '';
+        $info['message']   = 'Something unknown went wrong.';
+
+        //echo '<pre>'; var_dump($file); echo '</pre>';
+
+        $directory = $this->getQuarantaineDirectory();
 
         if (!is_dir($directory)) {
             // @todo error!!
@@ -72,6 +95,9 @@ class UploadController extends Controller
             $info['valid']     = true;
             $info['tmp_name']  = $name;
             $info['message']   = '';
+
+            $short_name = str_replace('.dat', '', $name);
+            $info['embed_url'] = $this->get('pivotx.routing')->buildUrl('_backend/fileembed/'.$short_name);
             //$info['file']  = $moved_file;
         }
 
@@ -119,5 +145,51 @@ class UploadController extends Controller
         $content = json_encode($info);
 
         return new \Symfony\Component\HttpFoundation\Response($content, 200);
+    }
+
+    public function getTemporaryEmbedAction(Request $request, $name)
+    {
+        $code    = 200;
+        $content = 'No preview available.';
+        $headers = array();
+        $width   = $request->query->get('width', false);
+        $height  = $request->query->get('height', false);
+        if ($name != '') {
+            $file = $this->getQuarantaineFile($name);
+            $url  = $this->getQuarantaineUrl($name);
+            $info = getimagesize($file);
+
+            if ($info != false) {
+                if ($width === false) {
+                    $width = 90;
+                }
+                if ($height === false) {
+                    $height = 60;
+                }
+
+                $content = '<img src="'.$url.'" width="'.$width.'" height="'.$height.'" alt="" />';
+            }
+        }
+
+        return new Response($content, $code, $headers);
+    }
+
+    public function getTemporaryFileDownloadAction(Request $request, $name)
+    {
+        $code    = 404;
+        $content = '<h1>File not found.</h1>';
+        $headers = array();
+        $width   = $request->query->get('width', false);
+        $height  = $request->query->get('height', false);
+        if ($name != '') {
+            $file = $this->getQuarantaineFile($name);
+            $info = getimagesize($file);
+
+            $code                    = 200;
+            $headers['content-type'] = $info['mime'];
+            $content                 = file_get_contents($file);
+        }
+
+        return new Response($content, $code, $headers);
     }
 }
