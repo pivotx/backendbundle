@@ -235,4 +235,47 @@ $(document).ready(function(){
 
     // disable notification history
     $.pnotify.defaults.history = false;
+
+    // @todo only when enabled
+    $('.toggle-translations').on('click', function(e){
+        e.preventDefault();
+
+        if ($('body').data('pivotx-translations-tooltips') != 'yes') {
+            $('body').data('pivotx-translations-tooltips', 'yes');
+            $('body').data('pivotx-translations-state', 'hidden');
+
+            $('.pivotx-is-translated').each(function(){
+                var position = $(this).offset();
+                var placement = 'left';
+
+                if (position.left < 200) {
+                    placement = 'right';
+                }
+
+                $(this).tooltip({'placement': placement});
+            });
+        }
+
+        switch ($('body').data('pivotx-translations-state')) {
+            case 'hidden':
+                $('body').data('pivotx-translations-state', 'showing');
+                $('body').addClass('pivotx-hide-translated');
+                break;
+
+            case 'showing':
+                $('body').data('pivotx-translations-state', 'tooltips');
+                $('.pivotx-is-translated').each(function(){
+                    $(this).tooltip('show');
+                });
+                break;
+
+            case 'tooltips':
+                $('body').data('pivotx-translations-state', 'hidden');
+                $('body').removeClass('pivotx-hide-translated');
+                $('.pivotx-is-translated').each(function(){
+                    $(this).tooltip('hide');
+                });
+                break;
+        }
+    });
 });
