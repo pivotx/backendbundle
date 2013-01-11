@@ -198,20 +198,36 @@ function activateFileSelection(field_row_el, args)
 }
 
 
+var drag_over_state = false;
+var allow_new_state = true;
 
 $(function(){
     // generic dragover/leave events
     $(document).on('dragover', function(e){
-        $('div.file-drop-target').each(function(){
-            $(this).show();
-        });
+        if ((drag_over_state == false) && (allow_new_state)) {
+            allow_new_state = false;
+            drag_over_state = true;
+            console.log('dragover');
+            $('div.file-drop-target').each(function(){
+                $(this).show();
+            });
+
+            setTimeout(function() { allow_new_state = true; }, 100);
+        }
     });
     $(document).on('dragleave', function(e){
-        $('div.file-drop-target').each(function(){
-            if ($('ul.files li:not(.no-file)').length > 0) {
-                $(this).hide();
-            }
-        });
+        if ((drag_over_state == true) && (allow_new_state)) {
+            allow_new_state = false;
+            drag_over_state = false;
+            console.log('dragleave');
+            $('div.file-drop-target').each(function(){
+                if ($('ul.files li:not(.no-file)').length > 0) {
+                    $(this).hide();
+                }
+            });
+
+            setTimeout(function() { allow_new_state = true; }, 100);
+        }
     });
 
     $(document).on('click', '.remove-link', function(e){

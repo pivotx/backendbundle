@@ -1,18 +1,21 @@
+        {% set plural_title = translate([crud.entity.name,'.plural_title']) %}
+        {% set singular_title = translate([crud.entity.name,'.singular_title']) %}
+
         <ul class="nav nav-list">
-            <li class="nav-header">General information</li>
+            <li class="nav-header">{{ translate('table.widget.general-information') }}</li>
             <li>
             {% if view.length == 0 %}
-                <p>There are no items.</p>
+                <p>{{ translate('table.widget.item-count-0', { ':count': view.length, ':item': singular_title, ':items': plural_title }) }}</p>
             {% elseif view.length == 1 %}
-                <p>There is {{ view.length }} item.</p>
+                <p>{{ translate('table.widget.item-count-1', { ':count': view.length, ':item': singular_title, ':items': plural_title }) }}</p>
             {% else %}
-                <p>There are {{ view.length }} items.</p>
+                <p>{{ translate('table.widget.item-count-n', { ':count': view.length, ':item': singular_title, ':items': plural_title }) }}</p>
             {% endif %}
             </li>
             {% if is_granted(crud.entity.roles.create) %}
             <li>
                 <p>
-                    <a class="btn" href="{{ ref('_table/LocalEmbedResource/0') }}">Add a new local resource</a>
+                    <a class="btn" href="{{ ref('_table/LocalEmbedResource/0') }}">{{ translate('table.widget.addbutton', {':item': translate('localembedresource.singular_title')}) }}</a>
                 </p>
                 {#
                 <p>

@@ -47,6 +47,11 @@ table.crud td.select-checkbox {
     width: 15px;
 }
 
+/* @todo this style is not working */
+table.crud td div.btn-group:first-child {
+    display: block !important;
+}
+
 
 /**
  * Crud table filters
@@ -164,3 +169,6 @@ form.crud-edit-form div.unique div.suggestions ul li {
  * Crud table specifics
  */
 
+table.crud-genericresource div.preview {
+    height: 60px;
+}

@@ -79,7 +79,7 @@ table.crud-genericresource th.column-text4 {
                 № {{ item.id }}
             </td>
             <td>
-                <span class="type">{{ translate([item.resourcetype,'.name']|join) }}</span>
+                <span class="type">{{ translate([item.resourcetype|lower,'.singular_title']) }}</span>
             </td>
             <td>
                 <span class="title">{{ item.title }}</span>
@@ -96,17 +96,20 @@ table.crud-genericresource th.column-text4 {
                     <a class="btn btn-mini btn-danger crud-button-confirm" data-modal-text-selector=".text-delete-{{ item.id }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity.name,'/',item.id],view.queryarguments({'action':'delete'})) }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
                     {% endif %}
                 </div>
+                {% if item.isdownloadable %}
+                <div class="btn-group on-row-hover">
+                    <a class="btn btn-mini btn-info" href="{{ item.downloadlink }}"><i class="icon-arrow-down icon-white"></i> {{ translate('entity.button.download') }}</a>
+                </div>
+                {% endif %}
             </td>
             <td>
+                <div class="preview">
                 {% if item.isembeddable %}
-                    {{ item.html(180,120) }}
-
-                    <br/>Click <a href="{{ item.downloadlink }}">here</a> to download.
+                    {{ item.html(90,60) }}
                 {% else %}
-                <span>
-                    Click <a href="{{ item.downloadlink }}">here</a> to download.
-                </span>
+                    {{ translate('genericresource.no-preview') }}
                 {% endif %}
+                </div>
             </td>
         </tr>
     {% endfor %}

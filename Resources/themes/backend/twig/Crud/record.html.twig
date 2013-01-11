@@ -10,48 +10,51 @@
 
 
 {% block meta_content %}
-    
+
+    {% set plural_title = translate([crud.entity.name,'.plural_title']) %}
+    {% set singular_title = translate([crud.entity.name,'.singular_title']) %}
+
     <div class="well sidebar-nav crud-meta" data-crud-table="id1">
         <ul class="nav nav-list">
             <li>
                 <p>
-                    <a href="{{ ref(['_table/',crud.entity.name]) }}">{{ translate(['crud.record.back-to-all-',crud.entity.name]) }}</a>
+                    <a href="{{ ref(['_table/',crud.entity.name]) }}">{{ translate('form.widget.back-to-all', { ':items': plural_title }) }}</a>
                 </p>
             </li>
         </ul>
 
         <ul class="nav nav-list">
-            <li class="nav-header">General information</li>
+            <li class="nav-header">{{ translate('form.widget.general-information') }}</li>
             <li>
                 <p>
                 {% if item.id > 0 %}
                     {% if (item.datecreated is defined) and (item.datemodified is defined) and (item.datecreated==item.datemodified) %}
-                        This item was created on {{ item.datecreated|formatas('Backend/Auto') }}.
+                        {{ translate('form.widget.item-created', { ':item': singular_title, ':date':item.datecreated|formatas('Backend/Auto')}) }}
                     {% else %}
                         {% if item.datecreated is defined %}
-                            This item was created on {{ item.datecreated|formatas('Backend/Auto') }}.
+                            {{ translate('form.widget.item-created', { ':item': singular_title, ':date':item.datecreated|formatas('Backend/Auto')}) }}
                         {% endif %}
                         {% if item.datemodified is defined %}
-                            It was last edited on {{ item.datemodified|formatas('Backend/Auto') }}.
+                            {{ translate('form.widget.item-modified', { ':item': singular_title, ':date':item.datemodified|formatas('Backend/Auto')}) }}
                         {% endif %}
                     {% endif %}
                 {% else %}
-                        This is a new item.
+                        {{ translate('form.widget.new-item', { ':item': singular_title }) }}
                 {% endif %}
                 </p>
             </li>
         {% if crud.selection %}
             <li>
                 <p>
-                    You are editing a selection, by saving you are going to the next.
+                    {{ translate('form.widget.selection-next-message') }}
                 </p>
                 <p>
                     <div class="btn-group">
                         <a class="btn btn-primary crud-button-post-form" data-form-selector=".crud-edit-form" data-loading-text="Saving&hellip;" href="#">
-                            Save
+                            {{ translate('form.widget.savebutton') }}
                         </a>
                         <a class="btn crud-button-post-form form-no-redirect" data-form-selector=".crud-edit-form" data-loading-text="Saving&hellip;" href="#">
-                            Save and continue editing
+                            {{ translate('form.widget.savecontinuebutton') }}
                         </a>
                     </div>
                 </p>
@@ -67,10 +70,10 @@
                 <p>
                     <div class="btn-group">
                         <a class="btn btn-primary crud-button-post-form" data-form-selector=".crud-edit-form" data-loading-text="Saving&hellip;" href="#">
-                            Save
+                            {{ translate('form.widget.savebutton') }}
                         </a>
                         <a class="btn crud-button-post-form form-no-redirect" data-form-selector=".crud-edit-form" data-loading-text="Saving&hellip;" href="#">
-                            Save and continue editing
+                            {{ translate('form.widget.savecontinuebutton') }}
                         </a>
                     </div>
                 </p>

@@ -6,12 +6,12 @@
     {% if file_li.embed_html is defined %}
         {{ file_li.embed_html|raw }}
     {% else %}
-        No preview available.
+        {{ translate('form.backend_file.no-preview') }}
     {% endif %}
     </div>
-    Name: <span class="name">{{ file_li.name }}</span><br/>
-    Type: <span class="type">{{ file_li.mimetype }}</span>, Size: <span class="size">{{ file_li.size }}</span> bytes<br/>
-    <a class="remove-link" href="#">Remove file</a>
+    {{ translate('form.backend_file.file-name') }}: <span class="name">{{ file_li.name }}</span><br/>
+    {{ translate('form.backend_file.file-type') }}: <span class="type">{{ file_li.mimetype }}</span>, {{ translate('form.backend_file.file-size') }}: <span class="size">{{ file_li.size }}</span> {{ translate('form.backend_file.file-bytes') }}<br/>
+    <a class="remove-link" href="#">{{ translate('form.backend_file.removebutton') }}</a>
 </div>
 {% endblock %}
 

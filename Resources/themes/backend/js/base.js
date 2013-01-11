@@ -274,7 +274,9 @@ $(document).ready(function(){
                 $('body').removeClass('pivotx-hide-translated');
                 $('.pivotx-is-translated').each(function(){
                     $(this).tooltip('hide');
+                    $(this).tooltip('destroy');
                 });
+                $('body').data('pivotx-translations-tooltips', 'no');
                 break;
         }
     });

@@ -69,6 +69,11 @@ body.pivotx-hide-translated span.pivotx-is-translated {
     color: #000 !important;
 }
 
+body.pivotx-hide-translated span.pivotx-is-translated.automagic {
+    background-color: #f00 !important;
+    color: #f00 !important;
+}
+
 body.pivotx-hide-translated div.tooltip div.tooltip-inner {
     border: 1px solid #fff;
     white-space: nowrap;

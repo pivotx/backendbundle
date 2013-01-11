@@ -3,7 +3,7 @@
         </div>
 
         <ul class="nav nav-list crud-selection crud-selection-{{ crud.htmlid }}" data-crud-table="{{ crud.htmlid }}">
-            <li class="nav-header">Selection</li>
+            <li class="nav-header">{{ translate('table.widget.selection-information') }}</li>
             <li>
                 <p>
                     {% spaceless %}
@@ -33,10 +33,10 @@
                     <div class="btn-group">
                         <!-- <a class="btn disabled crud-button-link" href="{{ ref(['_table/',crud.entity.name],view.queryarguments) }}">Show selection</a> -->
                         {% if is_granted(crud.entity.roles.update) %}
-                        <a class="btn btn-success disabled crud-button-link" href="{{ ref(['_table/',crud.entity.name],view.queryarguments({'action':'edit-multiple'})) }}">Edit in sequence</a>
+                        <a class="btn btn-success disabled crud-button-link" href="{{ ref(['_table/',crud.entity.name],view.queryarguments({'action':'edit-multiple'})) }}">{{ translate('table.widget.editsequencebutton') }}</a>
                         {% endif %}
                         {% if is_granted(crud.entity.roles.delete) %}
-                        <a class="btn btn-danger disabled crud-button-confirm" data-modal-text-selector=".crud-selection-summary-{{ crud.htmlid }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity.name],view.queryarguments({'action':'delete-multiple'})) }}">Delete</a>
+                        <a class="btn btn-danger disabled crud-button-confirm" data-modal-text-selector=".crud-selection-summary-{{ crud.htmlid }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity.name],view.queryarguments({'action':'delete-multiple'})) }}">{{ translate('table.widget.deleteselectionbutton') }}</a>
                         {% endif %}
                     </div>
                 </p>
