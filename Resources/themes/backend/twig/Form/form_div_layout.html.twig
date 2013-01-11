@@ -2,46 +2,52 @@
 
 {% block file_li_template %}
 <div class="file">
-    <div class="preview">No preview available.</div>
+    <div class="preview">
+    {% if file_li.embed_html is defined %}
+        {{ file_li.embed_html|raw }}
+    {% else %}
+        No preview available.
+    {% endif %}
+    </div>
     Name: <span class="name">{{ file_li.name }}</span><br/>
     Type: <span class="type">{{ file_li.mimetype }}</span>, Size: <span class="size">{{ file_li.size }}</span> bytes<br/>
-    <a href="#">Remove file</a>
+    <a class="remove-link" href="#">Remove file</a>
 </div>
 {% endblock %}
 
 {% block shared_file_widget %}
-        {% set show_target = '' %}
-        {% if files is defined and files|length > 0 %}
-            {% set show_target = ' style="display: none"' %}
-        {% endif %}
-        <div class="file-drop-target alert alert-success drag-target" data-drop-target="{{ full_name }}"{{ show_target|raw }}>
-        {% if attr.multiple %}
-            <span>{{ translate('form.backend_file.droparea-plural') }}</span>
-        {% else %}
-            <span>{{ translate('form.backend_file.droparea-singular') }}</span>
-        {% endif %}
-        </div>
-        <ul class="unstyled files">
-        {% if files is defined %}
-            {% for file in files %}
-            <li data-json="{{ file.json }}">
-                {% set file_li = file %}
-                {{ block('file_li_template') }}
-            </li>
-            {% endfor %}
-        {% endif %}
-            <li class="no-file crud-hide file-template">
-                {% set file_li = { 'name': '', 'mimetype': '', 'size': '' } %}
-                {{ block('file_li_template') }}
-            </li>
-            <li class="no-file progress-template">
-                <span class="name">&#160;</span>
-                <div class="progress progress-striped">
-                    <div class="bar" style="width: 0%;"></div>
-                </div>
-                <span class="status">&#160;</span>
-            </li>
-        </ul>
+    {% set show_target = '' %}
+    {% if files is defined and files|length > 0 %}
+        {% set show_target = ' style="display: none"' %}
+    {% endif %}
+    <div class="file-drop-target alert alert-success drag-target" data-drop-target="{{ full_name }}"{{ show_target|raw }}>
+    {% if attr.multiple %}
+        <span>{{ translate('form.backend_file.droparea-plural') }}</span>
+    {% else %}
+        <span>{{ translate('form.backend_file.droparea-singular') }}</span>
+    {% endif %}
+    </div>
+    <ul class="unstyled files">
+    {% if files is defined %}
+        {% for file in files %}
+        <li data-json="{{ file.json }}">
+            {% set file_li = file %}
+            {{ block('file_li_template') }}
+        </li>
+        {% endfor %}
+    {% endif %}
+        <li class="no-file crud-hide file-template">
+            {% set file_li = { 'name': '', 'mimetype': '', 'size': '' } %}
+            {{ block('file_li_template') }}
+        </li>
+        <li class="no-file progress-template">
+            <span class="name">&#160;</span>
+            <div class="progress progress-striped">
+                <div class="bar" style="width: 0%;"></div>
+            </div>
+            <span class="status">&#160;</span>
+        </li>
+    </ul>
 {% endblock %}
 
 {% block backend_file_widget %}

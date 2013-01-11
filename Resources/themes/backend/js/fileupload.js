@@ -5,7 +5,7 @@
 function updateCrudFilesFieldRow(field_row_el)
 {
     var files = [];
-    $('ul.files li', field_row_el).each(function(){
+    $('ul.files li:not(.no-file)', field_row_el).each(function(){
         var data = $(this).attr('data-json');
         if (typeof(data) != 'undefined') {
             var json = $.parseJSON($(this).attr('data-json'));
@@ -203,16 +203,27 @@ $(function(){
     // generic dragover/leave events
     $(document).on('dragover', function(e){
         $('div.file-drop-target').each(function(){
-            //$(this).addClass('alert alert-success drag-target');
             $(this).show();
         });
     });
     $(document).on('dragleave', function(e){
         $('div.file-drop-target').each(function(){
             if ($('ul.files li:not(.no-file)').length > 0) {
-                //$(this).removeClass('alert alert-success drag-target');
                 $(this).hide();
             }
         });
+    });
+
+    $(document).on('click', '.remove-link', function(e){
+        var field_row_el = $(this).closest('.crud-field-row');
+        var li_el = $(this).closest('li');
+
+        li_el.remove();
+
+        if ($('ul.files li:not(.no-file)').length == 0) {
+            $('div.file-drop-target', field_row_el).show();
+        }
+
+        updateCrudFilesFieldRow(field_row_el);
     });
 });

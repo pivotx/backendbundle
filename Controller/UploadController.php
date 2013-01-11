@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class UploadController extends Controller
 {
+    /**
+     */
     private function getQuarantaineDirectory()
     {
         $directory = getcwd().'/data/upload-quarantaine';
@@ -29,17 +31,24 @@ class UploadController extends Controller
         return $directory;
     }
 
+    /**
+     */
     private function getQuarantaineFile($name)
     {
         return $this->getQuarantaineDirectory().'/'.$name.'.dat';
     }
 
+    /**
+     */
     private function getQuarantaineUrl($name)
     {
         return $this->get('pivotx.routing')->buildUrl('_backend/filetempdownload/'.$name);
     }
 
-    protected function handleFileUpload($file)
+    /**
+     * Store the uploaded file into the quarataine directory
+     */
+    private function handleFileUpload($file)
     {
         $info = array();
 
@@ -104,6 +113,9 @@ class UploadController extends Controller
         return $info;
     }
 
+    /**
+     * Store the handling of files into the quarataine directory
+     */
     protected function handlePost($files)
     {
         $info = array();
@@ -122,6 +134,8 @@ class UploadController extends Controller
         return $info;
     }
 
+    /**
+     */
     public function processUploadAction(Request $request)
     {
         $info = array();
@@ -147,6 +161,9 @@ class UploadController extends Controller
         return new \Symfony\Component\HttpFoundation\Response($content, 200);
     }
 
+    /**
+     * Get a snippet of HTML from a file in the quarantaine directory
+     */
     public function getTemporaryEmbedAction(Request $request, $name)
     {
         $code    = 200;
