@@ -1,0 +1,38 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="column-id"                               >{{ translate(['genericresource.crud-heading.id']) }}</th>
+            <th class="column-date"                             >{{ translate(['genericresource.crud-heading.date']) }}</th>
+            <th class="column-title sort-by" data-order="title" >{{ translate(['genericresource.crud-heading.title']) }}</th>
+            <th class="column-preview"                          >{{ translate(['genericresource.crud-heading.preview']) }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% loadView 'GenericResource/findLatestByModified' as resources limit 5 %}
+    {% for resource in resources.result %}
+        <tr>
+            <td>№ {{ resource.id }}</td>
+            <td>{{ resource.datemodified|formatas('Backend/RelativeTime') }}</td>
+            <td>
+                {{ resource.title }}<br/>
+                <div class="btn-group on-row-hover">
+                    <a class="btn btn-success btn-mini file-add" data-id="{{ resource.id }}" data-name="{{ resource.title }}"><i class="icon-ok icon-white"></i>
+                    {% if attr.multiple %}
+                        Add file
+                    {% else %}
+                        Select file
+                    {% endif %}
+                    </a>
+                </div>
+            </td>
+            <td>
+                <div class="preview">
+                {% if resource.isembeddable %}
+                    {{ resource.html(90,60) }}
+                {% endif %}
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
