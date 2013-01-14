@@ -34,6 +34,10 @@ class ResourceToFieldTransformer implements DataTransformerInterface
         //*/
 
         if ($appValue instanceof \PivotX\CoreBundle\Entity\GenericResource) {
+            return $appValue->getFileInfo();
+        }
+
+        /*
             return $appValue;
         }
 
@@ -47,6 +51,7 @@ class ResourceToFieldTransformer implements DataTransformerInterface
                 return $image;
             }
         }
+         */
 
         return null;
     }
@@ -73,7 +78,7 @@ class ResourceToFieldTransformer implements DataTransformerInterface
 
                 $title = $image->getFilename();
                 $title = preg_replace('|[^a-zA-Z0-9_ .-]|', '', $title);
-                $title = preg_replace('|[ _]|',' ',$title);
+                $title = preg_replace('|[ _]+|',' ',$title);
                 $title = preg_replace('|(.+)[.]([a-zA-Z0-9]+)|', '\\1', $title);
                 $title = ucfirst(trim($title));
 

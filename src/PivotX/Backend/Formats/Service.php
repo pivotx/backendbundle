@@ -28,5 +28,8 @@ class Service
 
         $format = new AutoFormat('Backend/Auto', 'PivotX/Backend', 'Convert any source to some string format.');
         $this->pivotx_formats->registerFormat($format);
+
+        $format = new RelativeTimeFormat('Backend/RelativeTime', 'PivotX/Backend', 'Convert any source to some string format.');
+        $this->pivotx_formats->registerFormat($format);
     }
 }

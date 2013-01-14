@@ -41,7 +41,6 @@ class BackendResource extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        // @todo guessing this is new
         $this->options = $options;
 
         $view
@@ -58,7 +57,7 @@ class BackendResource extends AbstractType
         $resolver->setDefaults(array(
             'compound' => true,
             'multiple' => false,
-            'data_class' => 'PivotX\CoreBundle\Entity\GenericResource',
+            //'data_class' => 'PivotX\CoreBundle\Entity\GenericResource',
             'files' => $files
         ));
     }

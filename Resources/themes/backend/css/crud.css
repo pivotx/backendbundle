@@ -85,6 +85,7 @@ form.crud-edit-form textarea.textarea-high {
 
 form.crud-edit-form span.crud-fileinput {
     position: relative;
+    cursor: pointer;
 }
 
 form.crud-edit-form span.crud-fileinput input {
@@ -169,6 +170,7 @@ form.crud-edit-form div.unique div.suggestions ul li {
  * Crud table specifics
  */
 
+form.crud-edit-form div.file-selection div.preview,
 table.crud-genericresource div.preview {
     height: 60px;
 }

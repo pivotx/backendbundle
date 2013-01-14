@@ -10,7 +10,7 @@
     {% endif %}
     </div>
     {{ translate('form.backend_file.file-name') }}: <span class="name">{{ file_li.name }}</span><br/>
-    {{ translate('form.backend_file.file-type') }}: <span class="type">{{ file_li.mimetype }}</span>, {{ translate('form.backend_file.file-size') }}: <span class="size">{{ file_li.size }}</span> {{ translate('form.backend_file.file-bytes') }}<br/>
+    {{ translate('form.backend_file.file-type') }}: <span class="type">{{ file_li.mimetype }}</span>, {{ translate('form.backend_file.file-size') }}: <span class="size">{{ file_li.size }}</span>&#x20;{{ translate('form.backend_file.file-bytes') }}<br/>
     <a class="remove-link" href="#">{{ translate('form.backend_file.removebutton') }}</a>
 </div>
 {% endblock %}
@@ -70,8 +70,8 @@
             data-function="activateJQueryFileUpload"
             data-name="{{ full_name }}"
             data-url="{{ ref('_backend/fileupload', {'type':'jquery-fileupload','name':full_name}) }}"
-            data-text-done="{{ translate('form.backend_file.status-done') }}"
-            data-text-fail="{{ translate('form.backend_file.status-fail') }}"
+            data-text-done="{{ translate('form.backend_file.status-done')|striptags }}"
+            data-text-fail="{{ translate('form.backend_file.status-fail')|striptags }}"
         ></div>
     {% endspaceless %}
 {% endblock %}
@@ -80,29 +80,7 @@
     {% spaceless %}
         {{ block('shared_file_widget') }}
         <div class="file-selection crud-hide alert alert-info" data-selection-target="{{ full_name }}">
-            <table class="table table-striped">
-                <tbody>
-                {% loadView 'GenericResource/findAll' as resources %}
-                {% for resource in resources.result %}
-                    <tr>
-                        <td>№ {{ resource.id }}</td>
-                        <td>{{ resource.title }}</td>
-                        <td>
-                            {% if resource.isembeddable %}
-                                {{ resource.html(100,75) }}
-                            {% endif %}
-                        </td>
-                        <td><span class="btn btn-mini file-add" data-id="{{ resource.id }}" data-name="{{ resource.title }}">
-                        {% if attr.multiple %}
-                            Add file
-                        {% else %}
-                            Select file
-                        {% endif %}
-                        </span></td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            {% include 'Crud/association.GenericResource.html.twig' %}
         </div>
         <span class="btn btn-success crud-fileselection">
         {% if attr.multiple %}
@@ -127,20 +105,12 @@
             {{ form_widget(form.filesinfo) }}
         </span>
 
-        {% if not attr.multiple %}
-        &#160;
-        <span class="btn btn-warning crud-fileinput">
-            <span class="icon-arrow-left icon-white"></span>
-            <span>{{ translate('form.backend_resource.removebutton-singular') }}</span>
-        </span>
-        {% endif %}
-
         <div class="crud-hide execute-function"
             data-function="activateJQueryFileUpload"
             data-name="{{ full_name }}"
             data-url="{{ ref('_backend/fileupload', {'type':'jquery-fileupload','name':full_name}) }}"
-            data-text-done="{{ translate('form.backend_resource.status-done') }}"
-            data-text-fail="{{ translate('form.backend_resource.status-fail') }}"
+            data-text-done="{{ translate('form.backend_resource.status-done')|striptags }}"
+            data-text-fail="{{ translate('form.backend_resource.status-fail')|striptags }}"
         ></div>
     {% endspaceless %}
 {% endblock %}
@@ -149,7 +119,7 @@
 {% spaceless %}
     {% set type = type|default('text') %}
     <div class="unique" data-field="{{ name }}" data-sources="{{ sources }}" data-automatic="{% if value == "" %}autofill{% else %}keep{% endif %}">
-        <div class="value-auto" data-empty="{{ translate('form.backend_unique.empty-value') }}">
+        <div class="value-auto" data-empty="{{ translate('form.backend_unique.empty-value')|striptags }}">
             {% set fakeslug = 'dit-ne-the-slug-wert' %}
             {% set ref = [slug_entity,'/',fakeslug]|join %}
             {% set url_complete = ref(ref) %}

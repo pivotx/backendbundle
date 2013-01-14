@@ -63,7 +63,7 @@ table.crud-genericresource th.column-text4 {
                 <input type="checkbox" name="id-toggle" data-id="id-toggle">
             </th>
             <th class="column-id"                               >{{ translate([crud.entity.name,'.crud-heading.id']) }}</th>
-            <th class="column-type"                             >{{ translate([crud.entity.name,'.crud-heading.type']) }}</th>
+            <th class="column-date"                             >{{ translate([crud.entity.name,'.crud-heading.date']) }}</th>
             <th class="column-title sort-by" data-order="title" >{{ translate([crud.entity.name,'.crud-heading.title']) }}</th>
             <th class="column-preview"                          >{{ translate([crud.entity.name,'.crud-heading.preview']) }}</th>
         </tr>
@@ -79,10 +79,11 @@ table.crud-genericresource th.column-text4 {
                 № {{ item.id }}
             </td>
             <td>
-                <span class="type">{{ translate([item.resourcetype|lower,'.singular_title']) }}</span>
+                <span class="date">{{ item.datemodified|formatas('Backend/Auto') }}</span>
+                {# <span class="type">{{ translate([item.resourcetype|lower,'.singular_title']) }}</span> #}
             </td>
             <td>
-                <span class="title">{{ item.title }}</span>
+                <span class="title">{{ item.title }}</span><br/>
 
                 <span class="crud-hide text-delete-{{ item.id }}">
                     Are you sure you want to delete the resource <strong><span class="title">{{ item.title }}</span></strong>?
