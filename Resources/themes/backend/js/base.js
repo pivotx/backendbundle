@@ -229,6 +229,7 @@ $(document).ready(function(){
     $(document).on('elementloader', '#elementload', function(e){
         // @todo should not be hardcoded like this
 
+        $('textarea.wysiwyg-normal').trigger('elementload');
         $('textarea.wysiwyg-redactor').trigger('elementload');
         $('div.execute-function').trigger('elementload');
     });

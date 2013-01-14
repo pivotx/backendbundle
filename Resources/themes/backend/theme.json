@@ -15,6 +15,7 @@
         "jquery-fileupload",
         "pines-notify",
         "bootstrap",
-        "google-code-prettify"
+        "google-code-prettify",
+        "niceditor"
     ]
 }

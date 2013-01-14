@@ -672,7 +672,4 @@ $(function(){
         //console.log('executing', str);
         eval(str);
     });
-
-
 });
-
