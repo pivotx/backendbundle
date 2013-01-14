@@ -16,7 +16,7 @@
             <td>
                 {{ resource.title }}<br/>
                 <div class="btn-group on-row-hover">
-                    <a class="btn btn-success btn-mini file-add" data-id="{{ resource.id }}" data-name="{{ resource.title }}"><i class="icon-ok icon-white"></i>
+                    <a class="btn btn-success btn-mini file-add" data-json-url="{{ ref(['_backend/resourceselection/',resource.id]) }}"><i class="icon-ok icon-white"></i>
                     {% if attr.multiple %}
                         Add file
                     {% else %}

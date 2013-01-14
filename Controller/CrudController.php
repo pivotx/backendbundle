@@ -880,6 +880,39 @@ class CrudController extends Controller
 
         $content = json_encode($suggestions);
 
-        return new \Symfony\Component\HttpFoundation\Response($content, 200);
+        $response = new \Symfony\Component\HttpFoundation\Response($content, 200);
+
+        $response->headers->set('content-type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Get suggested field values
+     *
+     * Returns a list of possible values when trying to enter a unique value.
+     * Usually reserved for SLUGs
+     */
+    public function getResourceInfoAction(Request $request, $id)
+    {
+        $repository = $this->get('doctrine')->getRepository('PivotX\\CoreBundle\\Entity\\GenericResource');
+
+        $resource = null;
+        if ($id > 0) {
+            $resource = $repository->find($id);
+        }
+
+        $info = array();
+        if (!is_null($resource)) {
+            $info = $resource->getFileInfo();
+        }
+
+        $content = json_encode($info);
+
+        $response = new \Symfony\Component\HttpFoundation\Response($content, 200);
+
+        $response->headers->set('content-type', 'application/json');
+
+        return $response;
     }
 }

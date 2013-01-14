@@ -14,6 +14,14 @@ function updateCrudFilesFieldRow(field_row_el)
             }
         }
     });
+
+    if (files.length == 0) {
+        $('div.file-drop-target', field_row_el).show();
+    }
+    else {
+        $('div.file-drop-target', field_row_el).hide();
+    }
+
     var json = JSON.stringify(files, null, 2);
     $('input', field_row_el).each(function(){
         var id = $(this).attr('id');
@@ -56,15 +64,24 @@ function updateCrudFileFieldRow(field_row_el, args, file_info, progress, filesta
         $('div.progress', file_el).hide();
 
         if ((filestatus == 200) && (file_info.valid)) {
+            var name = '';
+
+            if ((typeof file_info.name != 'undefined') && (file_info.name != '')) {
+                name = file_info.name;
+            }
+            if ((typeof file_info.title != 'undefined') && (file_info.title != '')) {
+                name = file_info.title;
+            }
+
             $('span.status', file_el)
                 .addClass('label label-success')
                 .html(args.textDone)
                 ;
 
             var title_input_el = $(field_row_el).closest('form').find('#form_title');
-            if ((title_input_el.length > 0) && (title_input_el.val() == '')) {
+            if ((title_input_el.length > 0) && (title_input_el.val() == '') && (name != '')) {
                 // set the default title to the filename
-                $(title_input_el).val(file_info.name);
+                $(title_input_el).val(name);
             }
 
             var html = $('li.file-template', field_row_el).html();
@@ -73,12 +90,17 @@ function updateCrudFileFieldRow(field_row_el, args, file_info, progress, filesta
             $('.type', file_el).html(file_info.mimetype);
             $('.size', file_el).html(file_info.size);
 
-            if ((typeof file_info.embed_url != 'undefined') && (file_info.embed_url != '')) {
+            if ((typeof file_info.embed_html != 'undefined') && (file_info.embed_html != '')) {
+                $('div.preview', file_el).html(file_info.embed_html);
+            }
+            else if ((typeof file_info.embed_url != 'undefined') && (file_info.embed_url != '')) {
                 $.ajax({
                     type: 'GET',
                     url: file_info.embed_url,
                     success: function(data, textStatus, jqXHR){
                         $('div.preview', file_el).html(data);
+
+                        updateCrudFilesFieldRow(field_row_el);
                     }
                 });
             }
@@ -183,14 +205,19 @@ function activateFileSelection(field_row_el, args)
         }
     });
 
-    $('span.file-add', field_row_el).on('click', function(e){
-        var file_info = {};
-        file_info.valid   = true;
-        file_info.id      = $(this).attr('data-id');
-        file_info.name    = $(this).attr('data-name');
-        file_info.nessage = 'Added';
+    $('a.file-add', field_row_el).on('click', function(e){
+        e.preventDefault();
 
-        updateCrudFileFieldRow(field_row_el, args, file_info, 100, 200);
+        var url = $(this).attr('data-json-url');
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function(data, textStatus, jqXHR){
+                updateCrudFileFieldRow(field_row_el, args, data, 100, 200);
+            }
+        });
+
 
         $(selection_el).hide();
         $(drop_target_el).show();

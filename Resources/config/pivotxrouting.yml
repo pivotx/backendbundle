@@ -115,6 +115,13 @@ routes:
       requirements:
           name:     "[0-9a-f.-]+"
 
+    - filter:       { target: false, site: "pivotx-backend", language: false }
+      pattern:      "_backend/resourceselection/{id}"
+      public:       "backend/resourceselection/{id}"
+      defaults:     { _controller: "BackendBundle:Crud:getResourceInfo", _role: "ROLE_EDITOR" }
+      requirements:
+          id:       "[0-9]+"
+
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_developer/routing"
       public:       "developer/routing"
