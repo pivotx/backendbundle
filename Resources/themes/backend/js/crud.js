@@ -533,6 +533,8 @@ $(function(){
 
         var post = {};
         $('select, input, textarea', form_selector_el).each(function(){
+            $(this).trigger('elementfinalize');
+
             var name = $(this).attr('name');
             var value = $(this).val();
 

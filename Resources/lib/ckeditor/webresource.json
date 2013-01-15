@@ -1,0 +1,12 @@
+{
+    "identifier": "ckeditor",
+    "version": "4.0.1",
+
+    "files": [
+        { "file": "", "copy": "ckeditor" },
+        { "content": "/app_dev.php/pivotx/cwr/ckeditor/ckeditor.js", "type": "text/x-javascript-src", "group": "bodyEnd" }
+    ],
+
+    "dependencies": [
+    ]
+}

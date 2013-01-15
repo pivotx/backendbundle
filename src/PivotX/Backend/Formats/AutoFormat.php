@@ -1,8 +1,6 @@
 <?php
 /**
- * Backend auto-formatting conversion in this file.
- *
- * Normally you would want proper classes per kind of formatting.
+ * Backend auto-formatting conversion
  */
 
 namespace PivotX\Backend\Formats;

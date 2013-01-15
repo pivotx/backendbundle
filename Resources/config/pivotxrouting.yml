@@ -184,4 +184,5 @@ routes:
       public:       "cwr/{file}"
       defaults:     { _controller: "CoreBundle:Cwr:cwr" }
       requirements:
-          file:     "[A-Za-z0-9_.-]+[.][A-Za-z0-9]+"
+          file:     "[A-Za-z0-9/_.-]+[.][A-Za-z0-9]+"
+          file2:     "[A-Za-z0-9_.-]+[.][A-Za-z0-9]+"

@@ -16,6 +16,6 @@
         "pines-notify",
         "bootstrap",
         "google-code-prettify",
-        "niceditor"
+        "ckeditor"
     ]
 }
