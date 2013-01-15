@@ -6,7 +6,9 @@
     <div>{{ error.message }}</div>
 {% endif %}
 
-<form action="{{ path('login_check') }}" method="post">
+{# <form action="{{ path('login_check') }}" method="post"> #}
+<form action="{{ ref('_page/login_check') }}" method="post">
+{# <form action="" method="post"> #}
     <label for="email">E-mail:</label>
     <input type="text" id="email" name="_username" value="{{ last_username }}" />
 
