@@ -293,8 +293,8 @@ class DeveloperController extends Controller
             //$siteoptions->clearSiteOptions($site, 'routing');
 
             $siteoptions->set('routing.setup', json_encode($json_data), 'application/json', false, false, $site);
-            $siteoptions->set('routing.targets', json_encode($json_data['targets']), 'application/json', true, false, $site);
-            $siteoptions->set('routing.languages', json_encode($json_data['languages']), 'application/json', true, false, $site);
+            $siteoptions->set('routing.targets', json_encode($json_data['targets']), 'application/json', false, false, $site);
+            $siteoptions->set('routing.languages', json_encode($json_data['languages']), 'application/json', false, false, $site);
 
             $routeprefixes = array();
             foreach($json_data['hosts'] as $target => $languages) {
@@ -325,7 +325,7 @@ class DeveloperController extends Controller
                     $routeprefixes[] = $routeprefix;
                 }
             }
-            $siteoptions->set('routing.routeprefixes', json_encode($routeprefixes), 'application/json', true, false, $site);
+            $siteoptions->set('routing.routeprefixes', json_encode($routeprefixes), 'application/json', false, false, $site);
 
 
             // recompile routes
