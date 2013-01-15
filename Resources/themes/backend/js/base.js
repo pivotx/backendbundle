@@ -239,6 +239,7 @@ $(document).ready(function(){
 
     // @todo only when enabled
     $('.toggle-translations').on('click', function(e){
+        var click_el = this;
         e.preventDefault();
 
         if ($('body').data('pivotx-translations-tooltips') != 'yes') {
@@ -261,6 +262,7 @@ $(document).ready(function(){
             case 'hidden':
                 $('body').data('pivotx-translations-state', 'showing');
                 $('body').addClass('pivotx-hide-translated');
+                $(click_el).addClass('btn-info');
                 break;
 
             case 'showing':
@@ -268,6 +270,7 @@ $(document).ready(function(){
                 $('.pivotx-is-translated').each(function(){
                     $(this).tooltip('show');
                 });
+                $(click_el).removeClass('btn-info').addClass('btn-warning');
                 break;
 
             case 'tooltips':
@@ -278,6 +281,7 @@ $(document).ready(function(){
                     $(this).tooltip('destroy');
                 });
                 $('body').data('pivotx-translations-tooltips', 'no');
+                $(click_el).removeClass('btn-warning');
                 break;
         }
     });

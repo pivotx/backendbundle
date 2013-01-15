@@ -1,18 +1,10 @@
 
 <div class="navbar navbar-fixed-bottom">
     <div class="navbar-inner">
-        {#
-        <div class="container">
-            <footer>
-                <p>PivotX version 4.1.x</p>
-            </footer>
-        </div>
-        #}
-
         {% if backend.security.logged %}
         <div class="container-fluid">
             <span class="navbar-text">
-                PivotX version 4.1.x
+                PivotX version 4.0.x
             </span>
 
             <span class="navbar-text">
@@ -31,12 +23,13 @@
                 </ul>
             </span>
 
+            {% if siteoptions.translations_debug is defined %}
             <div class="btn-group pull-right">
-
                 <a class="btn toggle-translations" href="#">
                     <i class="icon-wrench"></i> {{ translate('footer.button.translations') }}
                 </a>
             </div>
+            {% endif %}
         </div>
         {% endif %}
     </div>

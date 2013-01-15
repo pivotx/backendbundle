@@ -122,6 +122,10 @@ class Controller extends CoreController
             $context['backend']['messages'] = $messages;
         }
 
+        $context['siteoptions'] = array();
+        if ($siteoptions->getValue('translations.debug', false) === true) {
+            $context['siteoptions']['translations_debug'] = true;
+        }
         //var_dump($context);
 
         return $context;
