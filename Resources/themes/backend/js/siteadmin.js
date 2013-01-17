@@ -188,7 +188,7 @@ $(function(){
     $('a.delete-entity-button').on('click', function(e){
         e.preventDefault();
 
-        var entity = $(e.target).attr('data-entity');
+        var entity = $(this).attr('data-entity');
 
         var title = 'Are you absolutely sure?';
         var text = 'You are about to delete the entity "' + entity + '".';

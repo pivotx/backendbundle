@@ -74,6 +74,53 @@ class DeveloperController extends Controller
         return strcasecmp($a->getEntityFilter(), $b->getEntityFilter());
     }
 
+    private function getDeveloperRoute($route)
+    {
+        $helppages = array();
+
+        $entity       = $route->getEntity();
+        $entityfilter = $route->getEntityFilter();
+
+        $text = <<<THEEND
+<h4>Twig template code:</h4>
+<code>&lt;a href="{{ ref('$entity/$entityfilter') }}"&gt;link&lt;/a&gt;</code><br/>
+THEEND;
+
+        $requirements = $route->getRequirements();
+        if (count($requirements) > 0) {
+            $text .= '<h4>URL/Reference requirements:</h4>';
+            $text .= '<dl class="dl-horizontal">';
+            foreach($requirements as $k => $v) {
+                $text .= '<dt>{'.$k.'}</dt>';
+                $text .= '<dd>'.$v.'</dd>';
+            }
+            $text .= '</dl>';
+        }
+        $defaults = $route->getDefaults();
+        if (count($defaults) > 0) {
+            $text .= '<h4>Defaults:</h4>';
+            $text .= '<dl class="dl-horizontal">';
+            foreach($route->getDefaults() as $k => $v) {
+                $text .= '<dt>'.$k.'</dt>';
+                $text .= '<dd>'.$v.'</dd>';
+            }
+            $text .= '</dl>';
+        }
+        $helppages[] = array(
+            'title' => 'Documentation',
+            'type' => 'default',
+            'text' => new \Twig_Markup($text, 'utf-8')
+        );
+
+        return array(
+            'filter' => $route->getFilter(),
+            'public_url' => $route->getUrl(),
+            'name' => $route->getEntity().'/'.$route->getEntityFilter(),
+            'helppages' => $helppages
+        );
+
+    }
+
     public function showRoutingAction(Request $request)
     {
         $context = $this->getDefaultHtmlContext();
@@ -111,17 +158,22 @@ class DeveloperController extends Controller
         $routes = array();
         foreach($_routes as $route) {
             $filter = $route->getFilter();
+            $add    = false;
             if (isset($filter['site'])) {
                 if (is_array($filter['site'])) {
                     if (in_array($site, $filter['site'])) {
-                        $routes[] = $route;
+                        $add = true;
                     }
                 }
                 else {
                     if ($filter['site'] == $site) {
-                        $routes[] = $route;
+                        $add = true;
                     }
                 }
+            }
+
+            if ($add) {
+                $routes[] = $this->getDeveloperRoute($route);
             }
         }
 

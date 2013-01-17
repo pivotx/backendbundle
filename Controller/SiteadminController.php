@@ -24,10 +24,10 @@ class SiteadminController extends Controller
             $name      = $so_check->getName();
             $attention = false;
 
-            $description = $translation_service->translate('config.check.'.$name.'.false');
+            $description = $translation_service->translate('config.check.'.$name.'.false', null, 'twig');
             if ($so_check->getUnpackedValue() === true) {
-                $attention   = $translation_service->translate('config.check.require-attention');
-                $description = $translation_service->translate('config.check.'.$name.'.true');
+                $attention   = $translation_service->translate('config.check.require-attention', null, 'twig');
+                $description = $translation_service->translate('config.check.'.$name.'.true', null, 'twig');
             }
 
             $checks[] = array(

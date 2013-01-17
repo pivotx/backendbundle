@@ -16,7 +16,12 @@
             {% for menuitem in menu.items %}
                 {% if menuitem.ismenu %}
                     <a class="btn dropdown-toggle {% if menuitem.attribute('switched_user') %}btn-warning{% endif %} }}" data-toggle="dropdown" href="#">
-                        <i class="{{ menuitem.attribute('icon') }}"></i> {{ menuitem.label }} <span class="caret"></span>
+                        <i class="{{ menuitem.attribute('icon') }}"></i>
+                        {{ menuitem.label }}
+                        {% if backend.current_site is defined %}
+                            ({{ backend.current_site }})
+                        {% endif %}
+                        <span class="caret"></span>
                     </a>
                     {% set submenu = menuitem.menu %}
                     <ul class="dropdown-menu">

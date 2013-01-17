@@ -97,6 +97,9 @@ class Controller extends CoreController
             'messages' => false
         );
 
+        // @todo only add current_site when user is allowed to change sites
+        $context['backend']['current_site'] = $this->getCurrentSite();
+
         $siteoptions = $this->container->get('pivotx.siteoptions');
         if ($siteoptions->getValue('config.check.any', false, 'all')) {
             $href = $this->container->get('pivotx.routing')->buildUrl('_siteadmin/status');

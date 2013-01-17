@@ -267,12 +267,17 @@ class EntitiesController extends Controller
             return false;
         }
 
-        $suggestions->setTranslationsForNewEntity($this->get('pivotx.translations'), $this->getCurrentSite(), $entity['name']);
+        $routing_generator = new \PivotX\Doctrine\Generator\Routing($this->get('pivotx.siteoptions'), $this->get('pivotx.translations'));
+        $sites = $routing_generator->getSites();
+        foreach($sites as $site) {
+            $suggestions->setTranslationsForNewEntity($this->get('pivotx.translations'), $site, strtolower($entity['name']));
+        }
 
         $this->get('session')->setFlash('notice', 'Entity "'.$name.'" has been added.');
 
         $this->saveEntity($entity);
 
+        $siteoptions = $this->get('pivotx.siteoptions');
         $siteoption = $siteoptions->getSiteOption('config.entities', 'all');
         $entities   = $siteoption->getUnpackedValue();
         $entities[] = $entity['name'];
@@ -357,8 +362,6 @@ class EntitiesController extends Controller
         switch ($request->request->get('action', '')) {
             case 'add_entity':
                 $entity_name = $this->handleNewEntity($request->request);
-                $entity_name = false;
-                // @todo we cannot redirect to entity until the setup has been updated
                 break;
 
             case 'delete_entity':
@@ -428,32 +431,6 @@ class EntitiesController extends Controller
         return $this->render('Entities/entities.html.twig', $context);
     }
 
-    /*
-    private function getSites()
-    {
-        $siteoptions = $this->get('pivotx.siteoptions');
-        $_sites = explode("\n", $siteoptions->getValue('config.sites', array(), 'all'));
-
-        $sites = array();
-        foreach($_sites as $site) {
-            if ($site != 'pivotx-backend') {
-                $sites[] = $site;
-            }
-        }
-
-        return $sites;
-    }
-     */
-
-    /*
-    private function getLanguagesForSite($site)
-    {
-        $siteoptions = $this->get('pivotx.siteoptions');
-
-        return $siteoptions->getValue('routing.languages', array(), $site);
-    }
-     */
-
     private function handleEntityForm(Request $request, $entity)
     {
         $variants = array(
@@ -462,6 +439,8 @@ class EntitiesController extends Controller
             'plural_title' => 'plural title',
             'plural_slug' => 'plural slug',
         );
+
+        $entity_name = strtolower($entity['name']);
 
         $default_data = array();
 
@@ -478,7 +457,7 @@ class EntitiesController extends Controller
                 $name = $language['name'];
 
                 foreach($variants as $k => $v) {
-                    $default_data[$usite.'_'.$name.'_'.$k] = $translations->translate('entry.common.'.$k, '&site='.$site.'&language='.$name);
+                    $default_data[$usite.'_'.$name.'_'.$k] = $translations->translate($entity_name.'.common.'.$k, '&site='.$site.'&language='.$name);
                 }
 
             }
@@ -523,7 +502,7 @@ class EntitiesController extends Controller
                         $texts[$name] = $value;
                     }
 
-                    $translations->setTexts('entry', 'common.'.$k, $site, null, $texts, TranslationText::STATE_VALID);
+                    $translations->setTexts($entity_name, 'common.'.$k, $site, null, $texts, TranslationText::STATE_VALID);
                 }
 
                 $routing_generator->updateRoutes($entity['name']);

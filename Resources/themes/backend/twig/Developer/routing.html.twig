@@ -1,5 +1,7 @@
 {% extends "Base/content_and_meta.html.twig" %}
 
+{% import "Include/snippets.html.twig" as snippets %}
+
 {% block content %}
 
     <table class="developer table table-striped table-bordered">
@@ -33,10 +35,12 @@
             <tr>
                 <th>Target</th>
                 <th>Language</th>
+                <th>Public URL</th>
                 <th>Local reference</th>
             </tr>
         </thead>
-    {% for route in routes.result %}
+    {% for loopvar in routes.htmliterator %}
+        {% set route = loopvar.value %}
         <tbody>
             <tr>
                 <td>
@@ -54,18 +58,14 @@
                     {% endif %}
                 </td>
                 <td>
-                    {{ route.entity }}/{{ route.entityfilter }}
+                    {{ route.public_url }}
+                </td>
+                <td>
+                    {{ route.name }}<br/>
 
-                    <div class="on-row-hover btn-group">
-                        <a class="btn btn-mini" data-show="code-example">{% raw %}{% code %}{% endraw %}</a>
-                    </div>
+                    {{ snippets.buttonrow(loopvar.number, route.name) }}
 
-                    <div class="toggles code-example">
-                        <hr />
-<pre class="prettify linenums">
-&lt;a href="{% raw %}{{ ref('{% endraw %}{{ route.entity }}/{{ route.entityfilter }}{% raw %}') }}{% endraw %}"&gt;link&lt;/a&gt; &lt;!-- (this example doesn't work) --&gt;
-</pre>
-                    </div>
+                    {{ snippets.modal(loopvar.number, route.helppages) }}
                 </td>
             </tr>
         </tbody>

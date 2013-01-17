@@ -13,7 +13,7 @@ class BackendController extends Controller
     {
         $path = \PivotX\Backend\Lists\Documentation::getPath();
 
-        $documentation = 'Missing';
+        $documentation = 'This documentation is missing. Our apologies.';
 
         $filename = $path . '/' . $name . '.md';
         if (file_exists($filename)) {
