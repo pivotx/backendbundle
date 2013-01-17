@@ -174,6 +174,13 @@ routes:
       public:       "site/load"
       defaults:     { _controller: "BackendBundle:Developer:showLoadSite", _role: "ROLE_ADMIN" }
 
+    - filter:       { target: false, site: "pivotx-backend", language: false }
+      pattern:      "_documentation/{name}"
+      public:       "documentation/{name}"
+      defaults:     { _controller: "BackendBundle:Backend:showDocumentation", _view: "Documentation/page.html.twig", _role: "ROLE_EDITOR" }
+      requirements:
+          name:      "[A-Za-z0-9_]+"
+
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_profile/home"
       public:       "profile/home"

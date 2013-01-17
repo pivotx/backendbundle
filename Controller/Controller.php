@@ -266,7 +266,13 @@ class Controller extends CoreController
         $contentmenu = $topmenu->addItem(new \PivotX\Backend\Lists\Content($this->get('pivotx.siteoptions')));
         $siteadminmenu = $topmenu->addItem(new \PivotX\Backend\Lists\Siteadmin());
         $developermenu = $topmenu->addItem(new \PivotX\Backend\Lists\Developer());
+        $documentationmenu = $topmenu->addItem(new \PivotX\Backend\Lists\Documentation());
         $this->get('pivotx.lists')->addItem('Backend/Topmenu', $topmenu, false);
+
+        // @todo ideally we should be able to grab a part of the menu in {% loadList(..) %}
+        //       then we don't have to define it twice
+        $documentationmenu = new \PivotX\Backend\Lists\Documentation();
+        $this->get('pivotx.lists')->addItem('Backend/Documentation', $documentationmenu, false);
 
         // profile menu
         $repository = $this->get('doctrine')->getRepository('PivotX\CoreBundle\Entity\User');

@@ -9,6 +9,26 @@ use Symfony\Component\Security\Core\SecurityContext;
 
 class BackendController extends Controller
 {
+    public function showDocumentationAction(Request $request, $name)
+    {
+        $path = \PivotX\Backend\Lists\Documentation::getPath();
+
+        $documentation = 'Missing';
+
+        $filename = $path . '/' . $name . '.md';
+        if (file_exists($filename)) {
+            $documentation = file_get_contents($filename);
+        }
+
+        $format = $this->get('pivotx.formats')->findFormat('md');
+
+        $context = $this->getDefaultHtmlContext();
+
+        $context['documentation'] = $format->format($documentation);
+
+        return $this->render('Documentation/page.html.twig', $context);
+    }
+
     public function showLoginAction()
     {
         $request = $this->getRequest();

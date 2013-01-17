@@ -1,0 +1,18 @@
+{% extends "Base/content_and_meta.html.twig" %}
+
+{% block content %}
+
+    {{ documentation }}
+
+{% endblock %}
+
+{% block meta_content %}
+
+    {% loadList 'Backend/Documentation' as menu excludeRoot %}
+    <ul>
+    {% for menuitem in menu.items %}
+        <li class="{{ menuitem.classes }}"><a href="{{ menuitem.link }}">{{ menuitem.label }}</a></li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}
