@@ -1,21 +1,24 @@
 {
-    "name": "pivotx/core-bundle",
-    "description": "PivotX 4 Back-end Package",
-    "version": "0.0.1",
+    "name": "pivotx/backendbundle",
+    "description": "PivotX 4 Backend Bundle",
+    "version": "4.0.0-beta1",
     "type": "symfony-bundle",
-    "license": "GPL-2.0",
+    "license": "MIT",
+    "homepage": "http://github.com/PivotX/BackendBundle",
     "authors": [
-        {
-            "name": "Bob den Otter",
-            "email": "bob@twokings.nl",
-            "homepage": "http://twokings.nl",
-            "role": "Developer"
-        },
         {
             "name": "Marcel Wouters",
             "email": "marcel@twokings.nl",
             "homepage": "http://twokings.nl",
             "role": "Developer"
         }
-    ]
+    ],
+    "require": {
+        "pivotx/corebundle": "4.0.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "PivotX": [ "src/PivotX/BackendBundle/src" ]
+        }
+    }
 }
