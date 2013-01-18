@@ -10,7 +10,8 @@ class Documentation extends Item
 {
     public static function getPath()
     {
-        return '/home/marcel/public_html/px4-docs';
+        // @todo faulty logic
+        return dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))).'/CoreBundle/Resources/doc';
     }
 
     public function __construct()
