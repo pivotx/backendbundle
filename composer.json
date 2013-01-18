@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "pivotx/corebundle": "4.0.*"
+        "pivotx/corebundle": ">=4.0.0"
     },
     "autoload": {
         "psr-0": {
