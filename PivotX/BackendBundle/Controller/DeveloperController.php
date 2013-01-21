@@ -303,7 +303,7 @@ THEEND;
     {
         $siteoptions = $this->get('pivotx.siteoptions');
 
-        $sites = explode("\n", $siteoptions->getValue('config.sites', array(), 'all'));
+        $sites = explode("\n", $siteoptions->getValue('config.sites', '', 'all'));
 
         $site = false;
         foreach($sites as $_site) {
@@ -384,6 +384,14 @@ THEEND;
 
             $site_routing = new \PivotX\Component\Siteoptions\Routing($siteoptions);
             $site_routing->compileSiteRoutes($site);
+
+
+            // update config check
+
+            $siteoptions->set('config.check.sites', 0, 'x-value/boolean', false, false, 'all');
+
+            $setup = new \PivotX\Component\Siteoptions\Setup($siteoptions);
+            $setup->updateConfigCheck();
         }
 
         $content = json_encode($data);
