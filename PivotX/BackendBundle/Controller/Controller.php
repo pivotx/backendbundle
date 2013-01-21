@@ -210,7 +210,7 @@ class Controller extends CoreController
     /**
      * Set the current site for the user
      */
-    private function setCurrentSite($current_site)
+    protected function setCurrentSite($current_site)
     {
         $siteoptions = $this->get('pivotx.siteoptions');
         $sites = explode("\n", $siteoptions->getValue('config.sites', array(), 'all'));

@@ -4,6 +4,7 @@ namespace PivotX\BackendBundle\Controller;
 
 use PivotX\BackendBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class DeveloperController extends Controller
@@ -317,7 +318,7 @@ THEEND;
 
         $content = $siteoption->getValue();
 
-        return new \Symfony\Component\HttpFoundation\Response($content, 200);
+        return new Response($content, 200);
     }
 
     public function showMutateSiteAction(Request $request)
@@ -407,9 +408,22 @@ THEEND;
             $setup->updateConfigCheck();
         }
 
-        $content = json_encode($data);
+        if ($data['ok']) {
+            $url = $this->get('pivotx.routing')->buildUrl('_developer/site/new');
 
-        return new \Symfony\Component\HttpFoundation\Response($content, 200);
+            // maybe not always wanted, but we'll wait for the complains before changing
+            $this->setCurrentSite($site);
+
+            return new \Symfony\Component\HttpFoundation\Response('', 204, array('X-Location' => $url));
+        }
+
+        $notification = json_encode(array(
+            'title' => 'Error in site setup',
+            'text' => 'The site setup is not correct and could not be saved.',
+            'type' => 'error',
+        ));
+
+        return new \Symfony\Component\HttpFoundation\Response($notification, 200, array('X-Notification' => 'yes'));
     }
 
     public function showSiteAction(Request $request)

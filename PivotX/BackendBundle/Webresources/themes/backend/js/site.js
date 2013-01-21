@@ -109,10 +109,10 @@ function siteUpdateHosts(context_el)
             var name = 'hosts_' + language + '_' + target;
             var value = site_host_cache[name];
 
-            if (typeof value === 'undefined') {
+            if ((typeof value === 'undefined') || (value == '')) {
                 var domain = $('input[name="domain"]', context_el).val().trim();
                 if (domain == 'any') {
-                    domain = '%request_host%';
+                    domain = '%request.host%';
                 }
 
 
@@ -206,10 +206,7 @@ function siteUpdateSetup(context_el, setup)
         url: action,
         type: 'POST',
         data: { 'setup': json_setup },
-        success: function(data, textStatus, jqXHR){
-            // @todo do nothing atm
-            console.log(data);
-        }
+        success: handleAjaxResponse
     });
 }
 
