@@ -156,7 +156,7 @@ class Controller extends CoreController
             }
         }
 
-        $path = '@BackendBundle/Resources/themes/'.$theme_name;
+        $path = '@BackendBundle/Webresources/themes/'.$theme_name;
         $realpath = $this->get('kernel')->locateResource($path);
 
         $webresourcer = $this->get('pivotx.webresourcer');
