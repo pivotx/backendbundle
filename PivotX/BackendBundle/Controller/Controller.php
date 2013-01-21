@@ -177,7 +177,7 @@ class Controller extends CoreController
     protected function getCurrentSite()
     {
         $siteoptions = $this->get('pivotx.siteoptions');
-        $sites = explode("\n", $siteoptions->getValue('config.sites', array(), 'all'));
+        $sites = explode("\n", $siteoptions->getValue('config.sites', '', 'all'));
 
         $token = $this->get('security.context')->getToken();
         $user  = null;
