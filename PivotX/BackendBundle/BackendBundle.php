@@ -12,7 +12,7 @@ class BackendBundle extends Bundle
         try {
             $service = $this->container->get('pivotx.routing');
 
-            $fname = dirname(__FILE__).'/Resources/config/pivotxrouting.yml';
+            $fname = dirname(dirname(dirname(__FILE__))).'/Resources/config/pivotxrouting.yml';
             $service->load($fname);
         }
         catch (\InvalidArgumentException $e) {
