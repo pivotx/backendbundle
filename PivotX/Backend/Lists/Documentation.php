@@ -11,7 +11,7 @@ class Documentation extends Item
     public static function getPath()
     {
         // @todo faulty logic
-        return dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))).'/CoreBundle/Resources/doc';
+        return dirname(dirname(dirname(dirname(dirname(__FILE__))))).'/corebundle/Resources/doc';
     }
 
     public function __construct()

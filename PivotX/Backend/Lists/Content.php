@@ -27,7 +27,7 @@ class Content extends Item
         $crudmenu = $this->addItem(new CrudTables('editor'));
         $crudmenu->setAsItemsholder();
 
-        $entities = $siteoptions_service->getValue('config.entities', null, 'all');
+        $entities = $siteoptions_service->getValue('config.entities', array(), 'all');
         foreach($entities as $entity) {
             // @todo fixed entities should not be in this menu
 

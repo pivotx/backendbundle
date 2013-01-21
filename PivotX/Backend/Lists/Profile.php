@@ -29,7 +29,7 @@ class Profile extends Item
 
         $current_site = $this->getCurrentSite($security_context, $siteoptions);
 
-        $sites = explode("\n", $siteoptions->getValue('config.sites', array(), 'all'));
+        $sites = explode("\n", $siteoptions->getValue('config.sites', '', 'all'));
         if (count($sites) > 1) {
             $this->addItem(new SeparatorItem());
 
@@ -84,7 +84,7 @@ class Profile extends Item
      */
     private function getCurrentSite($security_context, $siteoptions)
     {
-        $sites = explode("\n", $siteoptions->getValue('config.sites', array(), 'all'));
+        $sites = explode("\n", $siteoptions->getValue('config.sites', '', 'all'));
 
         $token = $security_context->getToken();
         $user  = null;
