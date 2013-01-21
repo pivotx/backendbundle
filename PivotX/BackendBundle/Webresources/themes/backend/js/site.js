@@ -110,7 +110,13 @@ function siteUpdateHosts(context_el)
             var value = site_host_cache[name];
 
             if (typeof value === 'undefined') {
-                value = 'http://' + $('input[name="domain"]', context_el).val().trim();
+                var domain = $('input[name="domain"]', context_el).val().trim();
+                if (domain == 'any') {
+                    domain = '%request_host%';
+                }
+
+
+                value = 'http://' + domain;
                 if (!is_primary_language) {
                     value += '/' + language;
                 }

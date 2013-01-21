@@ -380,6 +380,19 @@ THEEND;
             $siteoptions->set('routing.routeprefixes', json_encode($routeprefixes), 'application/json', false, false, $site);
 
 
+            // check config.sites key
+
+            $sites = explode("\n", $siteoptions->getValue('config.sites', '', 'all'));
+            if ((count($sites) == 0) || ($sites[0] == '')) {
+                // if not present yet, add it
+                $sites = array(
+                    'pivotx-backend',
+                    $site
+                );
+                $siteoptions->set('config.sites', implode("\n", $sites), 'text/plain', true, true, 'all');
+            }
+
+
             // recompile routes
 
             $site_routing = new \PivotX\Component\Siteoptions\Routing($siteoptions);
