@@ -186,15 +186,14 @@ routes:
       public:       "profile/home"
       defaults:     { _controller: "BackendBundle:Backend:any", _view: "Developer/profile.html.twig" }
 
-    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
-      pattern:      "_http/404"
-      public:       "page-not-found"
-      defaults:     { _nothing: "not-found" }
-
     - filter:       { target: false, site: "pivotx-backend", language: "none" }
       pattern:      "_cwr/{file}"
       public:       "cwr/{file}"
       defaults:     { _controller: "CoreBundle:Cwr:cwr" }
       requirements:
           file:     "[A-Za-z0-9/_.-]+[.][A-Za-z0-9]+"
-          file2:     "[A-Za-z0-9_.-]+[.][A-Za-z0-9]+"
+
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
+      pattern:      "_http/404"
+      public:       "page-not-found"
+      defaults:     { _nothing: "not-found" }

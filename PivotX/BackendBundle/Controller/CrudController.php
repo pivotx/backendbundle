@@ -402,6 +402,10 @@ class CrudController extends Controller
      */
     public function showTableAction(Request $request)
     {
+        if (is_null($this->getEntityClass($request->get('entity')))) {
+            return $this->forwardByReference('_http/404');
+        }
+
         if ($request->query->has('action')) {
             $selection = $this->getCrudSelection($request);
 
@@ -743,6 +747,10 @@ class CrudController extends Controller
      */
     public function showRecordAction(Request $request)
     {
+        if (is_null($this->getEntityClass($request->get('entity')))) {
+            return $this->forwardByReference('_http/404');
+        }
+
         $entity_class = $this->getEntityClass($request->get('entity'));
         $entity_manager = $this->get('doctrine')->getEntityManager();
 
@@ -757,6 +765,10 @@ class CrudController extends Controller
             if (method_exists($item,'initNewCrudRecord')) {
                 $item->initNewCrudRecord();
             }
+        }
+
+        if (is_null($item)) {
+            return $this->forwardByReference('_http/404');
         }
 
         $intention = false;
