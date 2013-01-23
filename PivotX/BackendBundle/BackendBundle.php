@@ -12,16 +12,11 @@ class BackendBundle extends Bundle
         try {
             $service = $this->container->get('pivotx.routing');
 
-            echo "HIER<br/>\n";
-
             $fname = dirname(dirname(dirname(__FILE__))).'/Resources/config/pivotxrouting.yml';
-            echo 'filename['.$fname.']<br/>';
-            die('');
             $service->load($fname);
         }
         catch (\InvalidArgumentException $e) {
         }
-        echo 'hier wel';
 
         // force loading of our views
         // @todo this is not pretty
