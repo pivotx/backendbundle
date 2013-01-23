@@ -5,7 +5,7 @@ namespace PivotX\BackendBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class BackendBundle extends Bundle
+class PivotXBackendBundle extends Bundle
 {
     public function boot()
     {
