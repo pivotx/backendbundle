@@ -97,4 +97,59 @@ $(window).load(function(){
 
         $(dm_el).modal();
     });
+
+    $(document).on('click', 'code', function(e){
+        var width = $(this).width();
+        var text = '';
+        if ($('input', this).is('*')) {
+            text = $('input', this).val();
+            $('input', this).remove();
+        }
+        else {
+            text = $(this).text();
+        }
+
+        $(this).html('<input class="input-clipboard" readonly="readonly" style="width: '+width+'px" type="text" value="'+ text + '" />');
+        $('input', this).select();
+
+        showNotification({
+            'title': 'Selected text',
+            'text': 'Text:<br/><pre style="max-width: 250px; word-break: break-all">' + text + '</pre>Press Ctrl-C or Command-C to copy it.',
+            'type': 'success'
+        });
+    });
+
+    $(document).on('click', 'pre.prettyprint', function(e){
+        var width = $(this).width();
+        var height = $(this).height();
+        var text = '';
+        if ($('textarea', this).is('*')) {
+            text = $('textarea', this).val();
+            $('textarea', this).remove();
+        }
+        else {
+            text = $(this).text();
+        }
+
+        $(this).html('<textarea class="input-clipboard" readonly="readonly" style="width: '+width+'px; height: '+height+'px">'+ text + '"</textarea>');
+        $('textarea', this).select();
+
+        showNotification({
+            'title': 'Selected text',
+            'text': 'Text:<br/><pre style="max-width: 250px; word-break: break-all">' + text + '</pre>Press Ctrl-C or Command-C to copy it.',
+            'type': 'success'
+        });
+    });
+
+    $(document).on('blur', 'code', function(e){
+        var text = '';
+        if ($('input', this).is('*')) {
+            text = $('input', this).val();
+            $('input', this).remove();
+        }
+        else {
+            text = $(this).text();
+        }
+        $(this).text(text);
+    });
 });
