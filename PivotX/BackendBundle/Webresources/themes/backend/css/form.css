@@ -1,7 +1,3 @@
-
-/**
- */
-
 form.table-form table {
 }
 
@@ -34,4 +30,8 @@ form.table-form table td.checkbox input[type="checkbox"] {
 
 form.table-form table td.target-language {
     text-align: right;
+}
+
+form label {
+    font-weight: bold;
 }
