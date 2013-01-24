@@ -446,10 +446,15 @@ class CrudController extends Controller
 
         // init the CRUD view
 
-        $view = \PivotX\Component\Views\Views::loadView('Crud/'.$context['crud']['entity']['name'].'/findAll');
+        $view = \PivotX\Component\Views\Views::loadView($context['crud']['entity']['name'].'/findCrudAll');
         if (($view === false) || ($view instanceof \PivotX\Component\Views\EmptyView)) {
             // custom view not found, use the default
             $view = \PivotX\Component\Views\Views::loadView($context['crud']['entity']['name'].'/findAll');
+        }
+
+        if ($view->hasMethodArgument('site')) {
+            // this should only be true for PivotX-only CRUD editors
+            $view->setArguments(array('site' => $this->getCurrentSite()));
         }
 
         $view->setCurrentPage(1, 10);
