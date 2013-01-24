@@ -67,5 +67,15 @@ class Service
         $view = new findBundles($this->kernel, 'Backend/findBundles');
         $this->pivotx_views->registerView($view);
         unset($view);
+
+
+        $_sites = explode("\n", $this->siteoptions_service->getValue('config.sites', '', 'all'));
+        $sites  = array();
+        foreach($_sites as $_site) {
+            $sites[$_site] = $_site;
+        }
+        $view = new ArrayView($sites, 'Backend/findSites', 'PivotX/Backend', 'Return all defined sites', array('returnAll', 'Backend'));
+        $this->pivotx_views->registerView($view);
+        unset($view);
     }
 }

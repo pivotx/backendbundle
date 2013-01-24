@@ -277,7 +277,12 @@ class CrudController extends Controller
     {
         $args = array();
         foreach($request->query->all() as $name => $value) {
-            if ((substr($name,0,7) == 'filter-') || (substr($name,0,6) == 'table-')) {
+            if (substr($name,0,7) == 'filter-') {
+                if ($value != '') {
+                    $args[$name] = $value;
+                }
+            }
+            else if (substr($name,0,6) == 'table-') {
                 $args[$name] = $value;
             }
         }
@@ -452,11 +457,6 @@ class CrudController extends Controller
             $view = \PivotX\Component\Views\Views::loadView($context['crud']['entity']['name'].'/findAll');
         }
 
-        if ($view->hasMethodArgument('site')) {
-            // this should only be true for PivotX-only CRUD editors
-            $view->setArguments(array('site' => $this->getCurrentSite()));
-        }
-
         $view->setCurrentPage(1, 10);
 
         $arguments  = array();
@@ -477,6 +477,26 @@ class CrudController extends Controller
                 }
             }
         }
+
+        if ($view->hasMethodArgument('site')) {
+            // this should only be true for PivotX-only CRUD editors
+
+            if ($this->get('security.context')->isGranted('ROLE_DEVELOPER')) {
+                if (!isset($arguments['site'])) {
+                    $arguments['site']         = $this->getCurrentSite();
+                    $query_args['filter-site'] = $this->getCurrentSite();
+                }
+            }
+            else {
+                // only current site is allowed for non-developers roles
+                $arguments['site']  = $this->getCurrentSite();
+                if (isset($query_args['filter-site'])) {
+                    unset($query_args['filter-site']);
+                }
+            }
+        }
+
+
         if (count($arguments) > 0) {
             $view->setArguments($arguments);
         }

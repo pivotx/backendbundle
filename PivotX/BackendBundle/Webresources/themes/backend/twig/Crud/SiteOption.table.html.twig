@@ -31,29 +31,26 @@ table.crud-translationtext th.column-text4 {
 </style>
 
 <div class="crud crud-filter">
-{#
     <form method="get" action="" class="well form-inline">
-        {% loadView 'Crud/SiteOption/findAll' as ttexts %}
-        <select name="filter-siteandgroup">
-            <option value="">(filter on site &amp; group)</option>
-        {% for loopvar in ttexts.htmliterator({'groupingby':'sitename,groupname'}) %}
-            {% if loopvar.item_first %}
-                {% set ttext = loopvar.value %}
-                {% set value = [ ttext.sitename,'/',ttext.groupname]| join %}
-                {% set selected = '' %}
-                {% if value == view.queryarguments['filter-siteandgroup']|default('') %}
-                    {% set selected = ' selected="selected"' %}
-                {% endif %}
-                <option value="{{ value }}"{{ selected }}>{{ ttext.sitename }} / {{ ttext.groupname }}</option>
+    {% if is_granted('ROLE_DEVELOPER') %}
+        {% loadView 'Backend/findSites' as ttexts %}
+        <select name="filter-site">
+            <option value="">All sites</option>
+        {% for ttext in ttexts.result %}
+            {% set value = ttext.value %}
+            {% set selected = '' %}
+            {% if value == view.queryarguments['filter-site']|default('') %}
+                {% set selected = ' selected="selected"' %}
             {% endif %}
+            <option value="{{ value }}"{{ selected }}>{{ ttext.title }}</option>
         {% endfor %}
         </select>
+    {% endif %}
 
         <input type="text" class="input-medium" name="filter-name" placeholder="Search by key name" value="{{ view.queryarguments['filter-name']|default('') }}" />
 
         <button type="submit" class="btn">filter</button>
     </form>
-#}
 </div>
 
 <table class="crud crud-siteoption table table-striped" data-crud-table="{{ crud.htmlid }}">
