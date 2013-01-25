@@ -137,7 +137,7 @@ class Controller extends CoreController
     /**
      * Set the theme
      */
-    private function setTheme($theme_name = null)
+    protected function setTheme($theme_name = null)
     {
         if (is_null($theme_name)) {
             $sc = $this->get('security.context');
@@ -156,6 +156,7 @@ class Controller extends CoreController
             }
         }
 
+        /*
         $path = '@BackendBundle/Webresources/themes/'.$theme_name;
         $realpath = $this->get('kernel')->locateResource($path);
 
@@ -169,6 +170,7 @@ class Controller extends CoreController
         $webresourcer->activateWebresource($webresource->getIdentifier());
 
         $this->container->get('twig.loader')->addPath($realpath . '/twig');
+        */
     }
 
     /**
@@ -237,6 +239,12 @@ class Controller extends CoreController
      */
     protected function runOnce()
     {
+        $stopwatch = $this->container->get('debug.stopwatch', \Symfony\Component\DependencyInjection\ContainerInterface::NULL_ON_INVALID_REFERENCE);
+        $sw        = null;
+        if (!is_null($stopwatch)) {
+            $sw = $stopwatch->start('backend runonce', 'controller');
+        }
+
         $views = $this->get('pivotx.views');
 
         $views->registerView(new \PivotX\Component\Views\ArrayView(
@@ -253,13 +261,14 @@ class Controller extends CoreController
             'Dashboard/getWidgets', 'Backend'
         ));
 
+        /*
         $webresourcer = $this->get('pivotx.webresourcer');
-        $siteoptions  = $this->get('pivotx.siteoptions');
 
         $directories = $siteoptions->getValue('webresources.directory');
         foreach($directories as $directory) {
             $webresourcer->addWebresourcesFromDirectory($directory);
         }
+        */
 
         // set the current theme
         $this->setTheme();
@@ -295,7 +304,15 @@ class Controller extends CoreController
                 $url = $routing->buildUrl('_page/dashboard');
             }
 
+            if (!is_null($sw)) {
+                $sw->stop();
+            }
+
             return $this->redirect($url);
+        }
+
+        if (!is_null($sw)) {
+            $sw->stop();
         }
 
         return parent::runOnce();

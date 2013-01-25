@@ -4,7 +4,7 @@
 
     "files": [
         { "file": "", "copy": "ckeditor" },
-        { "content": "/app_dev.php/pivotx/cwr/ckeditor/ckeditor.js", "type": "text/x-javascript-src", "group": "bodyEnd" }
+        { "content": "%cache_prefix%/ckeditor/ckeditor.js", "type": "text/x-javascript-src", "group": "bodyEnd" }
     ],
 
     "dependencies": [

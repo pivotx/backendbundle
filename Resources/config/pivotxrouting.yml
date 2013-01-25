@@ -70,6 +70,11 @@ routes:
       defaults:     { _controller: "BackendBundle:Siteadmin:showStatus", _role: "ROLE_EDITOR" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
+      pattern:      "_siteadmin/rebuildwebresources"
+      public:       "siteadmin/rebuild-webresources"
+      defaults:     { _controller: "BackendBundle:Siteadmin:rebuildWebresources", _role: "ROLE_EDITOR" }
+
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_table/{entity}"
       public:       "table/{entity}"
       defaults:     { _controller: "BackendBundle:Crud:showTable", _role: "ROLE_EDITOR" }

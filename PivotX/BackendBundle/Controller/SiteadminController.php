@@ -76,5 +76,27 @@ class SiteadminController extends Controller
 
         return $this->render('Entities/entity.html.twig', $context);
     }
+
+    public function rebuildWebresourcesAction()
+    {
+        /*
+        $webresourcer = $this->get('pivotx.webresourcer');
+        $outputter    = $this->get('pivotx.outputter');
+        */
+        $sites = explode("\n", $this->get('pivotx.siteoptions')->getValue('config.sites', '', 'all'));
+        foreach($sites as $site) {
+            $this->buildWebresources($site, false);
+            $this->buildWebresources($site, true);
+
+            /*
+            $webresourcer->finalizeWebresources($outputter, false);
+            $groups = $outputter->finalizeAllOutputs($site);
+            $this->get('pivotx.siteoptions')->set('outputter.groups', json_encode($groups), 'application/json', true, false, $site);
+             */
+        }
+
+        $url = $this->get('pivotx.routing')->buildUrl('_siteadmin/status');
+        return $this->redirect($url);
+    }
 }
 
