@@ -22,7 +22,13 @@
     <dl class="dl-horizontal">
         <dt>Symfony 2</dt>
         <dd>
-            <a class="btn btn-mini" href="{{ ref('_siteadmin/status') }}">Clear caches</a>
+            <div class="btn-group">
+                <a class="btn btn-mini disabled" href="{{ ref('_siteadmin/clearcaches') }}">Clear</a>
+                <a class="btn btn-mini btn-primary" href="{{ ref('_siteadmin/clearcaches/all') }}">all</a>
+                <a class="btn btn-mini" href="{{ ref('_siteadmin/clearcaches/dev') }}">development</a>
+                <a class="btn btn-mini" href="{{ ref('_siteadmin/clearcaches/prod') }}">production</a>
+                <a class="btn btn-mini disabled" href="{{ ref('_siteadmin/clearcaches') }}">caches</a>
+            </div>
         </dd>
         <dt>Webresources</dt>
         <dd>

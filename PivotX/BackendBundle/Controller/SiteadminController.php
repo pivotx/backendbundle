@@ -98,5 +98,47 @@ class SiteadminController extends Controller
         $url = $this->get('pivotx.routing')->buildUrl('_siteadmin/status');
         return $this->redirect($url);
     }
+
+    public function clearCachesAction($name)
+    {
+        $path = $this->get('kernel')->getRootDir().'/cache';
+
+        if (is_null($name) || ($name == 'all')) {
+            // do nothing
+        }
+        else {
+            $path .= '/' . $name;
+        }
+
+        $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
+        foreach($objects as $name => $object){
+            if ($object->getFilename() == '..') {
+                // ignore
+                continue;
+            }
+            if ($object->isDir()) {
+                if (substr($name, -8) == '/cache/.') {
+                    echo "$name ignore dir<br/>\n";
+                    continue;
+                }
+                echo "$name<br/>\n";
+                //rmdir(dirname($name));
+            }
+            else if ($object->isFile()) {
+                if (substr($object->getFilename(), 0, 1) == '.') {
+                    // ignore hidden files
+                    echo "$name ignore file<br/>\n";
+                    continue;
+                }
+                echo "$name<br/>\n";
+                //@unlink($name);
+            }
+        }
+
+        die('-');
+
+        $url = $this->get('pivotx.routing')->buildUrl('_siteadmin/status');
+        return $this->redirect($url);
+    }
 }
 

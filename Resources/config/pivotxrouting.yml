@@ -70,6 +70,13 @@ routes:
       defaults:     { _controller: "BackendBundle:Siteadmin:showStatus", _role: "ROLE_EDITOR" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
+      pattern:      "_siteadmin/clearcaches/{name}"
+      public:       "siteadmin/clear-cache/{name}"
+      defaults:     { _controller: "BackendBundle:Siteadmin:clearCaches", _role: "ROLE_EDITOR" }
+      requirements:
+          name:      "[a-z_]+"
+
+    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_siteadmin/rebuildwebresources"
       public:       "siteadmin/rebuild-webresources"
       defaults:     { _controller: "BackendBundle:Siteadmin:rebuildWebresources", _role: "ROLE_EDITOR" }
