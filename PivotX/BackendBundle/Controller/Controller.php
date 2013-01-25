@@ -135,45 +135,6 @@ class Controller extends CoreController
     }
 
     /**
-     * Set the theme
-     */
-    protected function setTheme($theme_name = null)
-    {
-        if (is_null($theme_name)) {
-            $sc = $this->get('security.context');
-            $tk = $sc->getToken();
-            if (!is_null($tk)) {
-                $ur = $tk->getUser();
-                if (!is_null($ur)) {
-                    $settings = $ur->getSettings();
-                    if (isset($settings['backend.theme_name'])) {
-                        $theme_name = $settings['backend.theme_name'];
-                    }
-                }
-            }
-            if (is_null($theme_name)) {
-                $theme_name = 'backend';
-            }
-        }
-
-        /*
-        $path = '@BackendBundle/Webresources/themes/'.$theme_name;
-        $realpath = $this->get('kernel')->locateResource($path);
-
-        $webresourcer = $this->get('pivotx.webresourcer');
-        $siteoptions  = $this->get('pivotx.siteoptions');
-
-        $webresource = $webresourcer->addWebresource(new DirectoryWebresource($path.'/theme.json'));
-        if ($siteoptions->getValue('themes.debug', false)) {
-            $webresource->allowDebugging();
-        }
-        $webresourcer->activateWebresource($webresource->getIdentifier());
-
-        $this->container->get('twig.loader')->addPath($realpath . '/twig');
-        */
-    }
-
-    /**
      * Get the current site
      */
     protected function getCurrentSite()
@@ -261,17 +222,6 @@ class Controller extends CoreController
             'Dashboard/getWidgets', 'Backend'
         ));
 
-        /*
-        $webresourcer = $this->get('pivotx.webresourcer');
-
-        $directories = $siteoptions->getValue('webresources.directory');
-        foreach($directories as $directory) {
-            $webresourcer->addWebresourcesFromDirectory($directory);
-        }
-        */
-
-        // set the current theme
-        $this->setTheme();
 
         // top menu
         $topmenu = new \PivotX\Component\Lists\RouteItem('dashboard', '_page/dashboard');
