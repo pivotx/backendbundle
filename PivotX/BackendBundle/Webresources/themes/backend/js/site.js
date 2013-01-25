@@ -154,13 +154,17 @@ function siteBuildArray(context_el)
     var setup = {
         site: '',
         domain: '',
+        bundle: '',
+        theme: '',
         targets: [],
         languages: [],
         hosts: {}
     };
 
-    setup.site = $('input[name="site"]', context_el).val().trim();
+    setup.site   = $('input[name="site"]', context_el).val().trim();
     setup.domain = $('input[name="domain"]', context_el).val().trim();
+    setup.bundle = $('select[name="bundle"]', context_el).val().trim();
+    setup.theme  = $('input[name="theme"]', context_el).val().trim();
 
     $('tr.target input:checked', context_el).each(function(){
         var tr_el = $(this).closest('tr');

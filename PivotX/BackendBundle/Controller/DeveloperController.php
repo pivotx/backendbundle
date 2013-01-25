@@ -381,6 +381,20 @@ THEEND;
             $siteoptions->set('routing.routeprefixes', json_encode($routeprefixes), 'application/json', false, false, $site);
 
 
+            // fixing the theme configuration
+
+            $themes_active = false;
+            if (isset($json_data['theme']) && ($json_data['theme'] != '')) {
+                $themes_active = $json_data['theme'];
+            }
+            else if (isset($json_data['bundle']) && ($json_data['bundle'] != '')) {
+                $themes_active = $json_data['bundle'].'/Resources/theme/theme.json';
+            }
+            if ($themes_active !== false) {
+                $siteoptions->set('themes.active', $themes_active, 'text/x-line', true, true, $site);
+            }
+
+
             // check config.sites key
 
             $sites = explode("\n", $siteoptions->getValue('config.sites', '', 'all'));

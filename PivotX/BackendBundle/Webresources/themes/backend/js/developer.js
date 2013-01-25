@@ -29,6 +29,10 @@ function correctInputType(element, kind)
             out_value = out_value.replace(/[^a-zA-Z0-9_.-]+/g, '-');
             break;
 
+        case 'bundle_path':
+            out_value = out_value.replace(/[^a-zA-Z0-9@\/_.-]+/g, '-');
+            break;
+
         default:
             out_value = out_value.replace(/[^a-zA-Z0-9_]+/g, '_');
             break;

@@ -49,6 +49,7 @@ THEEND;
                     'path' => $path,
                     'relpath' => $relpath,
                     'title' => $bundle,
+                    'resourcepath' => '@'.$basename
                 );
             }
         }
