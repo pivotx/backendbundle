@@ -30,8 +30,13 @@ THEEND;
         $this->range_offset = null;
     }
 
-    private function loadBundles($only_src = true)
+    private function loadBundles()
     {
+        $only_src = true;
+        if (isset($this->arguments['all']) && ($this->arguments['all'])) {
+            $only_src = false;
+        }
+
         $data = array();
 
         $bundles = $this->kernel->getContainer()->getParameter('kernel.bundles');

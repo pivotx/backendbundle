@@ -28,12 +28,15 @@
                 <tr>
                     <td class="span5" colspan="2"><label for="site_bundle">Site bundle</label></td>
                     <td class="span7">
-                        {% loadView 'Backend/findBundles' as bundles %}
+                        {% loadView 'Backend/findBundles' as bundles with { all: false } %}
                         <select class="span8" name="bundle" id="site_bundle">
                         {% for bundle in bundles.result %}
                             <option value="{{ bundle.resourcepath }}">{{ bundle.title }}</option>
                         {% endfor %}
                         </select>
+
+                        {# @todo the error should have the same html as in other forms #}
+                        <span class="hide bundle-is-missing">The bundle previously selected is no longer available.</span>
                     </td>
                 </tr>
                 <tr>

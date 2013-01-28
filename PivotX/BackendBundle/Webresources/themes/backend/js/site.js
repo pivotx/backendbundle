@@ -219,6 +219,19 @@ function siteLoadSetup(context_el, setup)
     $('input[name="site"]').val(setup.site);
     $('input[name="domain"]').val(setup.domain);
 
+    var sel_el = $('select[name="bundle"]');
+    $(sel_el).val(setup.bundle);
+
+    if ($(sel_el).val() != setup.bundle) {
+        $(sel_el).closest('td').find('.bundle-is-missing').show();
+
+        $(sel_el).append('<option value="' + setup.bundle + '">Previous value: ' + setup.bundle + '</option>');
+        $(sel_el).val(setup.bundle);
+    }
+    else {
+        $(sel_el).closest('td').find('.bundle-is-missing').hide();
+    }
+
     for(var tidx in setup.targets) {
         var target = setup.targets[tidx];
         siteAddTarget(context_el, true, target.name, target.description);
