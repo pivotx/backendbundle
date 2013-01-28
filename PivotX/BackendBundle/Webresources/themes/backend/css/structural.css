@@ -1,3 +1,7 @@
+html {
+    font-size: 62.5%;
+}
+
 
 html body {
 	background-color: #F5F6F1;
@@ -32,10 +36,12 @@ html body {
 }
 
 
-/* just copied this */
+/* Header -------------------- */
 
-.sidebar-nav {
-    padding: 9px 0;
+.navbar-fixed-top .navbar-inner  {
+    background-image: none;
+    background-color: #fff;
+    border: 0;
 }
 
 
