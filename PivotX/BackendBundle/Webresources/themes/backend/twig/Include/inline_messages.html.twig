@@ -1,0 +1,37 @@
+
+    {% if app.session.hasFlash('error') %}
+        {% set flash_message = app.session.flash('error') %}
+    {#
+    <p class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{ flash_message }}
+    </p>
+    #}
+    <script>
+    jQuery(function(){
+        showNotification({
+            type: 'error',
+            title: 'Error',
+            text: '{{ flash_message }}'
+        });
+    });
+    </script>
+    {% endif %}
+    {% if app.session.hasFlash('notice') %}
+        {% set flash_message = app.session.flash('notice') %}
+    {#
+    <p class="alert">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{ flash_message }}
+    </p>
+    #}
+    <script>
+    jQuery(function(){
+        showNotification({
+            type: 'success',
+            title: 'Success',
+            text: '{{ flash_message }}'
+        });
+    });
+    </script>
+    {% endif %}

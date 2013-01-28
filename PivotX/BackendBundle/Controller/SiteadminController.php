@@ -95,47 +95,114 @@ class SiteadminController extends Controller
              */
         }
 
+        $this->get('session')->setFlash('notice', 'Webresources were rebuild.');
+
         $url = $this->get('pivotx.routing')->buildUrl('_siteadmin/status');
         return $this->redirect($url);
     }
 
-    public function clearCachesAction($name)
+    public function clearCachesAction($target)
     {
         $path = $this->get('kernel')->getRootDir().'/cache';
 
-        if (is_null($name) || ($name == 'all')) {
+        if (is_null($target) || ($target == 'all')) {
             // do nothing
         }
         else {
-            $path .= '/' . $name;
+            $path .= '/' . $target;
         }
 
-        $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
-        foreach($objects as $name => $object){
-            if ($object->getFilename() == '..') {
-                // ignore
-                continue;
-            }
-            if ($object->isDir()) {
-                if (substr($name, -8) == '/cache/.') {
-                    echo "$name ignore dir<br/>\n";
-                    continue;
-                }
-                echo "$name<br/>\n";
-                //rmdir(dirname($name));
-            }
-            else if ($object->isFile()) {
-                if (substr($object->getFilename(), 0, 1) == '.') {
-                    // ignore hidden files
-                    echo "$name ignore file<br/>\n";
-                    continue;
-                }
-                echo "$name<br/>\n";
-                //@unlink($name);
-            }
+        if (!is_dir($path)) {
+            $this->get('session')->setFlash('notice', 'No such cache was available.');
         }
+        else {
+            $failed_files       = array();
+            $failed_directories = array();
+            $failed_unknowns    = array();
 
-        die('-');
+            $file_count = $directory_count = 0;
+
+            $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::CHILD_FIRST);
+            foreach($objects as $name => $object) {
+
+                if ($object->getFilename() == '..') {
+                    // ignore
+                    continue;
+                }
+                if ($object->isDir()) {
+                    if ($name == $path.'/.') {
+                        continue;
+                    }
+                    if (substr($name, -2) == '/.') {
+                        continue;
+                    }
+                    if (@rmdir($name)) {
+                        $directory_count++;
+                    }
+                    else {
+                        $failed_directories[] = $name;
+                    }
+                }
+                else if ($object->isFile()) {
+                    if (substr($object->getFilename(), 0, 1) == '.') {
+                        // ignore hidden files
+                        continue;
+                    }
+                    if (@unlink($name)) {
+                        $file_count++;
+                    }
+                    else {
+                        $failed_files[] = $name;
+                    }
+                }
+                else {
+                    $failed_unknowns[] = $name;
+                }
+            }
+
+            if ((count($failed_directories) > 0) || (count($failed_files) > 0) || (count($failed_unknowns) > 0)) {
+                $this->get('session')->setFlash('error', 'Some cache files were not cleared.');
+
+                $this->get('pivotx.activity')
+                    ->administrativeMessage(
+                        null,
+                        'Failed cleaning cache "<strong>:target</strong>". <strong>:directories</strong> directories, <strong>:files</strong> files and <strong>:unknowns</strong> unknowns were not removed.',
+                        array(
+                            'target' => $target,
+                            'directories' => count($failed_directories),
+                            'files' => count($failed_files),
+                            'unknowns' => count($failed_unknowns)
+                        )
+                    )
+                    ->veryImportant()
+                    ->addContext(array(
+                        'failed' => array(
+                            'directories' => $failed_directories,
+                            'files' => $failed_files,
+                            'unknowns' => $failed_unknowns
+                        )
+                    ))
+                    ->log()
+                    ;
+            }
+            else {
+                $this->get('session')->setFlash('notice', 'Cache was cleared succesfully.');
+            }
+
+            $this->get('pivotx.activity')
+                ->administrativeMessage(
+                    null,
+                    'Cleared cache "<strong>:target</strong>". <strong>:directories</strong> directories and <strong>:files</strong> files were succesfully removed.',
+                    array(
+                        'target' => $target,
+                        'directories' => $directory_count,
+                        'files' => $file_count,
+                    )
+                )
+                ->notImportant()
+                ->log()
+                ;
+        }
 
         $url = $this->get('pivotx.routing')->buildUrl('_siteadmin/status');
         return $this->redirect($url);

@@ -4,22 +4,11 @@
 
     <h1>Entities</h1>
 
-    {% if app.session.hasFlash('error') %}
-    <p class="alert alert-error">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-        {{ app.session.flash('error') }}
-    </p>
-    {% endif %}
-    {% if app.session.hasFlash('notice') %}
-    <p class="alert">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-        {{ app.session.flash('notice') }}
-    </p>
-    {% endif %}
-
     {% if app.session.hasFlash('debug') %}
     <pre>{{ app.session.flash('debug') }}</pre>
     {% endif %}
+
+    {% include 'Include/inline_messages.html.twig' %}
 
     <p>
         On this page you can add, edit and remove entities for your site.

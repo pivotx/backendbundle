@@ -163,6 +163,7 @@ function showNotification(notification)
 {
     notification['animate_speed'] = 'fast';
     notification['sticker'] = false;
+    notification['history'] = false;
 
     $.pnotify(notification);
 }
