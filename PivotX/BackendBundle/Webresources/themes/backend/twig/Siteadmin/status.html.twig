@@ -57,14 +57,14 @@
     <h2>Updates</h2>
 
     <dl class="dl-horizontal">
-        <dt>PivotX</dt>
-        <dd>4.0.0 installed. Up to date.</dd>
-
-        <dt>Symfony</dt>
-        <dd>2.1.4 installed. <span class="label label-warning">2.1.6 available.</span> Minor update.</dd>
-
-        <dt>Twig</dt>
-        <dd>1.11.1 installed. <span class="label label-warning">1.16.1 available.</span> Security update. <span class="label label-important">Update recommended.</span></dd>
+    {% loadView 'Backend/findUpdatableComponents' as components %}
+    {% for component in components.result %}
+        <dt>{{ component.name }}</dt>
+        <dd>
+            <span class="our-version" name="{{ component.component_name }}">{{ component.version }}</span> installed.
+            <span class="new-version"><span class="version"></span> <span class="message">No update information available.</span></span>
+        </dd>
+    {% endfor %}
     </dl>
 
 {% endblock %}

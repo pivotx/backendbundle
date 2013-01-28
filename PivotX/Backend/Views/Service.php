@@ -68,6 +68,10 @@ class Service
         $this->pivotx_views->registerView($view);
         unset($view);
 
+        $view = new findUpdatableComponents($this->kernel, 'Backend/findUpdatableComponents');
+        $this->pivotx_views->registerView($view);
+        unset($view);
+
 
         $_sites = explode("\n", $this->siteoptions_service->getValue('config.sites', '', 'all'));
         $sites  = array();

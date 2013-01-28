@@ -7,6 +7,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class BackendBundle extends Bundle
 {
+    const VERSION = '4.0.0';
+
     public function boot()
     {
         try {
