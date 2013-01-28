@@ -286,4 +286,11 @@ $(document).ready(function(){
                 break;
         }
     });
+
+    setTimeout(function(){
+        if ($('.sf-toolbar').is('*')) {
+            $('.navbar-fixed-bottom .navbar-inner').addClass('symfony-debug');
+        }
+    },
+    250);
 });

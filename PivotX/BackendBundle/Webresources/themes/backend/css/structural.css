@@ -46,7 +46,7 @@ html body {
 
 
 /* extra big bottom navbar otherwise our symfony debug bar overrides it */
-.navbar-fixed-bottom .navbar-inner {
+.navbar-fixed-bottom .navbar-inner.symfony-debug {
     min-height: 80px;
 }
 
