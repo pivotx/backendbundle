@@ -21,8 +21,11 @@ class Documentation extends Item
         $this->setAttribute('icon', 'icon-book');
         $this->setRole('ROLE_EDITOR');
 
+        $auto_order_number = 1000;
+
         $directory = self::getPath();
         $files     = scandir($directory);
+        $pages     = array();
         foreach($files as $filename) {
             $file = $directory . '/' . $filename;
 
@@ -32,9 +35,26 @@ class Documentation extends Item
                 $title    = ucfirst(str_replace('_', ' ', $path_parts['filename']));
                 $basename = $path_parts['filename'];
 
-                $this->addItem(new RouteItem($title, '_documentation/'.$basename));
+                $order_number = $auto_order_number++;
+
+                $head_contents = file_get_contents($file, false, null, 0, 1024);
+                if (preg_match('|<!-- 0*([0-9]+) (.+)|', $head_contents, $match)) {
+                    $order_number = $match[1];
+                    $title        = trim($match[2]);
+                }
+
+                $pages[$order_number] = array($title, $basename);
 
             }
+        }
+
+        ksort($pages, SORT_NUMERIC);
+
+        foreach($pages as $number => $page) {
+            $title    = $page[0];
+            $basename = $page[1];
+
+            $this->addItem(new RouteItem($title, '_documentation/'.$basename));
         }
     }
 }
