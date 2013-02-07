@@ -10,9 +10,6 @@
 
         <!-- formats -->
         <parameter key="pivotx.backend.formats.class">PivotX\Backend\Formats\Service</parameter>
-
-        <!-- pivotx.crud -->
-        <parameter key="pivotx.crud.class">PivotX\Backend\Crud\Service</parameter>
     </parameters>
 
     <services>
@@ -26,9 +23,6 @@
 
         <service id="pivotx.backend.formats" class="%pivotx.backend.formats.class%" public="true">
             <argument type="service" id="pivotx.formats" />
-        </service>
-
-        <service id="pivotx.crud.event_listener" class="%pivotx.crud.class%" public="true">
         </service>
 
         <service id="form.type.backend_file" class="PivotX\Backend\Component\Form\Type\BackendFile">

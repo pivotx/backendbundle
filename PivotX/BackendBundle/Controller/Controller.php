@@ -93,6 +93,8 @@ class Controller extends CoreController
         $messages = array();
 
         $context['backend'] = array(
+            'core_version' => \PivotX\CoreBundle\CoreBundle::VERSION,
+            'backend_version' => \PivotX\BackendBundle\BackendBundle::VERSION,
             'security' => $this->checkLogin($this->getRequest()),
             'messages' => false
         );
