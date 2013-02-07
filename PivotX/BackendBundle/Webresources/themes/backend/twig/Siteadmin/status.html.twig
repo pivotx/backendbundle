@@ -25,11 +25,37 @@
         <dt>Symfony 2</dt>
         <dd>
             <div class="btn-group">
-                <a class="btn btn-mini disabled" href="{{ ref('_siteadmin/clearcaches') }}">Clear</a>
-                <a class="btn btn-mini btn-primary" href="{{ ref('_siteadmin/clearcaches/all') }}">all</a>
-                <a class="btn btn-mini" href="{{ ref('_siteadmin/clearcaches/dev') }}">development</a>
-                <a class="btn btn-mini" href="{{ ref('_siteadmin/clearcaches/prod') }}">production</a>
-                <a class="btn btn-mini disabled" href="{{ ref('_siteadmin/clearcaches') }}">caches</a>
+                Clear cache:
+
+                <div class="btn-group">
+                {% if app.session.hasFlash('previous_flush') %}
+                    {% set previous_flush = app.session.flash('previous_flush') %}
+                    {{ previous_flush }}
+                    <a class="btn btn-mini" href="{{ ref(['_siteadmin/clearcaches/',previous_flush]|join) }}">
+                        {% if previous_flush == 'prod' %}
+                            Clear production cache
+                        {% elseif previous_flush == 'dev' %}
+                            Clear development cache
+                        {% elseif previous_flush == 'all' %}
+                            Clear all caches
+                        {% else %}
+                            Clear {{ previous_flush }} cache
+                        {% endif %}
+                    </a>
+                {% else %}
+                    <a class="btn btn-mini" href="{{ ref('_siteadmin/clearcaches/prod') }}">
+                        Clear production cache
+                    </a>
+                {% endif %}
+                    <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ ref('_siteadmin/clearcaches/all') }}">Clear all caches</a></li>
+                        <li><a href="{{ ref('_siteadmin/clearcaches/dev') }}">Clear development cache</a></li>
+                        <li><a href="{{ ref('_siteadmin/clearcaches/prod') }}">Clear production cache</a></li>
+                    </ul>
+                </div>
             </div>
         </dd>
         <dt>Webresources</dt>

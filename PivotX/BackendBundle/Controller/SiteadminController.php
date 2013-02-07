@@ -189,6 +189,8 @@ class SiteadminController extends Controller
                 $this->get('session')->setFlash('notice', 'Cache was cleared succesfully.');
             }
 
+            $this->get('session')->setFlash('previous_flush', $target);
+
             $this->get('pivotx.activity')
                 ->administrativeMessage(
                     null,
