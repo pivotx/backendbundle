@@ -1,6 +1,6 @@
 var site_host_cache = {};
 
-function siteAddTarget(context_el, enabled, name, description)
+function siteAddTarget(context_el, enabled, name, description, bundle, theme)
 {
     var no_of_targets = $('tr.target', context_el).length;
     var target_number = no_of_targets + 1;
@@ -18,6 +18,22 @@ function siteAddTarget(context_el, enabled, name, description)
     $('tr.target-'+target_number+' td.name input', context_el).attr('name', 'target_name_' + target_number);
     $('tr.target-'+target_number+' td.description input', context_el).val(description);
     $('tr.target-'+target_number+' td.description input', context_el).attr('name', 'target_description_' + target_number);
+
+    var sel_el = $('tr.target-'+target_number+' td.bundle select', context_el);
+    $(sel_el).val(bundle);
+    if ((bundle !== false) && ($(sel_el).val() != bundle)) {
+        $(sel_el).closest('td').find('.bundle-is-missing').show();
+
+        $(sel_el).append('<option value="' + bundle + '">Previous value: ' + bundle + '</option>');
+        $(sel_el).val(bundle);
+    }
+    else {
+        $(sel_el).closest('td').find('.bundle-is-missing').hide();
+    }
+    $('tr.target-'+target_number+' td.bundle select', context_el).attr('name', 'target_bundle_' + target_number);
+
+    $('tr.target-'+target_number+' td.theme input', context_el).val(theme);
+    $('tr.target-'+target_number+' td.theme input', context_el).attr('name', 'target_theme_' + target_number);
 
     $('tr.target-'+target_number+' td.name input', context_el).focus();
 
@@ -154,8 +170,6 @@ function siteBuildArray(context_el)
     var setup = {
         site: '',
         domain: '',
-        bundle: '',
-        theme: '',
         targets: [],
         languages: [],
         hosts: {}
@@ -163,14 +177,15 @@ function siteBuildArray(context_el)
 
     setup.site   = $('input[name="site"]', context_el).val().trim();
     setup.domain = $('input[name="domain"]', context_el).val().trim();
-    setup.bundle = $('select[name="bundle"]', context_el).val().trim();
-    setup.theme  = $('input[name="theme"]', context_el).val().trim();
 
     $('tr.target input:checked', context_el).each(function(){
         var tr_el = $(this).closest('tr');
         var target = {};
-        target.name = $('td.name input', tr_el).val().trim();
+        target.name        = $('td.name input', tr_el).val().trim();
         target.description = $('td.description input', tr_el).val().trim();
+        target.bundle      = $('td.bundle select', tr_el).val().trim();
+        target.theme       = $('td.theme input', tr_el).val().trim();
+        
         setup.targets.push(target);
     });
     $('tr.language input:checked', context_el).each(function(){
@@ -219,22 +234,9 @@ function siteLoadSetup(context_el, setup)
     $('input[name="site"]').val(setup.site);
     $('input[name="domain"]').val(setup.domain);
 
-    var sel_el = $('select[name="bundle"]');
-    $(sel_el).val(setup.bundle);
-
-    if ($(sel_el).val() != setup.bundle) {
-        $(sel_el).closest('td').find('.bundle-is-missing').show();
-
-        $(sel_el).append('<option value="' + setup.bundle + '">Previous value: ' + setup.bundle + '</option>');
-        $(sel_el).val(setup.bundle);
-    }
-    else {
-        $(sel_el).closest('td').find('.bundle-is-missing').hide();
-    }
-
     for(var tidx in setup.targets) {
         var target = setup.targets[tidx];
-        siteAddTarget(context_el, true, target.name, target.description);
+        siteAddTarget(context_el, true, target.name, target.description, target.bundle, target.theme);
         $('a.add-target[data-name="'+target.name+'"]', context_el).closest('span').hide();
     }
     for(var lidx in setup.languages) {
@@ -266,7 +268,7 @@ $(function(){
             var name = $(this).attr('data-name');
             var description = $(this).attr('data-description');
 
-            siteAddTarget(form_el, (name != ''), name, description);
+            siteAddTarget(form_el, (name != ''), name, description, false, '');
 
             if (name != '') {
                 all.hide();

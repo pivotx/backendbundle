@@ -13,20 +13,21 @@
         <table class="table table-condensed">
             <tbody>
                 <tr>
-                    <th class="span12" colspan="3">
+                    <th class="span12" colspan="5">
                         Site
                     </th>
                 </tr>
                 <tr>
                     <td class="span5" colspan="2"><label for="siteid">Site identifier</label></td>
-                    <td class="span7"><input type="text" id="siteid" class="span8 correct-type" data-type="identifier" name="site" placeholder="main-site" /></td>
+                    <td class="span7" colspan="3"><input type="text" id="siteid" class="span8 correct-type" data-type="identifier" name="site" placeholder="main-site" /></td>
                 </tr>
                 <tr>
                     <td class="span5" colspan="2"><label for="primary_domain">Primary domain</label></td>
-                    <td class="span7"><input type="text" id="primary_domain" class="span8 correct-type host" data-type="host" name="domain" value="" placeholder="any" /></td>
+                    <td class="span7" colspan="3"><input type="text" id="primary_domain" class="span8 correct-type host" data-type="host" name="domain" value="" placeholder="any" /></td>
                 </tr>
+                {#
                 <tr>
-                    <td class="span5" colspan="2"><label for="site_bundle">Site bundle</label></td>
+                    <td class="span5" colspan="4"><label for="site_bundle">Site bundle</label></td>
                     <td class="span7">
                         {% loadView 'Backend/findBundles' as bundles with { all: false } %}
                         <select class="span8" name="bundle" id="site_bundle">
@@ -34,29 +35,45 @@
                             <option value="{{ bundle.resourcepath }}">{{ bundle.title }}</option>
                         {% endfor %}
                         </select>
+#}
 
                         {# @todo the error should have the same html as in other forms #}
+                        {#
                         <span class="hide bundle-is-missing">The bundle previously selected is no longer available.</span>
                     </td>
                 </tr>
                 <tr>
-                    <td class="span5" colspan="2"><label for="site_theme">Site theme</label></td>
+                    <td class="span5" colspan="4"><label for="site_theme">Site theme</label></td>
                     <td class="span7"><input type="text" id="site_theme" class="span8 correct-type host" data-type="bundle_path" name="theme" value="" placeholder="Resources/theme/theme.json" /></td>
                 </tr>
+#}
 
                 <tr>
-                    <th class="span12" colspan="3">
+                    <th class="span12" colspan="5">
                         Theme / URL schemes
                     </th>
                 </tr>
                 <tr class="hide target-template">
                     <td class="span3 checkbox number"><span></span><input type="checkbox" name="" /></td>
                     <td class="span2 name"><input class="span12 correct-type" data-type="identifier" type="text" name="" value="" /></td>
-                    <td class="span7 description"><input class="span8" type="text" name="" value="" /></td>
+                    <td class="span2 description"><input class="span12" type="text" name="" value="" /></td>
+                    <td class="span2 bundle">
+                        {% loadView 'Backend/findBundles' as bundles with { all: false } %}
+                        <select class="span12" name="bundle" id="site_bundle">
+                        {% for bundle in bundles.result %}
+                            <option value="{{ bundle.resourcepath }}">{{ bundle.title }}</option>
+                        {% endfor %}
+                        </select>
+
+                        {# @todo the error should have the same html as in other forms #}
+                        <span class="hide bundle-is-missing">The previously selected bundle is no longer available.</span>
+                    </td>
+                    <td class="span3 theme"><input type="text" id="site_theme" class="span12 correct-type host" data-type="bundle_path" name="theme" value="" placeholder="Resources/theme/theme.json" /></td>
+                </tr>
                 </tr>
                 <tr class="add-target">
                     <td></td>
-                    <td colspan="2">
+                    <td colspan="4">
                         <span>Add <a href="#" class="add-target" data-name="" data-description="">new</a> target</span>
                         <span>/ Add <a href="#" class="add-target" data-name="responsive" data-description="Responsive version">responsive</a></span>
                         <span>/ Add <a href="#" class="add-target" data-name="desktop" data-description="Desktop version">desktop</a></span>
@@ -65,17 +82,18 @@
                 </tr>
 
                 <tr>
-                    <th class="span12" colspan="3">
+                    <th class="span12" colspan="5">
                         Languages
                     </th>
                 </tr>
                 <tr class="language-template hide">
                     <td class="span3 checkbox number"><span></span><input type="checkbox" name="" /></td>
                     <td class="span2 name"><input class="span12 correct-type" data-type="identifier" type="text" name="" value="" /></td>
-                    <td class="span7 locale_description">
-                        <input class="span3 locale" type="text" name="" value="" />
-                        &#160;
-                        <input class="span5 description" type="text" name="" value="" />
+                    <td class="span2 locale">
+                        <input class="span12 locale" type="text" name="" value="" />
+                    </td>
+                    <td class="span5 description">
+                        <input class="span4 description" type="text" name="" value="" />
                     </td>
                 </tr>
                 <!--

@@ -300,7 +300,7 @@ THEEND;
         return $this->render('Developer/formats.html.twig', $context);
     }
 
-    public function showLoadSiteAction(Request $request)
+    public function loadSiteAction(Request $request)
     {
         $siteoptions = $this->get('pivotx.siteoptions');
 
@@ -321,7 +321,7 @@ THEEND;
         return new Response($content, 200);
     }
 
-    public function showMutateSiteAction(Request $request)
+    public function mutateSiteAction(Request $request)
     {
         $data = array(
             'ok' => false
@@ -379,20 +379,6 @@ THEEND;
                 }
             }
             $siteoptions->set('routing.routeprefixes', json_encode($routeprefixes), 'application/json', false, false, $site);
-
-
-            // fixing the theme configuration
-
-            $themes_active = false;
-            if (isset($json_data['theme']) && ($json_data['theme'] != '')) {
-                $themes_active = $json_data['theme'];
-            }
-            else if (isset($json_data['bundle']) && ($json_data['bundle'] != '')) {
-                $themes_active = $json_data['bundle'].'/Resources/theme/theme.json';
-            }
-            if ($themes_active !== false) {
-                $siteoptions->set('themes.active', $themes_active, 'text/x-line', true, true, $site);
-            }
 
 
             // check config.sites key

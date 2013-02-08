@@ -85,8 +85,22 @@ class SiteadminController extends Controller
         */
         $sites = explode("\n", $this->get('pivotx.siteoptions')->getValue('config.sites', '', 'all'));
         foreach($sites as $site) {
-            $this->buildWebresources($site, false);
-            $this->buildWebresources($site, true);
+            $targets = array();
+            if ($site == 'pivotx-backend') {
+                $targets[] = 'desktop'; // @todo ugly exception should be removed
+            }
+            else {
+                $_targets = $this->get('pivotx.siteoptions')->getValue('routing.targets', array(), $site);
+                $targets  = array_map(function($_target){
+                        return $_target['name'];
+                    },
+                    $_targets);
+            }
+
+            foreach($targets as $target) {
+                $this->buildWebresources($site, $target, false);
+                $this->buildWebresources($site, $target, true);
+            }
 
             /*
             $webresourcer->finalizeWebresources($outputter, false);

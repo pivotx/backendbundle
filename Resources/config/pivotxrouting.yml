@@ -179,12 +179,12 @@ routes:
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_developer/site/mutate"
       public:       "site/mutate"
-      defaults:     { _controller: "BackendBundle:Developer:showMutateSite", _role: "ROLE_ADMIN" }
+      defaults:     { _controller: "BackendBundle:Developer:mutateSite", _role: "ROLE_ADMIN" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_developer/site/load"
       public:       "site/load"
-      defaults:     { _controller: "BackendBundle:Developer:showLoadSite", _role: "ROLE_ADMIN" }
+      defaults:     { _controller: "BackendBundle:Developer:loadSite", _role: "ROLE_ADMIN" }
 
     - filter:       { target: false, site: "pivotx-backend", language: false }
       pattern:      "_documentation/{name}"

@@ -478,7 +478,7 @@ class CrudController extends Controller
             }
         }
 
-        if ($view->hasMethodArgument('site')) {
+        if (method_exists($view, 'hasMethodArgument') && ($view->hasMethodArgument('site'))) {
             // this should only be true for PivotX-only CRUD editors
 
             if ($this->get('security.context')->isGranted('ROLE_DEVELOPER')) {
