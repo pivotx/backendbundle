@@ -68,7 +68,7 @@
                         {% if field.nullable %} / nullable{% endif %}
                         {% if field.unique %} / unique{% endif %}
                         {% if field.arguments is defined %} / <span class="field-arguments">{{ field.arguments }}</span>{% endif %}
-                        {% if field.relation is defined %} / <span class="field-relation">{{ field.relation }}</span>{% endif %}
+                        {% if field.relation is defined %} / <span class="field-relation">{{ field.relation.type }}</span>{% endif %}
                     )</small>
                 </td>
             {% if not entity.fixed %}

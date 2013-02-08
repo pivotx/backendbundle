@@ -38,12 +38,14 @@ table.crud-translationtext th.column-text4 {
         {% for loopvar in ttexts.htmliterator({'groupingby':'sitename,groupname'}) %}
             {% if loopvar.item_first %}
                 {% set ttext = loopvar.value %}
-                {% set value = [ ttext.sitename,'/',ttext.groupname]| join %}
+                {% set value = [ ttext.sitename,'/',ttext.groupname]|join %}
                 {% set selected = '' %}
                 {% if value == view.queryarguments['filter-siteandgroup']|default('') %}
                     {% set selected = ' selected="selected"' %}
                 {% endif %}
+                {% if ttext.sitename == backend.current_site %}
                 <option value="{{ value }}"{{ selected }}>{{ ttext.sitename }} / {{ ttext.groupname }}</option>
+                {% endif %}
             {% endif %}
         {% endfor %}
         </select>

@@ -188,7 +188,7 @@ class SiteadminController extends Controller
                             'unknowns' => count($failed_unknowns)
                         )
                     )
-                    ->veryImportant()
+                    ->notImportant()
                     ->addContext(array(
                         'failed' => array(
                             'directories' => $failed_directories,
@@ -222,6 +222,19 @@ class SiteadminController extends Controller
 
         $url = $this->get('pivotx.routing')->buildUrl('_siteadmin/status');
         return $this->redirect($url);
+    }
+
+    /**
+     */
+    public function trimActivitiesAction($policy = 'normal')
+    {
+    }
+
+    /**
+     * Special Loggable-feature trimmer
+     */
+    public function trimLoggableActivitiesAction()
+    {
     }
 }
 

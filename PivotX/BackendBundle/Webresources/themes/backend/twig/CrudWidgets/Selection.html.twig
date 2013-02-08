@@ -1,3 +1,6 @@
+        {% set plural_title = translate([crud.entity.name,'.common.plural_title']) %}
+        {% set singular_title = translate([crud.entity.name,'.common.singular_title']) %}
+
         {# old stuff (crud-selection-summary) #}
         <div class="crud-hide crud-selection-summary-{{ crud.htmlid }}">
         </div>
@@ -8,15 +11,15 @@
                 <p>
                     {% spaceless %}
                     <span class="triselect visible-selection">
-                        <span class="tri-0">You have <span class="count">no</span> selected items</span>
-                        <span class="tri-1">You have <span class="badge badge-info count">1</span> selected item</span>
-                        <span class="tri-x">You have <span class="badge badge-info count">-</span> selected items</span>
+                        <span class="tri-0">{{ translate('table.widget.selected-count-0', { ':count': 0, ':item': singular_title, ':items': plural_title }) }}</span>
+                        <span class="tri-1">{{ translate('table.widget.selected-count-1', { ':count': 1, ':item': singular_title, ':items': plural_title }) }}</span>
+                        <span class="tri-x">{{ translate('table.widget.selected-count-n', { ':count': '-', ':item': singular_title, ':items': plural_title }) }}</span>
                     </span>
                     <span class="invisible-selection crud-hide">
                         <span class="triselect">
-                            <span class="tri-0"></span>
-                            <span class="tri-1">, with <span class="badge count">1</span> item hidden</span>
-                            <span class="tri-x">, with <span class="badge count">-</span> items hidden</span>
+                            <span class="tri-0">{{ translate('table.widget.invisible-count-0', { ':count': 0, ':item': singular_title, ':items': plural_title }) }}</span>
+                            <span class="tri-1">{{ translate('table.widget.invisible-count-1', { ':count': 1, ':item': singular_title, ':items': plural_title }) }}</span>
+                            <span class="tri-x">{{ translate('table.widget.invisible-count-n', { ':count': '-', ':item': singular_title, ':items': plural_title }) }}</span>
                         </span>
                     </span>.
                     {% endspaceless %}

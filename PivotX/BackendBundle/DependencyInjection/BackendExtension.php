@@ -23,5 +23,7 @@ class BackendExtension extends Extension
         //$loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader = new XmlFileLoader($container, new FileLocator(dirname(dirname(dirname(__DIR__))).'/Resources/config'));
         $loader->load('services.xml');
+
+        $container->setParameter('twig.form.resources', array('Form/form_div_layout.html.twig'));
     }
 }

@@ -36,6 +36,13 @@ class AutoFormat extends AbstractFormat
                     return strftime($fmt, $in->getTimestamp());
                     break;
 
+                case 'Doctrine\ORM\PersistentCollection':
+                    if (count($in) == 0) {
+                        return '#0';
+                    }
+                    return '#'.count($in);
+                    break;
+
                 default:
                     return 'object class:'.get_class($in);
             }

@@ -132,8 +132,6 @@ class CrudController extends Controller
                     $all_mappings[$mapname] = $mapping;
                 }
 
-                //echo '<pre>'; var_dump($all_mappings); echo '</pre>';
-
                 foreach($all_mappings as $mapname => $mapping) {
                     if (isset($mapping['id']) && ($mapping['id'] === true)) {
                         // always ignore id field
