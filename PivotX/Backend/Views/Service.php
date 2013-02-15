@@ -48,6 +48,10 @@ class Service
         $this->pivotx_views->registerView($view);
         unset($view);
 
+        $view = new findEntities2($this->kernel, $this->doctrine_registry, $this->siteoptions_service, 'Backend/findEntities2');
+        $this->pivotx_views->registerView($view);
+        unset($view);
+
         $suggestions = new \PivotX\Doctrine\Generator\Suggestions();
         $types = $suggestions->getFieldTypes();
         $view = new ArrayView($types, 'Backend/findEntityFieldTypes', 'PivotX/Backend', 'Return all the entity field types', array('returnAll', 'Backend'));

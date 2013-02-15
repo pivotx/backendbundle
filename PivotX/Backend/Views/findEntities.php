@@ -178,7 +178,7 @@ THEEND;
                     $field['fixed']   = true;
                 }
 
-                $twigfield = $suggestions->getTwigFieldFromType($fieldconfig['type']);
+                $twigfield = $suggestions->getTwigFieldFromType($fieldconfig['type'], $field);
                 foreach($twigfield as $k => $v) {
                     $field[$k] = $v;
                 }
@@ -233,7 +233,7 @@ THEEND;
             $field['type']     = $fieldconfig['type'];
             $field['editor']   = 'text';
 
-            $field['type_descriptipon'] = $fieldconfig['type'];
+            $field['type_description'] = $fieldconfig['type'];
 
             $field['nullable'] = $fieldconfig['nullable'];
             $field['unique']   = $fieldconfig['unique'];

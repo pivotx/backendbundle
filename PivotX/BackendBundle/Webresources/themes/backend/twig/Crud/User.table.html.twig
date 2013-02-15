@@ -66,10 +66,10 @@ table.crud-user th.column-level {
 
                 <div class="btn-toolbar on-row-hover">
                     <div class="btn-group">
-                        {% if is_granted(crud.entity.roles.update) %}
+                        {% if is_granted(crud.entity.getRole('update')) %}
                         <a class="btn btn-mini crud-button-link" data-loading-text="Starting edit&hellip;" href="{{ ref(['_table/',crud.entity.name,'/',item.id],view.queryarguments) }}"><i class="icon-pencil"></i> {{ translate('entity.button.edit') }}</a>
                         {% endif %}
-                        {% if is_granted(crud.entity.roles.delete) %}
+                        {% if is_granted(crud.entity.getRole('delete')) %}
                         <a class="btn btn-mini btn-danger crud-button-confirm" data-modal-text-selector=".text-delete-{{ item.id }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity.name,'/',item.id],view.queryarguments({'action':'delete'})) }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
                         {% endif %}
                     </div>

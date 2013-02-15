@@ -34,7 +34,7 @@ class EntitiesController extends Controller
 
         $views = $this->get('pivotx.views');
 
-        $view = $views->findView('Backend/findEntities');
+        $view = $views->findView('Backend/findEntities2');
         if (is_null($view)) {
             return null;
         }
@@ -42,6 +42,14 @@ class EntitiesController extends Controller
         $view->setArguments(array('verbose' => false, 'name' => $name));
 
         return $view->getValue();
+    }
+
+    private function saveEntity2($entity)
+    {
+        $json = json_encode($entity->exportPivotConfig());
+
+        $siteoptions = $this->get('pivotx.siteoptions');
+        $siteoptions->set('config.entities.'.$entity->getInternalName(), $json, 'application/json', false, false, 'all');
     }
 
     private function saveEntity($entity)
@@ -87,20 +95,24 @@ class EntitiesController extends Controller
         if ($orig == '') {
             // new field
 
-            $field = array(
-                'name' => $name,
-                'type' => $type,
-                'created' => false
-            );
+            $field = new \PivotX\Doctrine\Generator\FieldRepresentation($name);
+
+            $field->setState('new');
+            $field->setPivotXType($type);
+
+            if (isset($definition['orm'])) {
+            }
+
             if ($field_arg != '') {
-                $field['arguments'] = $field_arg;
+                $field->setArguments($field_arg);
             }
             if ($field_rel != '') {
-                $field['relation'] = $field_rel;
+                $field->setTargetEntity($field_rel);
             }
-            $entity['fields'][] = $field;
 
-            $this->get('session')->setFlash('notice', 'New field "'.$name.'" for entity "'.$entity['name'].'" has been added.');
+            $entity->addField($field);
+
+            $this->get('session')->setFlash('notice', 'New field "'.$name.'" for entity "'.$entity->getName().'" has been added.');
         }
         else {
             // edit field
@@ -115,10 +127,10 @@ class EntitiesController extends Controller
                     $field['name'] = $name;
                     $field['type'] = $type;
                     if ($field_arg != '') {
-                        $field['arguments'] = $field_arg;
+                        $field->setArguments($field_arg);
                     }
                     if ($field_rel != '') {
-                        $field['relation'] = $field_rel;
+                        $field->setTargetEntity($field_rel);
                     }
                 }
             }
@@ -126,7 +138,7 @@ class EntitiesController extends Controller
             $this->get('session')->setFlash('notice', 'Field "'.$orig.'" for entity "'.$entity['name'].'" has been edited.');
         }
 
-        $this->saveEntity($entity);
+        $this->saveEntity2($entity);
 
         //$this->get('session')->setFlash('debug', var_export($entity, true));
 
@@ -148,25 +160,15 @@ class EntitiesController extends Controller
             return false;
         }
 
-        $idx = false;
-        for($i=0; $i < count($entity['fields']); $i++) {
-            if ($entity['fields'][$i]['name'] == $name) {
-                $idx = $i;
-                break;
-            }
-        }
+        if ($entity->deleteField($name)) {
+            $this->get('session')->setFlash('notice', 'Field "'.$name.'" for entity "'.$entity->getName().'" has been deleted.');
 
-        if ($idx !== false) {
-            array_splice($entity['fields'], $idx, 1);
-
-            $this->get('session')->setFlash('notice', 'Field "'.$name.'" for entity "'.$entity['name'].'" has been deleted.');
-
-            $this->saveEntity($entity);
+            $this->saveEntity2($entity);
 
             return true;
         }
         else {
-            $this->get('session')->setFlash('notice', 'Field "'.$name.'" for entity "'.$entity['name'].'" could not been deleted (it was not found).');
+            $this->get('session')->setFlash('notice', 'Field "'.$name.'" for entity "'.$entity->getName().'" could not been deleted (it was not found).');
         }
 
         return false;
@@ -270,18 +272,12 @@ class EntitiesController extends Controller
         $routing_generator = new \PivotX\Doctrine\Generator\Routing($this->get('pivotx.siteoptions'), $this->get('pivotx.translations'));
         $sites = $routing_generator->getSites();
         foreach($sites as $site) {
-            $suggestions->setTranslationsForNewEntity($this->get('pivotx.translations'), $site, strtolower($entity['name']));
+            $suggestions->setTranslationsForNewEntity($this->get('pivotx.translations'), $site, $entity->getInternalName());
         }
 
         $this->get('session')->setFlash('notice', 'Entity "'.$name.'" has been added.');
 
-        $this->saveEntity($entity);
-
-        $siteoptions = $this->get('pivotx.siteoptions');
-        $siteoption = $siteoptions->getSiteOption('config.entities', 'all');
-        $entities   = $siteoption->getUnpackedValue();
-        $entities[] = $entity['name'];
-        $siteoption->setUnpackedValue($entities);
+        $this->saveEntity2($entity);
 
         return $name;
     }
@@ -295,10 +291,9 @@ class EntitiesController extends Controller
             return false;
         }
 
-        $entity['delete'] = true;
-        $entity['fields'] = array();
+        $entity->setState('deleted');
 
-        $this->saveEntity($entity);
+        $this->saveEntity2($entity);
 
         return false;
     }
@@ -312,26 +307,9 @@ class EntitiesController extends Controller
             return false;
         }
 
-        $field_order = $arguments->get('order', array());
-        $old_fields  = $entity['fields'];
-        $new_fields  = array();
-        foreach($field_order as $field) {
-            $idx = false;
-            for($i=0; $i < count($old_fields); $i++) {
-                if ($old_fields[$i]['name'] == $field) {
-                    $idx = $i;
-                    break;
-                }
-            }
-            if ($idx !== false) {
-                $new_fields[] = $old_fields[$idx];
-                array_splice($old_fields, $idx, 1);
-            }
-        }
+        $entity->reorderFields($arguments->get('order', array()));
 
-        $entity['fields'] = array_merge($new_fields, $old_fields);
-
-        $this->saveEntity($entity);
+        $this->saveEntity2($entity);
 
         return false;
     }
@@ -346,11 +324,12 @@ class EntitiesController extends Controller
         }
 
         $crud_fields = explode(',', $arguments->get('crud'));
-        foreach($entity['fields'] as &$field) {
-            $field['in_crud'] = in_array($field['name'], $crud_fields);
+        $fields = $entity->getFields();
+        foreach($fields as &$field) {
+            $field->setInCrud(in_array($field->getName(), $crud_fields));
         }
 
-        $this->saveEntity($entity);
+        $this->saveEntity2($entity);
 
         return false;
     }
@@ -440,7 +419,7 @@ class EntitiesController extends Controller
             'plural_slug' => 'plural slug',
         );
 
-        $entity_name = strtolower($entity['name']);
+        $entity_name = $entity->getInternalName();
 
         $default_data = array();
 
@@ -505,12 +484,12 @@ class EntitiesController extends Controller
                     $translations->setTexts($entity_name, 'common.'.$k, $site, null, $texts, TranslationText::STATE_VALID);
                 }
 
-                $routing_generator->updateRoutes($entity['name']);
+                $routing_generator->updateRoutes($entity_name);
                 $site_routing = new \PivotX\Component\Siteoptions\Routing($this->get('pivotx.siteoptions'));
                 $site_routing->compileSiteRoutes($site);
             }
 
-            $this->saveEntity($entity);
+            $this->saveEntity2($entity);
 
             return false;
         }
@@ -524,10 +503,17 @@ class EntitiesController extends Controller
 
         $entity_name = $this->getRequest()->attributes->get('entity');
 
-        $view = $this->get('pivotx.views')->findView('Backend/findEntities');
+        $view = $this->get('pivotx.views')->findView('Backend/findEntities2');
         $view->setArguments(array('name'=>$entity_name));
 
         $entity = $view->getValue();
+
+        if (is_null($entity)) {
+            $this->get('session')->setFlash('error', 'Entity could not be found.');
+
+            $url = $this->get('pivotx.routing')->buildUrl('_entities/all');
+            return $this->redirect($url);
+        }
 
         if (($form = $this->handleEntityForm($request, $entity)) === false) {
             // form submission has been handled

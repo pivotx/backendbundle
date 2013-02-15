@@ -6,6 +6,8 @@
     <dl>
         <dt>Name</dt>
         <dd>{{ entity.name }}</dd>
+        <dt>Managed</dt>
+        <dd>{{ translate(['entities.managed.',entity.managed]|join) }}</dd>
     {% if entity.bundle %}
         <dt>Bundle</dt>
         <dd>{{ entity.bundle }}</dd>
@@ -18,12 +20,12 @@
     <table class="siteadmin siteadmin-sortable table table-striped table-bordered" data-entity="{{ entity.name }}">
         <thead>
             <tr>
-            {% if not entity.fixed %}
+            {% if entity.managed != 'ignore' %}
                 <th class="sort-handle"></th>
             {% endif %}
                 <th>name</th>
                 <th>definition</th>
-            {% if not entity.fixed %}
+            {% if entity.managed != 'ignore' %}
                 <th class="crud-checkbox">
                     in CRUD table
                 </th>
@@ -33,35 +35,34 @@
         <tbody data-action="{{ ref('_entities/all/mutate') }}" data-entity="{{ entity.name }}">
         {% for field in entity.fields %}
             <tr data-field="order_{{ field.name }}">
-            {% if not entity.fixed %}
+            {% if entity.managed != 'ignore' %}
                 <td class="sort-handle">
                     <i class="icon-align-justify"></i>
                 </td>
             {% endif %}
                 <td>
-            {% if not field.created %}
+                {% if field.state == 'new' %}
                     <em>(<strong>new</strong>)</em>
-            {% endif %}
+                {% endif %}
                     <span class="field-name">{{ field.name }}</span><br/>
-            {% if entity.mediatype == 'application/json' %}
-                {% if not field.created %}
+                {% if entity.managed == 'full' and true %}
+                    <div class="btn-group on-row-hover">
+                {% if true %}
+                        <a class="btn btn-mini siteadmin-edit" href="{{ ref('_entities/all/mutate') }}"><i class="icon-pencil"></i> edit</a>
+                {% endif %}
+                        <a class="btn btn-mini btn-danger siteadmin-delete" href="{{ ref('_entities/all/mutate') }}"><i class="icon-trash icon-white"></i> delete</a>
+                    </div>
+                {% elseif entity.managed == 'augmented' and not field.fixed %}
                     <div class="btn-group on-row-hover">
                         <a class="btn btn-mini siteadmin-edit" href="{{ ref('_entities/all/mutate') }}"><i class="icon-pencil"></i> edit</a>
-                        <a class="btn btn-mini btn-danger siteadmin-delete" href="{{ ref('_entities/all/mutate') }}"><i class="icon-trash icon-white"></i> delete</a>
                     </div>
-                {% elseif not field.fixed %}
-                    <!-- <span class="label label-info">Unchangable</span> -->
-                    <div class="btn-group on-row-hover">
-                        <a class="btn btn-mini btn-danger siteadmin-delete" href="{{ ref('_entities/all/mutate') }}"><i class="icon-trash icon-white"></i> delete</a>
-                    </div>
+                {% else %}
+                    <span class="label label-info">Unchangable</span>
                 {% endif %}
-            {% else %}
-                <div class="btn-group on-row-hover">
-                    <a class="btn btn-mini siteadmin-edit-entity" href="#"><i class="icon-pencil"></i> edit entity</a>
-                </div>
-            {% endif %}
                 </td>
                 <td>
+                    {{ field.pivotxtype }}
+                {#
                     {{ field.type_description }}<br/>
                     <small>( 
                         <span class="field-type">{{ field.type }}</span>
@@ -70,19 +71,20 @@
                         {% if field.arguments is defined %} / <span class="field-arguments">{{ field.arguments }}</span>{% endif %}
                         {% if field.relation is defined %} / <span class="field-relation">{{ field.relation.type }}</span>{% endif %}
                     )</small>
+                #}
                 </td>
-            {% if not entity.fixed %}
+            {% if entity.managed != 'ignore' %}
                 <td class="crud-checkbox">
-                    <input type="checkbox" name="crud_{{ field.name }}"{{ field.in_crud ? ' checked="checked"' : '' }} />
+                    <input type="checkbox" name="crud_{{ field.name }}"{{ field.incrud ? ' checked="checked"' : '' }} />
                 </td>
             {% endif %}
             </tr>
         {% endfor %}
-        {% if entity.mediatype == 'application/json' %}
+        {% if entity.managed == 'full' %}
             <tr>
                 <td class="sort-handle"></td>
                 <td>
-                    <em>new field</em><span class="field-name"></span>
+                    <em>new field</em><span class="field-name"></span><br/>
                     <div class="btn-group on-row-hover">
                         <a class="btn btn-mini siteadmin-edit siteadmin-add" href="#"><i class="icon-pencil"></i> add</a>
                     </div>
@@ -124,7 +126,7 @@
                 </td>
             </tr>
         {% endfor %}
-        {% if entity.mediatype == 'application/json' %}
+        {% if entity.managed == 'full' %}
             <tr>
                 <td>
                     <em>new feature</em><span class="field-name"></span>

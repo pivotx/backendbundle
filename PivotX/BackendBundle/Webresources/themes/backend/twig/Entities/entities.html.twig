@@ -14,52 +14,55 @@
         On this page you can add, edit and remove entities for your site.
     </p>
 
-{% loadView 'Backend/findEntities' as entities %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Entity</th>
-            <th>Name</th>
-        </tr>
-    </thead>
-    <tbody>
-{% for entity in entities.result %}
+
+    {% loadView 'Backend/findEntities2' as entities %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Entity</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for entity in entities.result %}
         <tr>
             <td>
                 {{ entity.name }}
             </td>
             <td>
                 {{ entity.name }}
-
-    {% if entity.delete is defined %}
+    {% if entity.state == 'deleted' %}
                 <br/>
                 <span class="label label-warning">
                     {{ translate('entities.message.entity-is-deleted') }}
                 </span>
     {% else %}
-        {% if entity.fixed %}
+        {% if entity.managed == 'ignore' %}
                 <br/>
                 <strong>
-                    {{ translate('entities.message.entity-is-fixed') }}
+                    {{ translate('entities.message.entity-is-unmanaged') }}
                 </strong>
         {% else %}
+                <br/>
                 <div class="btn-group on-row-hover">
                     <a class="btn btn-mini" href="{{ ref(['_entity/',entity.name]) }}"><i class="icon-pencil"></i> {{ translate('entity.button.edit') }}</a>
+            {% if entity.managed == 'full' %}
                     <a class="btn btn-mini btn-danger delete-entity-button" data-entity="{{ entity.name }}" href="{{ ref('_entities/all/mutate') }}"><i class="icon-trash icon-white"></i> {{ translate('entity.button.delete') }}</a>
+            {% endif %}
                 </div>
         {% endif %}
     {% endif %}
             </td>
         </tr>
-{% endfor %}
-    </tbody>
-</table>
+    {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}
 
 {% block meta_content %}
 
-    {% loadView 'Backend/findEntities' as entities %}
+    {% loadView 'Backend/findEntities2' as entities %}
     <div class="well sidebar-nav">
         <ul class="nav nav-list">
             <li class="nav-header">General information</li>

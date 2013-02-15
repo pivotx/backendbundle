@@ -12,7 +12,7 @@
                 <p>{{ translate('table.widget.item-count-n', { ':count': view.length, ':item': singular_title, ':items': plural_title }) }}</p>
             {% endif %}
             </li>
-            {% if is_granted(crud.entity.roles.create) %}
+            {% if is_granted(crud.entity.getRole('create')) %}
             <li>
                 <p>
                     <a class="btn" href="{{ ref('_table/LocalEmbedResource/0') }}">{{ translate('table.widget.addbutton', {':item': translate('localembedresource.singular_title')}) }}</a>

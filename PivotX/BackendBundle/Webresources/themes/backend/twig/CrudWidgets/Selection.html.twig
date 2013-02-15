@@ -35,10 +35,10 @@
                     <!-- <a class="btn" href="#">Batch edit</a> -->
                     <div class="btn-group">
                         <!-- <a class="btn disabled crud-button-link" href="{{ ref(['_table/',crud.entity.name],view.queryarguments) }}">Show selection</a> -->
-                        {% if is_granted(crud.entity.roles.update) %}
+                        {% if is_granted(crud.entity.getRole('update')) %}
                         <a class="btn btn-success disabled crud-button-link" href="{{ ref(['_table/',crud.entity.name],view.queryarguments({'action':'edit-multiple'})) }}">{{ translate('table.widget.editsequencebutton') }}</a>
                         {% endif %}
-                        {% if is_granted(crud.entity.roles.delete) %}
+                        {% if is_granted(crud.entity.getRole('delete')) %}
                         <a class="btn btn-danger disabled crud-button-confirm" data-modal-text-selector=".crud-selection-summary-{{ crud.htmlid }}" data-loading-text="Deleting&hellip;" href="{{ ref(['_table/',crud.entity.name],view.queryarguments({'action':'delete-multiple'})) }}">{{ translate('table.widget.deleteselectionbutton') }}</a>
                         {% endif %}
                     </div>

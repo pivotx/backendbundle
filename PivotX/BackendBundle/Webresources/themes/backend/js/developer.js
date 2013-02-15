@@ -12,6 +12,7 @@ function correctInputType(element, kind)
 
     switch (kind) {
         case 'tablename':
+        case 'columnname':
         case 'variable':
             out_value = out_value.replace(/[^a-zA-Z0-9_]+/g, '_');
             break;

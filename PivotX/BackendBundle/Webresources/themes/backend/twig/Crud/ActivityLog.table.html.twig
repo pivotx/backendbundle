@@ -92,9 +92,11 @@ table.crud-activitylog th.column-message {
             <td>
                 <span class="friendly-message">{{ item.compiledfriendlymessage }}</span>
                 <br/>
+                {% if item.hasTechnicalContext() %}
                 <div class="btn-group on-row-hover">
                     <a class="btn btn-mini btn-info crud-button-text" data-modal-title-text="Dump of technical context"  data-modal-text-selector=".text-dump-{{ item.id }}" href="#"><i class="icon-zoom-in"></i> {{ translate('entity.button.dump') }}</a>
                 </div>
+                {% endif %}
 
                 <span class="crud-hide text-dump-{{ item.id }}">
                     Message: <strong>{{ item.compiledfriendlymessage }}</strong><br/>

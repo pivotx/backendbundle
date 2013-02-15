@@ -27,13 +27,16 @@ class Content extends Item
         $crudmenu = $this->addItem(new CrudTables('editor'));
         $crudmenu->setAsItemsholder();
 
-        $entities = $siteoptions_service->getValue('config.entities', array(), 'all');
+        $er = new \PivotX\Doctrine\Generator\EntitiesRepresentation();
+        $er->importPivotConfiguration($siteoptions_service);
+        $entities = $er->getEntities();
         foreach($entities as $entity) {
-            $name = strtolower($entity);
-            $pluralname = \PivotX\Component\Translations\Inflector::pluralize($name);
+            $name          = $entity->getName();
+            $internal_name = $entity->getInternalName();
+            $pluralname    = \PivotX\Component\Translations\Inflector::pluralize($internal_name);
 
-            $menu = $this->addItem(new \PivotX\Component\Lists\RouteItem($pluralname, '_table/'.$entity));
-            $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem($name, '_table/'.$entity.'/{id}'));
+            $menu = $this->addItem(new \PivotX\Component\Lists\RouteItem($pluralname, '_table/'.$name));
+            $submenu = $menu->addItem(new \PivotX\Component\Lists\RouteItem($name, '_table/'.$name.'/{id}'));
             $submenu->resetInMenu();
         }
     }

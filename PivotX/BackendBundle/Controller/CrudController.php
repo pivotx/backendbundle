@@ -327,7 +327,7 @@ class CrudController extends Controller
     {
         $widgets = array();
 
-        if ($entity['name'] == 'GenericResource') {
+        if ($entity->getName() == 'GenericResource') {
             $widgets[] = 'CrudWidgets/GenericResourceGeneral.html.twig';
         }
         else {
@@ -342,21 +342,22 @@ class CrudController extends Controller
     /**
      * Where to put the edit/delete buttons
      */
-    private function determineButtonPosition($fields)
+    private function determineButtonPosition($entity)
     {
         $done = false;
 
         // set show_buttons to false
+        $fields = $entity->getFields();
         foreach($fields as &$field) {
-            $field['show_buttons'] = false;
+            $field->setShowButtons(false);
         }
 
         // method: preferred fields by name
         if (!$done) {
             $preferred_fields = array ( 'title', 'name', 'email' );
             foreach($fields as &$field) {
-                if (isset($field['in_crud']) && $field['in_crud'] && in_array($field['name'], $preferred_fields)) {
-                    $field['show_buttons'] = true;
+                if ($field->isInCrud() && in_array($field->getName(), $preferred_fields)) {
+                    $field->setShowButtons(true);
                     $done = true;
                     break;
                 }
@@ -366,8 +367,8 @@ class CrudController extends Controller
         // method: first field
         if (!$done) {
             foreach($fields as &$field) {
-                if (isset($field['in_crud']) && $field['in_crud']) {
-                    $field['show_buttons'] = true;
+                if ($field->isInCrud() && in_array($field->getName(), $preferred_fields)) {
+                    $field->setShowButtons(true);
                     $done = true;
                     break;
                 }
@@ -391,7 +392,7 @@ class CrudController extends Controller
                 break;
         }
 
-        $view  = $views->findView('Backend/findEntities');
+        $view  = $views->findView('Backend/findEntities2');
         if (is_null($view)) {
             return null;
         }
@@ -442,17 +443,17 @@ class CrudController extends Controller
         $context = $this->getDefaultHtmlContext();
 
 
-        if (!$this->get('security.context')->isGranted($context['crud']['entity']['roles']['read'])) {
+        if (!$this->get('security.context')->isGranted($context['crud']['entity']->getRole('read'))) {
             return $this->forwardByReference('_page/no_access');
         }
 
 
         // init the CRUD view
 
-        $view = \PivotX\Component\Views\Views::loadView($context['crud']['entity']['name'].'/findCrudAll');
+        $view = \PivotX\Component\Views\Views::loadView($context['crud']['entity']->getName().'/findCrudAll');
         if (($view === false) || ($view instanceof \PivotX\Component\Views\EmptyView)) {
             // custom view not found, use the default
-            $view = \PivotX\Component\Views\Views::loadView($context['crud']['entity']['name'].'/findAll');
+            $view = \PivotX\Component\Views\Views::loadView($context['crud']['entity']->getName().'/findAll');
         }
 
         $view->setCurrentPage(1, 10);
@@ -502,13 +503,14 @@ class CrudController extends Controller
             $view->setQueryArguments($query_args);
         }
 
-        $context['crud']['entity']['fields'] = $this->determineButtonPosition($context['crud']['entity']['fields']);
+        $this->determineButtonPosition($context['crud']['entity']);
+
         $context['widgets']                  = $this->determineCrudTableWidgets($context['crud']['entity']);
         $context['view']                     = $view;
 
         $table_html = $this
             ->render(array(
-                    'Crud/'.$context['crud']['entity']['name'].'.table.html.twig',
+                    'Crud/'.$context['crud']['entity']->getName().'.table.html.twig',
                     'Crud/any.table.html.twig'
                 ), $context)
             ->getContent()
@@ -571,7 +573,7 @@ class CrudController extends Controller
     {
         $context = $this->getDefaultHtmlContext();
 
-        if (!$this->get('security.context')->isGranted($context['crud']['entity']['roles']['update'])) {
+        if (!$this->get('security.context')->isGranted($context['crud']['entity']->getRole('update'))) {
             return $this->forwardByReference('_page/no_access');
         }
 
@@ -595,7 +597,7 @@ class CrudController extends Controller
         $crud_links = array();
         $crud_snippets = array();
         if (($this->get('security.context')->isGranted('ROLE_DEVELOPER')) && ($item->getId() > 0)) {
-            $entity_name = strtolower($context['crud']['entity']['name']);
+            $entity_name = $context['crud']['entity']->getInternalName();
             $id          = $item->getId();
 
             // we just use this to test for any routes
@@ -667,8 +669,8 @@ class CrudController extends Controller
     {
         $context = $this->getDefaultHtmlContext();
 
-        // @todo we only check update and not create/delete
-        if (!$this->get('security.context')->isGranted($context['crud']['entity']['roles']['update'])) {
+        // @todo we only check update and not create
+        if (!$this->get('security.context')->isGranted($context['crud']['entity']->getRole('update'))) {
             return $this->forwardByReference('_page/no_access');
         }
 
@@ -742,6 +744,12 @@ class CrudController extends Controller
      */
     public function showDeleteRecordAction(Request $request, $entity_manager, $item)
     {
+        $name = $this->getRequest()->get('entity');
+        $entity = $this->loadEntity($name);
+        if (!$this->get('security.context')->isGranted($entity->getRole('delete'))) {
+            return $this->forwardByReference('_page/no_access');
+        }
+
         if ($item->getId() > 0) {
             $entity_manager->remove($item);
         }

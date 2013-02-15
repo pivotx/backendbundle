@@ -34,7 +34,7 @@
                 <input type="hidden" name="original_name" value="" />
                 <label>
                     Name:<br/>
-                    <input type="text" class="identifier-type" name="name" value="" />
+                    <input type="text" class="correct-type" data-type="columnname" name="name" value="" />
                 </label>
                 <label>
                     Type:<br/>
@@ -54,9 +54,9 @@
                     Related to:<br/>
                     <select name="relation">
                         <option value="">(only select when applicable)</option>
-                    {% loadView 'Backend/findEntities' as entities %}
+                    {% loadView 'Backend/findEntities2' as entities %}
                     {% for entity in entities.result %}
-                        <option value="{{ entity.entity_class }}">{{ entity.name }}</option>
+                        <option value="{{ entity.entityclass }}">{{ entity.name }}</option>
                     {% endfor %}
                     </select>
                 </label>
