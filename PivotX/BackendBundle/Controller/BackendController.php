@@ -9,6 +9,16 @@ use Symfony\Component\Security\Core\SecurityContext;
 
 class BackendController extends Controller
 {
+    /**
+     * Harmless but necessary first-run code
+     */
+    public function runInitialAction(Request $request)
+    {
+        $this->rebuildWebresources();
+
+        $url = $this->get('pivotx.routing')->buildUrl('_documentation/guide');
+        return $this->redirect($url);
+    }
     public function showDocumentationAction(Request $request, $name)
     {
         $path = \PivotX\Backend\Lists\Documentation::getPath();

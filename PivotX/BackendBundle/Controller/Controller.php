@@ -81,6 +81,38 @@ class Controller extends CoreController
     }
 
     /**
+     * Rebuild all webresource
+     */
+    protected function rebuildWebresources()
+    {
+        $sites = explode("\n", $this->get('pivotx.siteoptions')->getValue('config.sites', '', 'all'));
+        foreach($sites as $site) {
+            $targets = array();
+            if ($site == 'pivotx-backend') {
+                $targets[] = 'desktop'; // @todo ugly exception should be removed
+            }
+            else {
+                $_targets = $this->get('pivotx.siteoptions')->getValue('routing.targets', array(), $site);
+                $targets  = array_map(function($_target){
+                        return $_target['name'];
+                    },
+                    $_targets);
+            }
+
+            foreach($targets as $target) {
+                $this->buildWebresources($site, $target, false);
+                $this->buildWebresources($site, $target, true);
+            }
+
+            /*
+            $webresourcer->finalizeWebresources($outputter, false);
+            $groups = $outputter->finalizeAllOutputs($site);
+            $this->get('pivotx.siteoptions')->set('outputter.groups', json_encode($groups), 'application/json', true, false, $site);
+             */
+        }
+    }
+
+    /**
      * Overruled version for the backend
      */
     public function getDefaultHtmlContext()

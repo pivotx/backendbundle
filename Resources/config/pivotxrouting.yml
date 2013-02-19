@@ -201,6 +201,11 @@ routes:
           file:     "[A-Za-z0-9/_.-]+[.][A-Za-z0-9]+"
 
     - filter:       { target: false, site: "pivotx-backend", language: false }
+      pattern:      "_siteadmin/start"
+      public:       "setup"
+      defaults:     { _controller: "BackendBundle:Backend:runInitial" }
+
+    - filter:       { target: false, site: "pivotx-backend", language: false }
       pattern:      "_page/login-redirect"
       public:       ""
       defaults:     { _redirect: "(l=en)@_page/dashboard" }
