@@ -663,6 +663,18 @@ class CrudController extends Controller
         return $this->showGetForm($request, $form, $item);
     }
 
+    private function processEntitiesChange($entity, $id)
+    {
+        if ($entity == 'TranslationText') {
+            // @todo enable this, if we can also do this at the service level
+            /*
+            $siteoptions = $this->get('pivotx.siteoptions');
+            $siteoptions->set('config.check.translations', 1, 'x-value/boolean', false, false, 'all');
+            $siteoptions->set('config.check.any', 1, 'x-value/boolean', false, false, 'all');
+            //*/
+        }
+    }
+
     /**
      * Save a CRUD record
      */
@@ -728,6 +740,8 @@ class CrudController extends Controller
                 $redirect_entity = $item->getCrudRootEntity();
             }
 
+            $this->processEntitiesChange($redirect_entity, $item->getId());
+
             $url = $this->get('pivotx.routing')->buildUrl('_table/'.$redirect_entity, $args);
 
             if ($request->getMethod() == 'POST') {
@@ -755,6 +769,8 @@ class CrudController extends Controller
             $entity_manager->remove($item);
         }
         $entity_manager->flush();
+
+        $this->processEntitiesChange($entity, $item->getId());
 
         if ($request->getMethod() == 'GET') {
             $args = $this->getCrudTableArgumentsFromRequest($request);

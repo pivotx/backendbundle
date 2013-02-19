@@ -223,6 +223,12 @@ class SiteadminController extends Controller
         // IMPORTANT
         // sometimes flashes don't actually work correctly when clearing a cache!
 
+        $siteoptions = $this->get('pivotx.siteoptions');
+        $siteoptions->set('config.check.cache', 0, 'x-value/boolean', false, false, 'all');
+        $siteoptions->set('config.check.translations', 0, 'x-value/boolean', false, false, 'all');
+        $setup = new \PivotX\Component\Siteoptions\Setup($siteoptions);
+        $setup->updateConfigCheck();
+
         $url = $this->get('pivotx.routing')->buildUrl('_siteadmin/status');
         return $this->redirect($url);
     }
