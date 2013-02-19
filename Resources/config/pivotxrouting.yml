@@ -30,15 +30,10 @@ routeprefixes:
     - filter:       { target: "desktop", site: "pivotx-backend", language: "nl" }
       prefix:       "http://%request.host%/pivotx/nl/"
 
-    - filter:       { target: false, site: "pivotx-backend", language: "none" }
+    - filter:       { target: false, site: "pivotx-backend", language: false }
       prefix:       "http://%request.host%/pivotx/"
 
 routes:
-    - filter:       { target: "desktop", site: "pivotx-backend", language: false }
-      pattern:      ""
-      public:       ""
-      defaults:     { _rewrite: "_page/dashboard" }
-
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_page/dashboard"
       public:       "dashboard"
@@ -52,12 +47,12 @@ routes:
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_page/login_check"
       public:       "login_check"
-      defaults:     { _controller: "BackendBundle:Backend:showLogin" }
+      defaults:     { _controller: "BackendBundle:Backend:performLoginCheck" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_page/logout"
       public:       "logout"
-      defaults:     { _controller: "BackendBundle:Backend:any", _view: "Core/logout.html.twig" }
+      defaults:     { _controller: "BackendBundle:Backend:performLogout", _view: "Core/logout.html.twig" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_page/no_access"
@@ -204,6 +199,11 @@ routes:
       defaults:     { _controller: "CoreBundle:Cwr:cwr" }
       requirements:
           file:     "[A-Za-z0-9/_.-]+[.][A-Za-z0-9]+"
+
+    - filter:       { target: false, site: "pivotx-backend", language: false }
+      pattern:      "_page/login-redirect"
+      public:       ""
+      defaults:     { _redirect: "(l=en)@_page/dashboard" }
 
     - filter:       { target: "desktop", site: "pivotx-backend", language: false }
       pattern:      "_http/404"

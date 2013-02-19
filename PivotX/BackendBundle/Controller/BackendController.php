@@ -50,4 +50,19 @@ class BackendController extends Controller
 
         return $this->render('Core/login.html.twig', $context);
     }
+
+    public function performLoginCheckAction()
+    {
+        $url = $this->get('pivotx.routing')->buildUrl('_page/dashboard');
+        return $this->redirect($url);
+    }
+
+    public function performLogoutAction()
+    {
+        $this->get('security.context')->setToken(null);
+        $this->get('request')->getSession()->invalidate();
+
+        $url = $this->get('pivotx.routing')->buildUrl('_page/login');
+        return $this->redirect($url);
+    }
 }
