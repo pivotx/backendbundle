@@ -22,7 +22,7 @@ class Developer extends Item
         $item = $menu->addItem(new RouteItem('entity', '_entity/{entity}'));
         $item->resetInMenu();
 
-        $this->addItem(new RouteItem('webresourcer', '_developer/webresourcer'));
+        //$this->addItem(new RouteItem('webresourcer', '_developer/webresourcer'));
 
         $this->addItem(new RouteItem('routing', '_developer/routing'));
         $this->addItem(new RouteItem('views', '_developer/views'));

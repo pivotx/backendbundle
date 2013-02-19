@@ -18,7 +18,7 @@ class Siteadmin extends Item
         $this->resetBreadcrumb();
 
         $menu = $this->addItem(new RouteItem('status', '_siteadmin/status'));
-        $menu = $this->addItem(new UrlItem('configuration', '#'));
+        //$menu = $this->addItem(new UrlItem('configuration', '#'));
         //$menu->resetBreadcrumb();
         //$submenu = $menu->addItem(new RouteItem('entry', '_siteadmin/entity/entry'));
         //$submenu = $menu->addItem(new RouteItem('page', '_siteadmin/entity/page'));
