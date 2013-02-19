@@ -1,14 +1,30 @@
 {% extends "Base/content_and_meta.html.twig" %}
 
+{% loadList 'Backend/Documentation' as menu excludeRoot %}
+
 {% block content %}
 
     {{ documentation }}
+
+    {# @todo would be nice if previousandnext could add the &larr; (or whatever) themselves #}
+    <ul class="pager">
+    {% for menuitem in menu.previousandnext %}
+        {% set pre = '' %}
+        {% set post = '' %}
+        {% if menuitem.hasClass('previous') %}
+            {% set pre = '&larr; ' %}
+        {% endif %}
+        {% if menuitem.hasClass('next') %}
+            {% set post = ' &rarr;' %}
+        {% endif %}
+        <li class="{{ menuitem.classes }}"><a href="{{ menuitem.link }}">{{ pre|raw }}{{ menuitem.label }}{{ post|raw }}</a></li>
+    {% endfor %}
+    </ul>
 
 {% endblock %}
 
 {% block meta_content %}
 
-    {% loadList 'Backend/Documentation' as menu excludeRoot %}
     <ul>
     {% for menuitem in menu.items %}
         <li class="{{ menuitem.classes }}"><a href="{{ menuitem.link }}">{{ menuitem.label }}</a></li>
