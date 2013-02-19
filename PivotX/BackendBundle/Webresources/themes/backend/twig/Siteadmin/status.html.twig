@@ -30,8 +30,7 @@
                 <div class="btn-group">
                 {% if app.session.hasFlash('previous_flush') %}
                     {% set previous_flush = app.session.flash('previous_flush') %}
-                    {{ previous_flush }}
-                    <a class="btn btn-mini" href="{{ ref(['_siteadmin/clearcaches/',previous_flush]|join) }}">
+                    <a class="btn btn-mini" href="{{ ref(['_siteadmin/clearcaches/',previous_flush]) }}">
                         {% if previous_flush == 'prod' %}
                             Clear production cache
                         {% elseif previous_flush == 'dev' %}

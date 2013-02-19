@@ -120,7 +120,7 @@ class SiteadminController extends Controller
         $path = $this->get('kernel')->getRootDir().'/cache';
 
         if (is_null($target) || ($target == 'all')) {
-            // do nothing
+            // add nothing
         }
         else {
             $path .= '/' . $target;
@@ -219,6 +219,9 @@ class SiteadminController extends Controller
                 ->log()
                 ;
         }
+
+        // IMPORTANT
+        // sometimes flashes don't actually work correctly when clearing a cache!
 
         $url = $this->get('pivotx.routing')->buildUrl('_siteadmin/status');
         return $this->redirect($url);

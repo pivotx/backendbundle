@@ -11,7 +11,7 @@ sites:
 
 languages:
     - name:         "nl"
-      description:  "Dutch"
+      description:  "Nederlands"
       locale:       "nl_NL.utf-8"
 
     - name:         "en"

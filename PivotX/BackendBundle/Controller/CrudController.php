@@ -40,7 +40,7 @@ class CrudController extends Controller
                 $_p = explode('\\',$class->name);
                 $base_class = end($_p);
 
-                //echo 'Base-class: '.$base_class."\n";
+                //echo 'Base-class: '.$base_class."<br/>\n";
 
                 if ($base_class == $name) {
                     return $class->name;
@@ -407,6 +407,7 @@ class CrudController extends Controller
     public function showTableAction(Request $request)
     {
         if (is_null($this->getEntityClass($request->get('entity')))) {
+            $this->get('session')->setFlash('custom404', 'Entity could not be found or is not configured correctly.');
             return $this->forwardByReference('_http/404');
         }
 
@@ -779,6 +780,7 @@ class CrudController extends Controller
     public function showRecordAction(Request $request)
     {
         if (is_null($this->getEntityClass($request->get('entity')))) {
+            $this->get('session')->setFlash('custom404', 'Entity could not be found or is not configured correctly.');
             return $this->forwardByReference('_http/404');
         }
 
@@ -799,6 +801,7 @@ class CrudController extends Controller
         }
 
         if (is_null($item)) {
+            $this->get('session')->setFlash('custom404', 'Record could not be found.');
             return $this->forwardByReference('_http/404');
         }
 

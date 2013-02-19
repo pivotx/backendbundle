@@ -270,7 +270,7 @@ class EntitiesController extends Controller
         }
 
         $routing_generator = new \PivotX\Doctrine\Generator\Routing($this->get('pivotx.siteoptions'), $this->get('pivotx.translations'));
-        $sites = $routing_generator->getSites();
+        $sites = $routing_generator->getAllSites();
         foreach($sites as $site) {
             $suggestions->setTranslationsForNewEntity($this->get('pivotx.translations'), $site, $entity->getInternalName());
         }
@@ -425,7 +425,7 @@ class EntitiesController extends Controller
 
         $routing_generator = new \PivotX\Doctrine\Generator\Routing($this->get('pivotx.siteoptions'), $this->get('pivotx.translations'));
 
-        $sites = $routing_generator->getSites();
+        $sites = $routing_generator->getAllSites();
         $translations = $this->get('pivotx.translations');
 
         foreach($sites as $site) {
