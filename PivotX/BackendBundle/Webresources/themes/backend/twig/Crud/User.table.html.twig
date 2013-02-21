@@ -1,29 +1,5 @@
 
-{# @todo define this somewhere else #}
-
-<style type="text/css">
-
-table.crud-user th.column-enabled {
-    width: 70px;
-    min-width: 70px;
-}
-
-table.crud-user th.column-last-login {
-    width: 150px;
-    min-width: 150px;
-}
-
-table.crud-user th.column-email {
-    width: 100%;
-    min-width: 100%;
-}
-
-table.crud-user th.column-level {
-    width: 110px;
-    min-width: 110px;
-}
-
-</style>
+<h1>{{ translate([crud.entity.name,'.common.plural_title'])|capitalize }}</h1>
 
 <table class="crud crud-user table table-striped" data-crud-table="{{ crud.htmlid }}">
     <thead>

@@ -1,13 +1,13 @@
 
 <div class="navbar navbar-fixed-bottom">
     <div class="navbar-inner">
-        {% if backend.security.logged %}
         <div class="container-fluid">
             <span class="navbar-text">
                 Core/{{ backend.core_version }}
                 Backend/{{ backend.backend_version }}
             </span>
 
+        {% if backend.security.logged %}
             <span class="navbar-text">
                 {# loadList 'Backend/BreadcrumbMenu' as menu #}
                 {# loadList ['Backend/Topmenu','Backend/Profilemenu','Backend/FooterMenu'] as menu #}
@@ -31,8 +31,8 @@
                 </a>
             </div>
             {% endif %}
-        </div>
         {% endif %}
+        </div>
     </div>
 </div>
 

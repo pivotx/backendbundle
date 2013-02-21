@@ -1,25 +1,6 @@
 
-{# @todo define this somewhere else #}
-
-<style type="text/css">
-
-table.crud-activitylog th.column-context {
-    width: 20%;
-}
-
-table.crud-activitylog th.column-whenwho {
-    width: 15%;
-}
-
-table.crud-activitylog th.column-message {
-    width: 55%;
-}
-
-
-</style>
-
-<div class="crud crud-filter">
 {#
+<div class="crud crud-filter">
     <form method="get" action="" class="well form-inline">
         {% loadView 'Crud/SiteOption/findAll' as ttexts %}
         <select name="filter-siteandgroup">
@@ -41,8 +22,10 @@ table.crud-activitylog th.column-message {
 
         <button type="submit" class="btn">filter</button>
     </form>
-#}
 </div>
+#}
+
+<h1>{{ translate([crud.entity.name,'.common.plural_title'])|capitalize }}</h1>
 
 <table class="crud crud-activitylog table table-striped" data-crud-table="{{ crud.htmlid }}">
     <thead>

@@ -44,7 +44,8 @@ tr:hover .hide-on-row-hover {
 
 .well.sidebar-nav {
     border: 0;
-    -webkit-box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px inset
+    -webkit-box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px inset;
+    padding: 0.5em 0;
 }
 
 .sidebar-nav .tab-content {
@@ -74,6 +75,15 @@ tr:hover .hide-on-row-hover {
     font-weight: bold;
 }
 
+.nav-tabs li:hover > a,
+.nav-tabs li.active:hover > a {
+    background-color: #EBE9DC;
+    border: 1px solid #EBE9DC;
+    font-weight: bold;
+    color: #0088cc;
+}
+
+
 /* Navigation -------------------- */
 
 .header .nav .btn {
@@ -88,6 +98,22 @@ tr:hover .hide-on-row-hover {
 .btn-group .pull-left a.btn.dropdown-toggle:last-child {
     border-right: 1px solid #f00;
 }
+
+
+/* Tables ------------------- */
+
+table.developer th {
+    background-color: #EBE9DC !important;  /* Sacrificing a kitten over here, sorry */
+}
+
+caption {
+    font-size: 15px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: left;
+    margin: 0 0 0.5em 0.5em;
+}
+
 
 /* Modal -------------------- */
 
@@ -138,3 +164,17 @@ body.pivotx-hide-translated div.tooltip div.tooltip-inner {
 .container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
    
 }
+
+/* Buttons -------------------------- */
+
+li.next > a:after {
+    content: " →";
+}
+
+li.previous > a:before {
+    content: "← ";
+}
+
+
+
+

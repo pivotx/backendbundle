@@ -1,34 +1,5 @@
 
-{# @todo define this somewhere else #}
-
-<style type="text/css">
-
-table.crud-translationtext th.column-site {
-    width: 110px;
-    min-width: 110px;
-}
-
-table.crud-translationtext th.column-key {
-    width: 30%;
-}
-
-table.crud-translationtext th.column-text1 {
-    width: 70%;
-}
-
-table.crud-translationtext th.column-text2 {
-    width: 35%;
-}
-
-table.crud-translationtext th.column-text3 {
-    width: 23.33333%;
-}
-
-table.crud-translationtext th.column-text4 {
-    width: 17.5%;
-}
-
-</style>
+<h1>{{ translate([crud.entity.name,'.common.plural_title'])|capitalize }}</h1>
 
 <div class="crud crud-filter">
     <form method="get" action="" class="well form-inline">

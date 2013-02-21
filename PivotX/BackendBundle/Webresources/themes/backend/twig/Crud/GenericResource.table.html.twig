@@ -1,35 +1,4 @@
 
-{# @todo define this somewhere else #}
-
-<style type="text/css">
-
-table.crud-genericresource th.column-site {
-    width: 110px;
-    min-width: 110px;
-}
-
-table.crud-genericresource th.column-key {
-    width: 30%;
-}
-
-table.crud-genericresource th.column-text1 {
-    width: 70%;
-}
-
-table.crud-genericresource th.column-text2 {
-    width: 35%;
-}
-
-table.crud-genericresource th.column-text3 {
-    width: 23.33333%;
-}
-
-table.crud-genericresource th.column-text4 {
-    width: 17.5%;
-}
-
-</style>
-
 {#
 <div class="crud crud-filter">
     <form method="get" action="" class="well form-inline">
@@ -55,6 +24,8 @@ table.crud-genericresource th.column-text4 {
     </form>
 </div>
 #}
+
+<h1>{{ translate([crud.entity.name,'.common.plural_title'])|capitalize }}</h1>
 
 <table class="crud crud-genericresource table table-striped" data-crud-table="{{ crud.htmlid }}">
     <thead>

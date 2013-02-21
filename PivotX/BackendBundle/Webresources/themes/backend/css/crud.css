@@ -29,6 +29,7 @@
  * Crud tables
  */
 
+
 table.crud th.sort-by {
     cursor: pointer;
 }
@@ -49,7 +50,11 @@ table.crud td.select-checkbox {
 
 /* @todo this style is not working */
 table.crud td div.btn-group:first-child {
-    display: block !important;
+    display: block;
+}
+
+table.crud th, table th {
+    background-color: #EBE9DC;
 }
 
 
@@ -65,6 +70,108 @@ div.crud-filter .filter-checkbox {
     float: left;
     width: 200px;
 }
+
+
+
+/**
+ * Crud generic resources
+ */
+ 
+table.crud-genericresource th.column-site {
+    width: 110px;
+    min-width: 110px;
+}
+
+table.crud-genericresource th.column-key {
+    width: 30%;
+}
+
+table.crud-genericresource th.column-text1 {
+    width: 70%;
+}
+
+table.crud-genericresource th.column-text2 {
+    width: 35%;
+}
+
+table.crud-genericresource th.column-text3 {
+    width: 23.33333%;
+}
+
+table.crud-genericresource th.column-text4 {
+    width: 17.5%;
+}
+
+/**
+ * Crud users
+ */
+
+table.crud-user th.column-enabled {
+    width: 70px;
+    min-width: 70px;
+}
+
+table.crud-user th.column-last-login {
+    width: 150px;
+    min-width: 150px;
+}
+
+table.crud-user th.column-email {
+    width: 100%;
+    min-width: 100%;
+}
+
+table.crud-user th.column-level {
+    width: 110px;
+    min-width: 110px;
+}
+
+/**
+ * Crud activity log
+ */
+
+table.crud-activitylog th.column-context {
+    width: 20%;
+}
+
+table.crud-activitylog th.column-whenwho {
+    width: 15%;
+}
+
+table.crud-activitylog th.column-message {
+    width: 55%;
+} 
+
+/**
+ * Crud translationtext log
+ */
+
+table.crud-translationtext th.column-site {
+    width: 110px;
+    min-width: 110px;
+}
+
+table.crud-translationtext th.column-key {
+    width: 30%;
+}
+
+table.crud-translationtext th.column-text1 {
+    width: 70%;
+}
+
+table.crud-translationtext th.column-text2 {
+    width: 35%;
+}
+
+table.crud-translationtext th.column-text3 {
+    width: 23.33333%;
+}
+
+table.crud-translationtext th.column-text4 {
+    width: 17.5%;
+}
+
+
 
 
 /**

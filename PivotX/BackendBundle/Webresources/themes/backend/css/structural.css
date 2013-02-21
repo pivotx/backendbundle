@@ -35,6 +35,26 @@ html body {
     width: 100%;
 }
 
+/* common typography -------------------- */
+
+h1 {
+    font-size: 30px;
+    font-size: 3rem;
+    margin-top: 0;
+}
+
+h2 {
+    font-size: 20px;
+    font-size: 2rem;
+    margin-top: 0;
+}
+
+h3 {
+    font-size: 15px;
+    font-size: 1.5rem;
+    margin-top: 0;
+}
+
 
 /* Header -------------------- */
 
@@ -42,6 +62,10 @@ html body {
     background-image: none;
     background-color: #fff;
     border: 0;
+}
+
+.brand:hover {
+    color: #999 !important;
 }
 
 

@@ -1,29 +1,5 @@
 
-{# @todo define this somewhere else #}
-
-<style type="text/css">
-
-table.crud-bike th.column-brand {
-    width: 100px;
-    min-width: 100px;
-}
-
-table.crud-bike th.column-title {
-    width: 100%;
-    min-width: 100%;
-}
-
-table.crud-bike th.column-year {
-    width: 90px;
-    min-width: 90px;
-}
-
-table.crud-bike th.column-reviews {
-    width: 110px;
-    min-width: 110px;
-}
-
-</style>
+<h1>{{ translate([crud.entity.name,'.common.plural_title'])|capitalize }}</h1>
 
 {#
 <div class="crud crud-filter">
