@@ -45,7 +45,7 @@ tr:hover .hide-on-row-hover {
 .well.sidebar-nav {
     border: 0;
     -webkit-box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px inset;
-    padding: 0.5em 0;
+    padding: 0 0 0.5em 0;
 }
 
 .sidebar-nav .tab-content {
@@ -93,6 +93,10 @@ tr:hover .hide-on-row-hover {
     border-right: 1px solid #EBE9DC;
     border-radius: 0;
     box-shadow: none;
+}
+
+.header .nav li.active div.btn-group > a {
+    color: #08c;
 }
 
 .btn-group .pull-left a.btn.dropdown-toggle:last-child {
@@ -175,6 +179,8 @@ li.previous > a:before {
     content: "← ";
 }
 
+/* Bootstrap quirks -------------------------- */
 
-
-
+.nav .active .dropdown-toggle .caret {
+    border-top-color: #08C;
+}

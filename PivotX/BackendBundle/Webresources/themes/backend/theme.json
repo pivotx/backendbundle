@@ -15,6 +15,7 @@
         "jquery-fileupload",
         "pines-notify",
         "bootstrap",
+        "font-awesome",
         "google-code-prettify",
         "ckeditor"
     ]

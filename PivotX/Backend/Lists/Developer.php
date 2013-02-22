@@ -12,7 +12,7 @@ class Developer extends Item
     {
         parent::__construct('development');
 
-        $this->setAttribute('icon', 'icon-globe');
+        $this->setAttribute('icon', 'icon-cog');
         $this->setRole('ROLE_DEVELOPER');
         $this->resetBreadcrumb();
 

@@ -1,8 +1,10 @@
 {
     "identifier": "font-awesome",
-    "version": "2.0",
+    "version": "3.0.2",
 
     "files": [
-        "css/*.css"
+        "css/font-awesome.min.css",
+        { "file": "", "copy": "font-awesome" },
+        { "content": "%cache_prefix%/font-awesome/css/font-awesome.min.css", "type": "text/x-css-href", "group": "bodyEnd" }
     ]
 }
