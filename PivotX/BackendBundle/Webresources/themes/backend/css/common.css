@@ -95,8 +95,19 @@ tr:hover .hide-on-row-hover {
     box-shadow: none;
 }
 
-.header .nav li.active div.btn-group > a {
+.header .nav .active div.btn-group > a {
     color: #08c;
+}
+
+.navbar-inverse .nav .active > a {
+    background: #fff;
+    color: #08c;
+}
+
+.navbar-inverse .nav .active > a:hover, .navbar-inverse .nav .active > a:focus {
+    background-color: #0081c2;
+    background-image: linear-gradient(to bottom, #0088cc, #0077b3);
+    background-repeat: repeat-x;
 }
 
 .btn-group .pull-left a.btn.dropdown-toggle:last-child {

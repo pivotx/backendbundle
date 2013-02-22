@@ -14,7 +14,7 @@ class Siteadmin extends Item
         parent::__construct('site-administration');
 
         $this->setRole('ROLE_ADMIN');
-        $this->setAttribute('icon', 'icon-fire');
+        $this->setAttribute('icon', 'icon-wrench');
         $this->resetBreadcrumb();
 
         $menu = $this->addItem(new RouteItem('status', '_siteadmin/status'));
