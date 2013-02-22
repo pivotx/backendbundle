@@ -140,7 +140,7 @@ class Controller extends CoreController
     protected function rebuildWebresources($clear_old_files = false)
     {
         if ($clear_old_files) {
-            $directory = dirname($this->kernel->getRootDir()).'/web/outputter';
+            $directory = dirname($this->get('kernel')->getRootDir()).'/web/outputter';
 
             $ignore = $this->clearDirectoryRecursive($directory);
         }
