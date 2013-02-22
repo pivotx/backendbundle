@@ -81,15 +81,75 @@ class Controller extends CoreController
     }
 
     /**
+     * Clear a complete directory
+     *
+     * (no reason it should be here, but for it's ok)
+     */
+    protected function clearDirectoryRecursive($path)
+    {
+        $failed_files       = array();
+        $failed_directories = array();
+        $failed_unknowns    = array();
+
+        $file_count = $directory_count = 0;
+
+        $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::CHILD_FIRST);
+        foreach($objects as $name => $object) {
+
+            if ($object->getFilename() == '..') {
+                // ignore
+                continue;
+            }
+            if ($object->isDir()) {
+                if ($name == $path.'/.') {
+                    continue;
+                }
+                if (substr($name, -2) == '/.') {
+                    continue;
+                }
+                if (@rmdir($name)) {
+                    $directory_count++;
+                }
+                else {
+                    $failed_directories[] = $name;
+                }
+            }
+            else if ($object->isFile()) {
+                if (substr($object->getFilename(), 0, 1) == '.') {
+                    // ignore hidden files
+                    continue;
+                }
+                if (@unlink($name)) {
+                    $file_count++;
+                }
+                else {
+                    $failed_files[] = $name;
+                }
+            }
+            else {
+                $failed_unknowns[] = $name;
+            }
+        }
+
+        return array($failed_files, $failed_directories, $failed_unknowns, $file_count, $directory_count);
+    }
+
+    /**
      * Rebuild all webresource
      */
-    protected function rebuildWebresources()
+    protected function rebuildWebresources($clear_old_files = false)
     {
+        if ($clear_old_files) {
+            $directory = dirname($this->kernel->getRootDir()).'/web/outputter';
+
+            $ignore = $this->clearDirectoryRecursive($directory);
+        }
+
         $sites = explode("\n", $this->get('pivotx.siteoptions')->getValue('config.sites', '', 'all'));
         foreach($sites as $site) {
             $targets = array();
             if ($site == 'pivotx-backend') {
-                $targets[] = 'desktop'; // @todo ugly exception should be removed
+                $targets[] = 'desktop'; // @todo ugly exception and should be removed
             }
             else {
                 $_targets = $this->get('pivotx.siteoptions')->getValue('routing.targets', array(), $site);
@@ -103,12 +163,6 @@ class Controller extends CoreController
                 $this->buildWebresources($site, $target, false);
                 $this->buildWebresources($site, $target, true);
             }
-
-            /*
-            $webresourcer->finalizeWebresources($outputter, false);
-            $groups = $outputter->finalizeAllOutputs($site);
-            $this->get('pivotx.siteoptions')->set('outputter.groups', json_encode($groups), 'application/json', true, false, $site);
-             */
         }
     }
 

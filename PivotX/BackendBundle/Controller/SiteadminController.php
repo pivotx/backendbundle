@@ -79,12 +79,7 @@ class SiteadminController extends Controller
 
     public function rebuildWebresourcesAction()
     {
-        /*
-        $webresourcer = $this->get('pivotx.webresourcer');
-        $outputter    = $this->get('pivotx.outputter');
-        */
-
-        $this->rebuildWebresources();
+        $this->rebuildWebresources(true);
 
         $this->get('session')->setFlash('notice', 'Webresources were rebuild.');
 
@@ -107,49 +102,7 @@ class SiteadminController extends Controller
             $this->get('session')->setFlash('notice', 'No such cache was available.');
         }
         else {
-            $failed_files       = array();
-            $failed_directories = array();
-            $failed_unknowns    = array();
-
-            $file_count = $directory_count = 0;
-
-            $objects = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::CHILD_FIRST);
-            foreach($objects as $name => $object) {
-
-                if ($object->getFilename() == '..') {
-                    // ignore
-                    continue;
-                }
-                if ($object->isDir()) {
-                    if ($name == $path.'/.') {
-                        continue;
-                    }
-                    if (substr($name, -2) == '/.') {
-                        continue;
-                    }
-                    if (@rmdir($name)) {
-                        $directory_count++;
-                    }
-                    else {
-                        $failed_directories[] = $name;
-                    }
-                }
-                else if ($object->isFile()) {
-                    if (substr($object->getFilename(), 0, 1) == '.') {
-                        // ignore hidden files
-                        continue;
-                    }
-                    if (@unlink($name)) {
-                        $file_count++;
-                    }
-                    else {
-                        $failed_files[] = $name;
-                    }
-                }
-                else {
-                    $failed_unknowns[] = $name;
-                }
-            }
+            list($failed_files, $failed_directories, $failed_unknowns, $file_count, $directory_count) = $this->clearDirectoryRecursive($path);
 
             if ((count($failed_directories) > 0) || (count($failed_files) > 0) || (count($failed_unknowns) > 0)) {
                 $this->get('session')->setFlash('error', 'Some cache files were not cleared.');
