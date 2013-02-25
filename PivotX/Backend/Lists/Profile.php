@@ -46,6 +46,25 @@ class Profile extends Item
             $this->addItem(new SeparatorItem());
         }
 
+        $languages = $this->getLanguagesForSite($siteoptions, $current_site);
+        $current_language = '';
+        if (is_array($languages) && (count($languages) > 0)) {
+            foreach($languages as $language) {
+                $lang = $language['name'];
+                $description = $language['description'];
+
+                $this->addItem($item = new RouteItem('language: '.$description, '(language='.$lang.')@'));
+                if ($item->isActive()) {
+                    $item->setAttribute('selected', true);
+                }
+                else {
+                    $item->setAttribute('icon', 'icon');
+                }
+            }
+
+            $this->addItem(new SeparatorItem());
+        }
+
         /*
         if (!is_null($token)) {
             if ($security_context->isGranted('ROLE_PREVIOUS_ADMIN')) {
@@ -112,5 +131,10 @@ class Profile extends Item
         }
 
         return $current_site;
+    }
+
+    private function getLanguagesForSite($siteoptions, $site)
+    {
+        return $siteoptions->getValue('routing.languages', array(), $site);
     }
 }
