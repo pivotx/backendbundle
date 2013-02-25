@@ -16,7 +16,7 @@
 					<td>
 						<strong>{{ tag.group }}</strong><br/>
 			{% elseif loopvar.item %}
-						<label class="filter-checkbox"><input type="checkbox" name="tag{{ tag.name }}"{% if tag.checked %} checked="checked"{% endif %} /> {{ tag.name }}</label>
+						<label class="filter-checkbox"><input type="checkbox" name="tag{{ tag.name }}"{% if tag.checked %} checked="checked"{% endif %} /> {{ tag.label }}</label>
 			{% elseif loopvar.group_end %}
 					</td>
 			{% endif %}

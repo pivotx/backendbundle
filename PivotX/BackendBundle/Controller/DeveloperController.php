@@ -205,6 +205,8 @@ THEEND;
 
     protected function getTagsFromViews($views, $tag_args)
     {
+        $translations = $this->get('pivotx.translations');
+
         $tags = array();
         $tag_dups = array();
         foreach($views as $view) {
@@ -214,6 +216,8 @@ THEEND;
 
                     $tag['group']   = (substr($_tag,0,6) == 'return') ? 'result' : 'entity';
                     $tag['name']    = $_tag;
+                    $tag['label']   = $translations->translate(strtolower($_tag).'.common.singular_title', null, null, array(), $_tag);
+
                     $tag['checked'] = (isset($tag_args['tag'.$_tag])) ? true : false;
 
                     $tags[] = $tag;
