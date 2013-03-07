@@ -1,7 +1,7 @@
 {
     "name": "pivotx/backendbundle",
     "description": "PivotX 4 Backend Bundle",
-    "version": "4.0.0-beta1",
+    "version": "4.0.0-dev",
     "type": "symfony-bundle",
     "license": "MIT",
     "homepage": "http://github.com/pivotx/backendbundle",
